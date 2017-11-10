@@ -89,7 +89,7 @@ class Event extends ActiveRecord
     }
 
     /**
-     * return DateTime
+     * @return DateTime
      */
     public function getStartDateTime() {
         $ret = new DateTime();

@@ -38,13 +38,12 @@
             //1. Get lichess rating history for each user
             //   TODO: maybe switch to lichess api here
             foreach( $users as $user ) {
-                print $user . "\n";
                 $response = $curl->get(sprintf("https://lichess.org/@/%s", $user));
 
                 if ($curl->errorCode === null)
                 {
                     $matches = [];
-                    if (preg_match('/{"name":"Blitz","points":([^}]+)/', $response, $matches) > 0)
+                    if( preg_match('/{"name":"Blitz","points":([^}]+)/', $response, $matches) > 0 )
                     {
                         $json = $matches[1];
                         $ret = Json::decode($json);
@@ -94,10 +93,8 @@
                 }while(true);
             }
 
-            //4. Append data to last till today (in case nobody played today yet)
-            $date = date('m/d/Y');
+            //4. Append data till today (in case nobody played today yet)
             $today = new DateTime();
-            $today->setTimestamp(strtotime($date));
 
             foreach($allUsersData as &$userData) {
                 do {
@@ -115,7 +112,7 @@
             }
 
 
-            //5. Combine data, find average and rating chang since yesterday
+            //5. Combine data, find average and rating change since yesterday
             $avg = array_fill(0, count($allUsersData[0]), 0);
 
 
@@ -135,6 +132,8 @@
 
             $rating = end($avg)[1];
             $dr = $rating - prev($avg)[1];
+
+            //6. Render
             return $this->render('ratings-view', ['data'=>$avg, 'rating'=>$rating, 'dr'=>$dr]);
         }
 
