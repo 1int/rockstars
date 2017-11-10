@@ -40,7 +40,7 @@
             foreach( $users as $user ) {
                 $response = $curl->get(sprintf("https://lichess.org/@/%s", $user));
 
-                if ($curl->errorCode === null)
+                if( $curl->errorCode === null )
                 {
                     $matches = [];
                     if( preg_match('/{"name":"Blitz","points":([^}]+)/', $response, $matches) > 0 )
@@ -94,7 +94,9 @@
             }
 
             //4. Append data till today (in case nobody played today yet)
+            //$date = date('m/d/Y');
             $today = new DateTime();
+            $today->setTimestamp(strtotime($date));
 
             foreach($allUsersData as &$userData) {
                 do {
