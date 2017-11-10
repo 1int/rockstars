@@ -94,7 +94,7 @@
             }
 
             //4. Append data till today (in case nobody played today yet)
-            //$date = date('m/d/Y');
+            $date = date('m/d/Y');
             $today = new DateTime();
             $today->setTimestamp(strtotime($date));
 
