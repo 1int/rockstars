@@ -43,26 +43,12 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Members', 'url' => ['/members/index']],
-            ['label' => 'Ratings', 'url' => ['/rating/index']],
-       //     ['label' => 'Videos', 'url' => ['/site/videos']],
-         //   ['label' => 'Schedule', 'url' => ['/site/schedule']],
-          //  ['label' => 'Contact', 'url' => ['/site/contact']],
-            ['label' => 'Schedule', 'url' => ['/schedule/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-           /* Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )*/
+            ['label' => 'Members', 'url' => ['/members'], 'active'=>Yii::$app->controller->id == 'members'],
+            ['label' => 'Ratings', 'url' => ['/rating'], 'active'=>Yii::$app->controller->id == 'rating'],
+            ['label' => 'Schedule', 'url' => ['/schedule'], 'active'=>Yii::$app->controller->id == 'schedule'],
+            ['label' => 'About', 'url' => ['/site/about'], 'active'=>Yii::$app->controller->id == 'site'],
         ],
+        'activateItems' => false
     ]);
     NavBar::end();
     ?>
