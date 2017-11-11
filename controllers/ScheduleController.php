@@ -36,8 +36,8 @@
             foreach( $events as $e) {
                 /** @var Event $e */
                 $thisEventLimit = $repeatEventsLimit;
-                while($thisEventLimit > 0 || $e->startDateTime < $today) {
-                    if( $e->startDateTime >= $today ) {
+                while($thisEventLimit > 0 || $e->date < $today) {
+                    if( $e->date >= $today ) {
                         $ret[] = $this->cloneEvent($e);
                         $thisEventLimit--;
                     }

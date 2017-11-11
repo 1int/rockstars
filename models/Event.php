@@ -17,6 +17,7 @@ use \DateInterval;
  * @property int $repeatsInDays
  * @property string $image
  * @property DateTime $startDate
+ * @property DateTime $date
  * @property string $startTime
  * @property DateTime $startDateTime
  * @property string $dayOfWeek
@@ -145,5 +146,12 @@ class Event extends ActiveRecord
      */
     public function getTimestamp() {
         return $this->date->getTimestamp();
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDate() {
+       return $this->date;
     }
 }
