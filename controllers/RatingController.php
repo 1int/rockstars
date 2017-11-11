@@ -63,6 +63,9 @@
                         $allUsersData[] = $data;
                     }
                 }
+                else {
+                    die ("Failed to get user data for " . $user );
+                }
             }
 
             //2. Find the earliest day when we had everybody playing
@@ -77,6 +80,8 @@
                     $maxDate = $date;
                 }
             }
+
+
 
             //3. Remove everything prior to the earliest date
             foreach($allUsersData as &$userData) {
@@ -112,7 +117,6 @@
                     }
                 }while(true);
             }
-
 
             //5. Combine data, find average and rating change since yesterday
             $avg = array_fill(0, count($allUsersData[0]), 0);
@@ -161,10 +165,11 @@
                 $pd->setTimestamp($prevdate / 1000);
                 $pd = $pd->add(new DateInterval("P1D"));
 
-                while($pd <= $d) {
-                    $full[] = [1000*$pd->getTimestamp(), $dataArray[$i][1]];
+                while($pd < $d) {
+                    $full[] = [1000*$pd->getTimestamp(), $dataArray[$i-1][1]];
                     $pd = $pd->add(new DateInterval("P1D"));
                 }
+                $full[] = [1000*$d->getTimestamp(), $dataArray[$i][1]];
             }
 
             return $full;
