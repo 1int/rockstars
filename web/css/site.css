@@ -317,3 +317,7 @@ div.event-header > comment {
     color: #ccc;
     margin-top: 5px;
 }
+
+g.highcharts-color-0 > rect:nth-child(2n) {
+    fill: #4c85cc;
+}

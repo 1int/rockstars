@@ -44,3 +44,6 @@ phpunit.phar
 .env
 
 /config/db.php
+views/doctors
+controllers/DoctorsController.php
+*.csv

@@ -16,12 +16,14 @@
 
     class RatingController extends Controller
     {
+
         /**
-         * Displays average team rating in blitz.
+         * Display team rating graph
          *
+         * @param string $type blitz, bullet or classical
          * @return string
          */
-        public function actionIndex()
+        public function actionIndex($type='blitz')
         {
 
             //0. Get all users that play on lichess
@@ -43,7 +45,7 @@
                 if( $curl->errorCode === null )
                 {
                     $matches = [];
-                    if( preg_match('/{"name":"Blitz","points":([^}]+)/', $response, $matches) > 0 )
+                    if( preg_match('/{"name":"'. ucfirst($type) .'","points":([^}]+)/', $response, $matches) > 0 )
                     {
                         $json = $matches[1];
                         $ret = Json::decode($json);
@@ -82,7 +84,6 @@
             }
 
 
-
             //3. Remove everything prior to the earliest date
             foreach($allUsersData as &$userData) {
                 do {
@@ -98,8 +99,16 @@
                 }while(true);
             }
 
+            /*$index = count($allUsersData[0]) - 1;
+            for($i = 0; $i < count($users); $i++)
+            {
+                print $users[$i] . ': ' . $allUsersData[$i][$index - 1][1] . "\n";
+                print $users[$i] . ': ' . $allUsersData[$i][$index][1] . "\n";
+            }
+
+            die;*/
             //4. Append data till today (in case nobody played today yet)
-            $date = date('m/d/Y');
+            $date = date('m/d/Y 00:00');
             $today = new DateTime();
             $today->setTimestamp(strtotime($date));
 
@@ -140,7 +149,7 @@
             $dr = $rating - prev($avg)[1];
 
             //6. Render
-            return $this->render('ratings-view', ['data'=>$avg, 'rating'=>$rating, 'dr'=>$dr]);
+            return $this->render('ratings-view', ['data'=>$avg, 'rating'=>$rating, 'dr'=>$dr, 'type'=>$type]);
         }
 
         /**
@@ -174,4 +183,17 @@
 
             return $full;
         }
+
+        public function actionBlitz() {
+            return $this->actionIndex('blitz');
+        }
+
+        public function actionClassical() {
+            return $this->actionIndex('classical');
+        }
+
+        public function actionBullet() {
+            return $this->actionIndex('bullet');
+        }
     }
+

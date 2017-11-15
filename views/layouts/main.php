@@ -44,7 +44,13 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Members', 'url' => ['/members'], 'active'=>Yii::$app->controller->id == 'members'],
-            ['label' => 'Ratings', 'url' => ['/rating'], 'active'=>Yii::$app->controller->id == 'rating'],
+            ['label' => 'Ratings', 'url' => ['/rating'], 'active'=>Yii::$app->controller->id == 'rating',
+                'items' => [
+                    ['label' => 'Blitz', 'url' => ['/rating/blitz'], 'active'=>Yii::$app->controller->id == 'rating' && Yii::$app->requestedAction->id=='blitz'],
+                    ['label' => 'Classical', 'url' => ['/rating/classical'], 'active'=>Yii::$app->controller->id == 'rating' && Yii::$app->requestedAction->id=='classical'],
+                    //['label' => 'Bullet', 'url' => ['/rating/bullet'], 'active'=>Yii::$app->controller->id == 'rating' && Yii::$app->requestedAction->id=='bullet'],
+                ],
+            ],
             ['label' => 'Schedule', 'url' => ['/schedule'], 'active'=>Yii::$app->controller->id == 'schedule'],
             ['label' => 'About', 'url' => ['/site/about'], 'active'=>Yii::$app->controller->id == 'site'],
         ],
