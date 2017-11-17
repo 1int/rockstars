@@ -29,13 +29,15 @@
 
             <div class="event-info">
                 <h2><?=$e->name?></h2>
-                <span><?=$e->dayOfWeek?>, <?=$e->startTime?> by <a href="<?=$e->master->link?>" target="_blank"><?=$e->master->name?></a></span>
+                <span><?=$e->dayOfWeek?>, <a href="http://www.thetimezoneconverter.com/?t=<?=$e->startTime?>&amp;tz=Moscow" title="See the time in your local timezone" target="_blank"><?=$e->startTime?></a>
+                    by <a href="<?=$e->master->link?>" target="_blank"><?=$e->master->name?></a>
+                </span>
             </div>
             <hr/>
         </div>
     <?php }?>
     <div class="row event-header">
-        <comment>*time is in GMT+3</comment>
+        <comment>*time is in GMT+3. Click the time to convert to local time zone.</comment>
     </div>
 
 </div>
