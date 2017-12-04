@@ -53,7 +53,7 @@ var lichess_widgets = (function() {
 				if (text && text != "")
 					text = text + " | ";
 
-				var res = text + "Classical <b>" + data.perfs.classical.rating;
+				var res = text + "Rapid <b>" + data.perfs.rapid.rating;
 				res    += "</b> | Blitz <b>" + data.perfs.blitz.rating + "</b>";
 
 				document.getElementById("lichess_widget_" + id).getElementsByTagName('span')[0].innerHTML = res;

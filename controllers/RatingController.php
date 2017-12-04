@@ -192,6 +192,10 @@
             return $this->actionIndex('classical');
         }
 
+        public function actionRapid() {
+            return $this->actionIndex('classical');
+        }
+
         public function actionBullet() {
             return $this->actionIndex('bullet');
         }
