@@ -12,6 +12,6 @@ $this->params['breadcrumbs'][] = 'About';
         We hit F7 both on the guitar and on the chessboard.
     </p>
 
-    <p>Feel free to join us in our Skype chat: https://join.skype.com/gsi7b9fslT9y</p>
+    <p>Feel free to <a href="https://join.skype.com/gsi7b9fslT9y">join us in our Skype chat</a></p>
 
 </div>
