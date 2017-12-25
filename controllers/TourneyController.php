@@ -5,16 +5,30 @@
      */
 
     namespace app\controllers;
+    use app\models\Tourney;
+    use app\models\Match;
     use yii\web\Controller;
 
     use linslin\yii2\curl;
-    use DateTime;
-    use app\models\Member;
+    use app\classes\lichess\Api;
 
     class TourneyController extends Controller
     {
 
         function actionIndex() {
+
+            /**
+             * @var Tourney $tourney
+             */
+            $tourney = Tourney::findOne(1);
+           // $tourney->generateRounds();
+            $game = $tourney->matches[0];
+            print "Getting match between " . $game->white . ' and ' .  $game->black;
+            $ret = Api::getGameBetweenPlayers($game->white, $game->black, $tourney->date);
+
+            var_dump($ret);
+
+            die;
             return $this->render('index');
         }
 

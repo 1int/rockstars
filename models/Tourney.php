@@ -64,4 +64,55 @@ class Tourney extends ActiveRecord
     {
         return $this->hasMany(Match::className(), ['tourney_id' => 'id']);
     }
+
+    /**
+     * @return array
+     */
+    public function getPlayersOfTeam1() {
+        return explode(',', $this->team1);
+    }
+
+    /**
+     * @return array
+     */
+    public function getPlayersOfTeam2() {
+        return explode(',', $this->team2);
+    }
+
+    public function generateRounds() {
+        Match::deleteAll('tourney_id=' . $this->id);
+
+        $players1 = $this->getPlayersOfTeam1();
+        $players2 = $this->getPlayersOfTeam2();
+        shuffle($players1);
+        shuffle($players2);
+        $count = count($players2);
+
+        for($round = 1; $round <= $count; $round++) {
+            $p1index = -1;
+            foreach ($players1 as $p1)
+            {
+                $p1index++;
+
+                $whiteFirst = rand(0, 1) > 0;
+                $p2 = $players2[($p1index + $round - 1) % $count];
+
+                $match = new Match();
+                $match->white = $whiteFirst ? $p1 : $p2;
+                $match->black = $whiteFirst ? $p2 : $p1;
+                $match->round = $round;
+                $match->tourney_id = $this->id;
+                $match->save();
+
+                //and now the rematch
+                $rematch = new Match();
+                $rematch->white = $whiteFirst ? $p2 : $p1;
+                $rematch->black = $whiteFirst ? $p1 : $p2;
+                $rematch->round = $round;
+                $rematch->tourney_id = $this->id;
+                $rematch->save();
+            }
+        }
+    }
+
 }
