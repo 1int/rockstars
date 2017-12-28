@@ -12,9 +12,14 @@ use \yii\db\ActiveRecord;
  * @property string $name
  * @property string $slug
  * @property string $description
- * @property string $team1
- * @property string $team2
+ * @property string $team1name
+ * @property string $team1logo
+ * @property string $team1players
+ * @property string $team2name
+ * @property string $team2logo
+ * @property string $team2players
  * @property string $date
+ * @property string $timeControl
  *
  * @property Match[] $matches
  */
@@ -38,7 +43,7 @@ class Tourney extends ActiveRecord
             [['description'], 'string'],
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 255],
-            [['team1', 'team2'], 'string', 'max' => 1028],
+            [['team1players', 'team2players', 'team1logo', 'team2logo', 'team1name', 'team2name'], 'string', 'max' => 1028],
         ];
     }
 
@@ -69,14 +74,14 @@ class Tourney extends ActiveRecord
      * @return array
      */
     public function getPlayersOfTeam1() {
-        return explode(',', $this->team1);
+        return explode(',', $this->team1players);
     }
 
     /**
      * @return array
      */
     public function getPlayersOfTeam2() {
-        return explode(',', $this->team2);
+        return explode(',', $this->team2players);
     }
 
     public function generateRounds() {
@@ -113,6 +118,10 @@ class Tourney extends ActiveRecord
                 $rematch->save();
             }
         }
+    }
+
+    function getTimeControl() {
+        return $this->time_control;
     }
 
 }

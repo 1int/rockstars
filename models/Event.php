@@ -23,6 +23,7 @@ use \DateInterval;
  * @property string $dayOfWeek
  * @property int $dateOfMonth
  * @property string $month
+ * @property bool $active
  *
  * @property Member $master
  */

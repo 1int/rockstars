@@ -29,7 +29,7 @@
 
 
             /** @var Event[] $events */
-            $events = Event::find()->where('repeatsInDays > 0')->all();
+            $events = Event::find()->where('repeatsInDays > 0 AND active = 1')->all();
 
 
             $today = new DateTime();
@@ -45,7 +45,7 @@
                 }
             }
 
-            $events = Event::find()->where('repeatsInDays = 0')->all();
+            $events = Event::find()->where('repeatsInDays = 0 AND active = 1')->all();
             foreach($events as $e) {
                 $ret[] = $e;
             }

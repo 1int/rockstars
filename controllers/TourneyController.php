@@ -14,22 +14,7 @@
 
     class TourneyController extends Controller
     {
-
         function actionIndex() {
-
-            /**
-             * @var Tourney $tourney
-             */
-            $tourney = Tourney::findOne(1);
-           // $tourney->generateRounds();
-            $game = $tourney->matches[0];
-            print "Getting match between " . $game->white . ' and ' .  $game->black;
-            $ret = Api::getGameBetweenPlayers($game->white, $game->black, $tourney->date);
-
-            var_dump($ret);
-
-            die;
-            return $this->render('index');
+            return $this->render('list', ['tourneys'=>Tourney::find()->all()]);
         }
-
     }
