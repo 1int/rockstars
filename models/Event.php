@@ -24,6 +24,7 @@ use \DateInterval;
  * @property int $dateOfMonth
  * @property string $month
  * @property bool $active
+ * @property int $skipNext
  *
  * @property Member $master
  */
@@ -155,4 +156,13 @@ class Event extends ActiveRecord
     public function getDate() {
        return $this->date;
     }
+
+    /**
+     * @param Event $otherEvent
+     */
+    public function assignDate($otherEvent) {
+        $this->date = $otherEvent->date;
+    }
+
+
 }

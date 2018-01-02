@@ -9,6 +9,7 @@
     use Yii;
     use yii\web\Controller;
     use app\models\Event;
+    use app\models\Holiday;
     use \DateTime;
 
     class ScheduleController extends Controller
@@ -33,19 +34,26 @@
 
 
             $today = new DateTime();
+            $todayString = $today->format('Y-d-m');
+
             foreach( $events as $e) {
                 /** @var Event $e */
                 $thisEventLimit = $repeatEventsLimit;
                 while($thisEventLimit > 0 || $e->date < $today) {
                     if( $e->date >= $today ) {
-                        $ret[] = $this->cloneEvent($e);
-                        $thisEventLimit--;
+                        if( $e->skipNext == 0 ) {
+                            $ret[] = $this->cloneEvent($e);
+                            $thisEventLimit--;
+                        }
+                        else {
+                            $e->skipNext--;
+                        }
                     }
                     $e->setDateToNextTime();
                 }
             }
 
-            $events = Event::find()->where('repeatsInDays = 0 AND active = 1')->all();
+            $events = Event::find()->where("repeatsInDays = 0 AND active = 1 AND start >= '$todayString'")->all();
             foreach($events as $e) {
                 $ret[] = $e;
             }
@@ -57,6 +65,23 @@
                 return $a->getTimestamp() > $b->getTimestamp();
             });
 
+
+
+            // Now check if some of the events should be cancelled due to holidays
+            $holidays = Holiday::find()->where("date >= '{$todayString}'")->all();
+
+            /** @var Holiday $holiday */
+            foreach($holidays as $holiday) {
+                for ($i = 0; $i < count($ret); $i++) {
+                    $dateString = $ret[$i]->date->format('Y-d-m');
+                    if($dateString == $holiday->date) {
+                        for($j = $i; $j < count($ret) - 1; $j++) {
+                            $ret[$j]->assignDate($ret[$j+1]);
+                        }
+                        unset($ret[count($ret)-1]);
+                    }
+                }
+            }
 
             if( count($ret) > $totalEventsLimit ) {
                 $ret = array_chunk($ret, $totalEventsLimit)[0];
