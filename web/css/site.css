@@ -323,8 +323,54 @@ g.highcharts-color-0 > rect:nth-child(2n) {
 }
 
 img.team-logo {
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     overflow: hidden;
     display: inline-block;
+    border-radius: 50%;
+
+    border: 3px solid #ccc;
+    box-shadow: 2px 1px #888;
+    box-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+span.team1 {
+    display: inline-block;
+    text-align: center;
+    padding: 0 20px 0 20px;
+    font-size: 16px;
+}
+
+span.team2 {
+    display: inline-block;
+    text-align: center;
+    padding: 0 20px 0 20px;
+    font-size: 16px;
+}
+
+div.tourney {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+span.team-name {
+    display: block;
+    margin-top: 12px;
+}
+span.vs {
+    position: relative;
+    top: -55px;
+    font-weight: bold;
+    font-size: 36px;
+    color: #555;
+    text-shadow: 0 1px #777;
+}
+
+div.tourney-info {
+    color: #ccc;
+    margin-top: -57px;
+    font-size: 11px;
 }
