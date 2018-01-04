@@ -15,7 +15,9 @@
             <span class="tourney-team"><img class="tourney-team-logo" src="<?=$t->team1logo?>"></span>
             <span class="tourney-info-vs tourney-score"><?=$t->getTotalScore()?></span>
             <span class="tourney-team"><img class="tourney-team-logo" src="<?=$t->team2logo?>"></span>
+            <?php if( $t->isFinished) { ?>
             <span class="tourney-finished">(Finished)</span>
+            <?php } ?>
         </div>
         <div class="well" id="tourney-general-info">
             <h4>Match details</h4>
@@ -70,3 +72,42 @@
         }
     }
 ?>
+
+<a id="btn-update-results" href="javascript: void(0)" class="admin-button">Update Results</a>
+
+
+<div id="modal-update-results" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Update Results</h4>
+            </div>
+            <form action="/tourney/update?id=<?=$t->id?>" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="admin-password">Admin password:</label>
+                        <input id="admin-password" name="admin-password" class="form-control" type="password"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<?php ob_start() ?>
+$("#btn-update-results").detach().appendTo($("ul.breadcrumb")).click(function() {
+$("#modal-update-results").modal();
+});;
+<?php $this->registerJs(ob_get_clean()); ?>
+
+
+

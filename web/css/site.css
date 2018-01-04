@@ -519,3 +519,7 @@ span.round-playing {
     font-weight: normal;
     font-size: 16px;
 }
+
+a.admin-button {
+    float: right;
+}

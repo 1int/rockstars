@@ -82,6 +82,10 @@ class Match extends ActiveRecord
                 return "<div class='match-not-played no-matches-are-finished'></div>";
             }
         }
+        else if( $this->href == 'cancelled' ) {
+            return "<div class='match-not-played other-matches-are-finished'>x</div>";
+        }
+
         return sprintf("<iframe width='%s' height='%s' frameborder=0 src='https://lichess.org/embed/%s?theme=auto&bg=auto'
     ></iframe>", '100%', '100%', $this->href);
     }

@@ -5,12 +5,14 @@
      */
 
     namespace app\controllers;
+
+    use Yii;
+    use yii\web\Controller;
+    use yii\web\HttpException;
+    use yii\web\NotFoundHttpException;
+
     use app\models\Tourney;
     use app\models\Match;
-    use yii\web\Controller;
-
-    use linslin\yii2\curl;
-    use yii\web\NotFoundHttpException;
     use app\classes\lichess\Api;
     use app\classes\lichess\Game;
 
@@ -29,6 +31,15 @@
         }
 
         function actionUpdate($id) {
+            $password = Yii::$app->request->post('admin-password');
+            if( $password != '666' ) {
+                throw new HttpException(403, 'Wrong admin password');
+            }
+
+            if( !Yii::$app->request->isPost ) {
+                throw new HttpException(403, 'Everything is made to be broken');
+            }
+
             /** @var Tourney $tourney */
             $tourney = Tourney::findOne($id);
             if( $tourney == null ) {
@@ -38,21 +49,72 @@
             // Actual update logic
             $api = new Api();
 
-            $matches = Match::find()->where('tourney_id = :tourney_id AND href IS NULL',
-                                                                    ['tourney_id'=>$id])->all();
+            for($round = 1; $round <= $tourney->totalRounds; $round++) {
+                if($round > 1 && !$tourney->isRoundFinished($round-1)) {
+                    break;
+                }
 
-            /** @var Match[] $matches */
-            /** @var Game $game */
-            foreach($matches as $match) {
-                $game = $api->getGameBetweenPlayers($match->white, $match->black, $tourney->date);
-                if( $game != null ) {
-                    $match->href = $game->id;
-                    $match->result = $game->getResult();
-                    $match->save();
+                $matches = Match::find()->where('tourney_id = :tourney_id AND href IS NULL AND round=:round',
+                    ['tourney_id'=>$id, 'round'=>$round])->all();
+
+                /** @var Match[] $matches */
+                /** @var Game $game */
+                foreach($matches as $match) {
+                    $game = $api->getGameBetweenPlayers($match->white, $match->black, $tourney->date);
+                    if( $game != null ) {
+                        $match->href = $game->id;
+                        $match->result = $game->getResult();
+                        $match->save();
+                    }
                 }
             }
 
-            // Show tourney as normal
-            return $this->render('view', ['tourney'=>$tourney]);
+            $this->redirect('/tourney/' . $tourney->slug);
         }
+
+        function actionNew() {
+            $password = Yii::$app->request->post('admin-password');
+            if( $password != '666' ) {
+                throw new HttpException(403, 'Wrong admin password');
+            }
+
+            $tourney = new Tourney();
+            $tourney->setAttributes($_POST);
+            //Konstantin_Zinkowski,nodiko500,Arevalz,DavidCecxladze,Aleksandr_Kalugin,Pirs07
+           // $tourney->date = (\DateTime::createFromFormat('d/m/Y', $tourney->date))->format('Y-m-d');
+
+            $logo1 = $_FILES['logo1']['tmp_name'];
+            if( $logo1 && $tourney->team2name ) {
+                $type = strtolower(pathinfo($_FILES['logo1']['name'],PATHINFO_EXTENSION));
+                $path = __DIR__ . '/../web/images/teams/' . str_replace(' ', '-',$tourney->team1name) . '.' . $type;
+                move_uploaded_file($_FILES["logo1"]["tmp_name"], $path);
+                $tourney->team1logo = '/images/teams/' . str_replace(' ', '-',$tourney->team1name) . '.' . $type;
+            }
+            else {
+                $tourney->team1logo = '/images/logo.jpg';
+            }
+
+            $logo2 = $_FILES['logo2']['tmp_name'];
+            if( $logo2 && $tourney->team2name ) {
+                $type = strtolower(pathinfo($_FILES['logo2']['name'],PATHINFO_EXTENSION));
+                $path = __DIR__ . '/../web/images/teams/' . str_replace(' ', '-',$tourney->team2name) . '.' . $type;
+                move_uploaded_file($_FILES["logo2"]["tmp_name"], $path);
+                $tourney->team2logo = '/images/teams/' .  str_replace(' ', '-',$tourney->team2name) . '.' . $type;
+            }
+            else {
+                $tourney->team2logo = '/images/teams/friends.png';
+            }
+
+            if($tourney->save()) {
+                $tourney->generateRounds();
+                $this->redirect('/tourney/' . $tourney->slug);
+            }
+            else {
+                throw new HttpException(400, explode(',',$tourney->getErrors()));
+            }
+
+        }
+
+
+
     }

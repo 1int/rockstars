@@ -29,7 +29,13 @@
             $response = $curl->get($url);
             if( $curl->errorCode === null ) {
                 $json = Json::decode($response);
+                if( !isset($json['currentPageResults']) ) {
+                    return null;
+                }
                 $games = $json['currentPageResults'];
+                if(!$games) {
+                    return null;
+                }
                 foreach($games as $g) {
                     $game = new Game($g);
 

@@ -44,15 +44,12 @@ class Tourney extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'description', 'team1', 'team2', 'date'], 'required'],
-            [['description'], 'string'],
-            [['date'], 'safe'],
-            [['name'], 'string', 'max' => 255],
-            [['team1players', 'team2players', 'team1logo', 'team2logo', 'team1name', 'team2name'], 'string', 'max' => 1028],
+            [['team1name', 'team2name', 'team1players', 'team2players', 'date'], 'required'],
+            [['date', 'description', 'slug', 'time_control'], 'safe'],
         ];
     }
 
-    /**
+    /**'
      * @inheritdoc
      */
     public function attributeLabels()
