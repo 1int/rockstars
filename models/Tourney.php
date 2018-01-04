@@ -191,7 +191,7 @@ class Tourney extends ActiveRecord
      */
     public function getTeam1PlayersWithLinks() {
         $ret = array_map(function($e) {
-            return sprintf('<a href="https://lichess.org/@/%s">%s</a>', $e, $e);
+            return sprintf('<a href="https://lichess.org/@/%s" target="_blank">%s</a>', $e, $e);
         }, $this->getPlayersOfTeam1());
         return implode(', ', $ret);
     }
@@ -201,7 +201,7 @@ class Tourney extends ActiveRecord
      */
     public function getTeam2PlayersWithLinks() {
         $ret = array_map(function($e) {
-            return sprintf('<a href="https://lichess.org/@/%s">%s</a>', $e, $e);
+            return sprintf('<a href="https://lichess.org/@/%s" target="_blank">%s</a>', $e, $e);
         }, $this->getPlayersOfTeam2());
         return implode(', ', $ret);
     }

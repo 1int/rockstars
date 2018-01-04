@@ -20,7 +20,7 @@
         public function actionIndex()
         {
             // How many times one event can show up in the list
-            $repeatEventsLimit = 3;
+            $repeatEventsLimit = 50;
             // How many total events are shown
             $totalEventsLimit = 8;
 
@@ -35,12 +35,15 @@
 
             $today = new DateTime();
             $todayString = $today->format('Y-d-m');
+            $thresholdDate = new DateTime();
+            $thresholdDate->sub(new \DateInterval('P365D'));
+            $thresholdString = $thresholdDate->format('Y-d-m');
 
             foreach( $events as $e) {
                 /** @var Event $e */
                 $thisEventLimit = $repeatEventsLimit;
-                while($thisEventLimit > 0 || $e->date < $today) {
-                    if( $e->date >= $today ) {
+                while($thisEventLimit > 0 || $e->date < $thresholdDate) {
+                    if( $e->date >= $thresholdDate ) {
                         if( $e->skipNext == 0 ) {
                             $ret[] = $this->cloneEvent($e);
                             $thisEventLimit--;
@@ -68,12 +71,12 @@
 
 
             // Now check if some of the events should be cancelled due to holidays
-            $holidays = Holiday::find()->where("date >= '{$todayString}'")->all();
+            $holidays = Holiday::find()->where("date >= '{$thresholdString}'")->all();
 
             /** @var Holiday $holiday */
             foreach($holidays as $holiday) {
                 for ($i = 0; $i < count($ret); $i++) {
-                    $dateString = $ret[$i]->date->format('Y-d-m');
+                    $dateString = $ret[$i]->date->format('Y-m-d');
                     if($dateString == $holiday->date) {
                         for($j = $i; $j < count($ret) - 1; $j++) {
                             $ret[$j]->assignDate($ret[$j+1]);
@@ -82,6 +85,12 @@
                     }
                 }
             }
+
+            $ret = array_filter($ret, function($e) use ($today) {
+                /** @var Event $e */
+                return $e->date >= $today;
+            });
+
 
             if( count($ret) > $totalEventsLimit ) {
                 $ret = array_chunk($ret, $totalEventsLimit)[0];
