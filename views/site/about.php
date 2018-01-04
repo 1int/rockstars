@@ -21,10 +21,12 @@ $this->params['breadcrumbs'][] = 'About';
     <h1>Rockstars! chess team</h1>
 
     <p>
-        We hit F7 both on the guitar and on the chessboard
+        <i> We hit F7 both on the guitar and on the chessboard! </i>
     </p>
 
-    <p>Feel free to <a href="https://join.skype.com/gsi7b9fslT9y">join us in our Skype chat!</a></p>
+    <br/>
+
+    <p>Feel free to <a href="https://join.skype.com/gsi7b9fslT9y">join us in our Skype chat</a></p>
 
     <div class="well">
         <h4>Here are some things we like:</h4>

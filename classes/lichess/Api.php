@@ -46,6 +46,7 @@
                 }
             }
             else {
+                //TODO: use this code
                 var_dump($curl->errorText);
             }
 

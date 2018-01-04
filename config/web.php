@@ -48,6 +48,11 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'rules' => [
+                '/tourney/update'=>'tourney/update',
+                '/tourney/<slug:[-a-zA-Z0-9]+>'=>'tourney/view',
+                '/tourneys'=>'tourney/index',
+            ]
         ],
 
     ],

@@ -15,6 +15,8 @@ use \yii\db\ActiveRecord;
  * @property string $black
  * @property string $href
  * @property float $result
+ * @property string $iframe
+ * @property string $matchScore
  *
  * @property Tourney $tourney
  */
@@ -62,5 +64,37 @@ class Match extends ActiveRecord
     public function getTourney()
     {
         return $this->hasOne(Tourney::className(), ['id' => 'tourney_id']);
+    }
+
+    /**
+     * @return string the iframe code or empty string if no lichess game id
+     */
+    public function getIframe() {
+        if( $this->href  == '' || $this->href == null ) {
+            //check if other matches of the same round already have results
+            $others = Match::find()->where('tourney_id = :tourney_id AND round=:round AND href IS NOT NULL',
+                ['tourney_id'=>$this->tourney_id, 'round'=>$this->round])->count();
+
+            if( $others > 0 ){
+                return "<div class='match-not-played other-matches-are-finished'>?</div>";
+            }
+            else {
+                return "<div class='match-not-played no-matches-are-finished'></div>";
+            }
+        }
+        return sprintf("<iframe width='%s' height='%s' frameborder=0 src='https://lichess.org/embed/%s?theme=auto&bg=auto'
+    ></iframe>", '100%', '100%', $this->href);
+    }
+
+    /**
+     * @return string
+     */
+    public function getMatchScore() {
+        switch($this->result) {
+            case 1: return '[1 - 0]';
+            case 0.5: return '[0.5 - 0.5]';
+            case -1: return '[0 - 1]';
+            default: return '';
+        }
     }
 }

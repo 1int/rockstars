@@ -353,12 +353,12 @@ span.team2 {
 
 div.tourney {
     text-align: center;
-    margin-bottom: 50px;
 }
 
 span.team-name {
     display: block;
     margin-top: 12px;
+    color: #333;
 }
 span.vs {
     position: relative;
@@ -373,4 +373,149 @@ div.tourney-info {
     color: #ccc;
     margin-top: -57px;
     font-size: 11px;
+}
+
+div.tourney-inner-wrapper {
+    padding: 15px 25px 47px 25px;
+    display: inline-block;
+    border-bottom: 1px solid  #f5f5f5;
+}
+
+
+div.tourney-inner-wrapper:hover{
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+div.tourney-match {
+    display: inline-block;
+    padding: 10px 15px 15px 10px;
+    cursor: pointer;
+    color: #333;
+    font-size: 16px;
+}
+
+div.tourney-match:hover {
+    background-color: #f5f5f5;
+}
+
+div.match-content > iframe {
+    width: 300px;
+    height: 211px;
+}
+
+div.other-matches-are-finished {
+    width: 300px;
+    height: 211px;
+    line-height: 190px;
+    text-align: center;
+    font-size: 150px;
+    color: #555;
+    text-shadow: 0 1px #777;
+}
+
+span.player-won {
+    font-weight: bold;
+}
+
+span.tourney-match-score {
+    color: #333;
+}
+
+span.tourney-team {
+    display: inline-block;
+    text-align: center;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
+}
+
+img.tourney-team-logo {
+    width: 75px;
+    height: 75px;
+    overflow: hidden;
+    display: inline-block;
+    border-radius: 50%;
+
+    border: 3px solid #ccc;
+    box-shadow: 2px 1px #888;
+    box-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+}
+
+span.tourney-score {
+    position: relative;
+    font-weight: bold;
+    font-size: 32px;
+    color: #333;
+    text-shadow: 0 1px #555;
+    top: 7px;
+}
+
+div#tourney-score {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+div#tourney-general-info {
+    color: #777;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+
+div#tourney-general-info a {
+    color: #777;
+}
+
+div#tourney-general-info h4 {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+span.tourney-finished {
+    display: block;
+    margin-top: -20px;
+    color: #ccc;
+}
+
+table#tourney-details {
+    font-size: 12px;
+}
+
+table#tourney-details td {
+    padding-right: 10px;
+}
+
+table#tourney-details td:nth-child(2) {
+    font-weight: 500;
+}
+
+div.round-number {
+    padding: 10px 0 10px 19px;
+    font-size: 26px;
+    background-color: #f5f5f5;
+    margin: 10px 0 10px 0;
+    font-weight: 500;
+}
+
+div#games-title {
+    color: #333;
+    margin: 35px 0 15px 0;
+    font-size: 26px;
+    text-align: center;
+    font-weight: 500;
+}
+
+span.round-score {
+    font-size: 16px;
+    float: right;
+    color: #ccc;
+    padding-right: 19px;
+    line-height: 37px;
+    font-weight: normal;
+}
+
+span.round-playing {
+    color: #ccc;
+    font-weight: normal;
+    font-size: 16px;
 }

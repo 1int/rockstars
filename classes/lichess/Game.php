@@ -8,6 +8,8 @@
 
 
 
+    use yii\base\Exception;
+
     class Game
     {
         public $id;
@@ -45,6 +47,25 @@
                 $this->timeControl .= '+' . $add;
             } catch(\Exception $e) {
 
+            }
+        }
+
+        /**
+         * @return float
+         * @throws \Exception
+         */
+        function getResult() {
+            if(strtolower($this->status) == 'draw') {
+                return 0.5;
+            }
+            if($this->winner == 'white') {
+                return 1;
+            }
+            else if($this->winner == 'black') {
+                return -1;
+            }
+            else {
+                throw new \Exception('Everything is broken');
             }
         }
 
