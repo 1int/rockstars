@@ -25,8 +25,8 @@
                 <tr><td>Status</td><td><?=$t->isFinished ? 'Finished' : 'Playing'?></td></tr>
                 <tr><td>Date</td><td><?=$t->date?></td></tr>
                 <tr><td>Time Control</td><td><?=$t->timeControlFullString?></td></tr>
-                <tr><td>Team <?=$t->team1name?></td><td><?=$t->team1PlayersWithLinks?></td></tr>
-                <tr><td>Team <?=$t->team2name?></td><td><?=$t->team2PlayersWithLinks?></td></tr>
+                <tr><td><?=$t->team1name?> players</td><td><?=$t->team1PlayersWithLinks?></td></tr>
+                <tr><td><?=$t->team2name?> players</td><td><?=$t->team2PlayersWithLinks?></td></tr>
             </table>
         </div>
     </header>
