@@ -1,7 +1,7 @@
 TODO:
-- About us page: split to sections
 - Tourneys mobile version
 - Добавить язык и вид ивента (skype, offline, etc.)
+
 - Маркер online напротив имени участника
 - Перевести рейтинги игроков на lichess API
 

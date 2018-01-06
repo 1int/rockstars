@@ -322,6 +322,7 @@ g.highcharts-color-0 > rect:nth-child(2n) {
     fill: #4c85cc;
 }
 
+@media screen and (min-width: 451px)   {
 img.team-logo {
     width: 100px;
     height: 100px;
@@ -336,19 +337,56 @@ img.team-logo {
     margin-right: 5px;
     margin-left: 5px;
 }
-
-span.team1 {
-    display: inline-block;
-    text-align: center;
-    padding: 0 20px 0 20px;
-    font-size: 16px;
 }
 
-span.team2 {
-    display: inline-block;
-    text-align: center;
-    padding: 0 20px 0 20px;
-    font-size: 16px;
+@media screen and (max-width: 450px)   {
+    img.team-logo {
+        width: 50px;
+        height: 50px;
+        overflow: hidden;
+        display: inline-block;
+        border-radius: 50%;
+
+        border: 3px solid #ccc;
+        box-shadow: 2px 1px #888;
+        box-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+}
+
+
+@media screen and (min-width: 450px) {
+    span.team1 {
+        display: inline-block;
+        text-align: center;
+        padding: 0 20px 0 20px;
+        font-size: 16px;
+    }
+
+    span.team2 {
+        display: inline-block;
+        text-align: center;
+        padding: 0 20px 0 20px;
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    span.team1 {
+        display: inline-block;
+        text-align: center;
+        padding: 0;
+        font-size: 16px;
+    }
+
+    span.team2 {
+        display: inline-block;
+        text-align: center;
+        padding: 0;
+        font-size: 16px;
+    }
 }
 
 div.tourney {
@@ -369,11 +407,34 @@ span.vs {
     text-shadow: 0 1px #777;
 }
 
-div.tourney-info {
-    color: #ccc;
-    margin-top: -57px;
-    font-size: 11px;
+
+
+
+@media screen and (min-width: 451px) {
+    div.tourney-info {
+        color: #ccc;
+        margin-top: -57px;
+        font-size: 11px;
+    }
 }
+
+@media screen and (max-width: 450px) {
+    span.vs {
+        position: relative;
+        top: -45px;
+        font-weight: bold;
+        font-size: 20px;
+        color: #555;
+        text-shadow: 0 1px #777;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    div.tourney-info {
+        display: none;
+    }
+}
+
 
 div.tourney-inner-wrapper {
     padding: 15px 25px 47px 25px;
@@ -429,16 +490,32 @@ span.tourney-team {
     font-size: 16px;
 }
 
-img.tourney-team-logo {
-    width: 75px;
-    height: 75px;
-    overflow: hidden;
-    display: inline-block;
-    border-radius: 50%;
+@media screen and (min-width: 451px) {
+    img.tourney-team-logo {
+        width: 75px;
+        height: 75px;
+        overflow: hidden;
+        display: inline-block;
+        border-radius: 50%;
 
-    border: 3px solid #ccc;
-    box-shadow: 2px 1px #888;
-    box-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+        border: 3px solid #ccc;
+        box-shadow: 2px 1px #888;
+        box-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    img.tourney-team-logo {
+        width: 35px;
+        height: 35px;
+        overflow: hidden;
+        display: inline-block;
+        border-radius: 50%;
+
+        border: 3px solid #ccc;
+        box-shadow: 2px 1px #888;
+        box-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+    }
 }
 
 span.tourney-score {
@@ -471,10 +548,18 @@ div#tourney-general-info h4 {
     font-weight: 500;
 }
 
-span.tourney-finished {
-    display: block;
-    margin-top: -20px;
-    color: #ccc;
+@media screen and (min-width: 450px) {
+    span.tourney-finished {
+        display: block;
+        margin-top: -20px;
+        color: #ccc;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    span.tourney-finished {
+        display: none;
+    }
 }
 
 table#tourney-details {
