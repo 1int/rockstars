@@ -8,7 +8,7 @@ use \yii\db\ActiveRecord;
 /**
  * This is the model class for table "tourney".
  *
- * @property string $id
+ * @property int $id
  * @property string $name
  * @property string $slug
  * @property string $description
@@ -44,8 +44,8 @@ class Tourney extends ActiveRecord
     public function rules()
     {
         return [
-            [['team1name', 'team2name', 'team1players', 'team2players', 'date'], 'required'],
-            [['date', 'description', 'slug', 'time_control'], 'safe'],
+            [['team1name', 'team2name', 'team1players', 'team2players', 'date', 'slug'], 'required'],
+            [['date', 'description', 'time_control'], 'safe'],
         ];
     }
 

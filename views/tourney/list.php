@@ -1,10 +1,17 @@
 <?php
 use app\models\Tourney;
 
+
 /* @var $this yii\web\View */
 /* @var Tourney[] $tourneys */
 $this->title = 'Rockstars! — Team Battles';
 $this->params['breadcrumbs'][] = 'Team Battles';
+
+
+/** @var Tourney $lastTourney */
+$lastTourney = Tourney::find()->where(1)->limit(1)->orderBy('id DESC')->one();
+$lastId = $lastTourney->id;
+
 ?>
     <div id="tourney-list">
         <?php foreach($tourneys as $t) { ?>
@@ -78,7 +85,7 @@ $this->params['breadcrumbs'][] = 'Team Battles';
 
                     <div class="form-group">
                         <label for="slug">Slug:</label>
-                        <input id="slug" name="slug" class="form-control"/>
+                        <input id="slug" name="slug" class="form-control" value="tourney-<?=($lastId+1)?>"/>
                     </div>
 
                     <div class="form-group">

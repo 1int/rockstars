@@ -32,7 +32,7 @@
 
         function actionUpdate($id) {
             $password = Yii::$app->request->post('admin-password');
-            if( $password != '666' ) {
+            if( $password != '666' && $password != 'friends' ) {
                 throw new HttpException(403, 'Wrong admin password');
             }
 
@@ -74,12 +74,13 @@
 
         function actionNew() {
             $password = Yii::$app->request->post('admin-password');
-            if( $password != '666' ) {
+            if( $password != '666' && $password != 'friends' ) {
                 throw new HttpException(403, 'Wrong admin password');
             }
 
             $tourney = new Tourney();
             $tourney->setAttributes($_POST);
+            $tourney->slug = str_replace(' ', '-', $tourney->slug);
             //Konstantin_Zinkowski,nodiko500,Arevalz,DavidCecxladze,Aleksandr_Kalugin,Pirs07
            // $tourney->date = (\DateTime::createFromFormat('d/m/Y', $tourney->date))->format('Y-m-d');
 
