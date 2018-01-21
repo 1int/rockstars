@@ -25,6 +25,8 @@ use \DateInterval;
  * @property string $month
  * @property bool $active
  * @property int $skipNext
+ * @property string $pairings
+ * @property bool $hasPairings
  *
  * @property Member $master
  */
@@ -34,6 +36,11 @@ class Event extends ActiveRecord
      * @var DateTime $date
      */
     private $date;
+
+    /**
+     * @var string $pairs
+     */
+    private $pairs = '';
 
     /**
      * @inheritdoc
@@ -49,8 +56,8 @@ class Event extends ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'start', 'time', 'master'], 'required'],
-            [['start', 'time'], 'safe'],
+            [['name', 'start', 'time'], 'required'],
+            [['start', 'time', 'has_pairings'], 'safe'],
             [['repeatsInDays'], 'integer'],
             [['name', 'image'], 'string', 'max' => 128],
             [['master'], 'exist', 'skipOnError' => true, 'targetClass' => Member::className(), 'targetAttribute' => ['master_id' => 'id']],
@@ -164,5 +171,73 @@ class Event extends ActiveRecord
         $this->date = $otherEvent->date;
     }
 
+    protected function queryPairings() {
+        $connection = Yii::$app->getDb();
+        $command = $connection->createCommand("SELECT pairs FROM pairings WHERE event_id = :event_id AND date=:date",
+            ['event_id'=>$this->id, 'date'=>$this->date->format('Y-m-d')]);
 
+        $this->pairs = $command->queryAll();
+        if($this->pairs) {
+            $this->pairs = $this->pairs[0]['pairs'];
+        }
+    }
+
+    protected function createPairings() {
+        $members = Member::find()->where('show_in_pairings=1')->all();
+        $members = array_map(function($e){return $e->id;}, $members);
+        shuffle($members);
+        if( count($members) % 2 == 0 ) {
+            $ret = implode(',', $members);
+        }
+        else {
+            $ret = implode(',', $members) . ',0';
+        }
+
+        $connection = Yii::$app->getDb();
+        $command = $connection->createCommand(sprintf("INSERT INTO pairings (event_id, date, pairs) VALUES (%d, '%s', '%s')",
+                                                            $this->id, $this->date->format('Y-m-d'), $ret));
+        $command->execute();
+        $this->pairs = $ret;
+    }
+
+    public function getPairings() {
+        if( !$this->pairs ) {
+            $this->queryPairings();
+            if( !$this->pairs ) {
+                $this->createPairings();
+            }
+        }
+        if( !$this->pairs ) {
+            return '';
+        }
+
+        $ids = explode(',', $this->pairs);
+        $i = 0;
+        $ret = '';
+        foreach($ids as $id) {
+            if( $id == 0 ) {
+                $ret .= '???';
+            }
+            else {
+                $ret .= Member::findOne($id)->usernameWithLink;
+            }
+
+            if($i < count($ids) - 1) {
+                if ($i % 2 == 1) {
+                    $ret .= ', ';
+                }
+                else {
+                    $ret .= '-';
+                }
+            }
+            $i++;
+        }
+
+
+        return $ret;
+    }
+
+    public function getHasPairings() {
+        return $this->has_pairings;
+    }
 }

@@ -19,7 +19,7 @@
          */
         public function actionIndex()
         {
-            $members = Member::find()->all();
+            $members = Member::find()->where('show_on_homepage=1')->all();
             shuffle($members);
             return $this->render('members-view', ['members'=>$members]);
         }

@@ -608,3 +608,15 @@ span.round-playing {
 a.admin-button {
     float: right;
 }
+
+div.pairings {
+    width: 315px;
+    margin: 0 0 0 15px;
+    font-size: 10px;
+    color: #ccc;
+}
+
+div.pairings > a {
+    color: #ccc;
+    font-weight: 400;
+}

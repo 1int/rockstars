@@ -27,7 +27,7 @@
         {
 
             //0. Get all users that play on lichess
-            $members = Member::find()->where('plays_on_lichess=1')->all();
+            $members = Member::find()->where('show_on_graph=1')->all();
             $users = array_map( function($m) {
                 return $m->username;
             }, $members);

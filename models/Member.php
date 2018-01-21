@@ -14,8 +14,10 @@ use \yii\db\ActiveRecord;
  * @property string $avatar
  * @property string $bio
  * @property int $role
- * @property int $plays_on_lichess
+ * @property int $show_in_graph
  * @property string $link
+ * @property string $usernameWithLink
+ * @property string $nameWithLink
  */
 class Member extends ActiveRecord
 {
@@ -35,7 +37,7 @@ class Member extends ActiveRecord
         return [
             [['name', 'username', 'bio', 'role'], 'required'],
             [['bio'], 'string'],
-            [['role', 'plays_on_lichess'], 'integer'],
+            [['role', 'show_on_graph'], 'integer'],
             [['name', 'avatar'], 'string', 'max' => 255],
             [['username'], 'string', 'max' => 127],
         ];
@@ -63,4 +65,19 @@ class Member extends ActiveRecord
     public function getLink() {
         return sprintf("http://lichess.org/@/%s", $this->username);
     }
+
+    /**
+     * @return string
+     */
+    public function getUsernameWithLink() {
+        return sprintf('<a href="http://lichess.org/@/%s" target="_blank">%s</a>', $this->username, $this->username);
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameWithLink() {
+        return sprintf('<a href="http://lichess.org/@/%s" target="_blank">%s</a>', $this->username, $this->name);
+    }
+
 }

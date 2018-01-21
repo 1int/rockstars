@@ -57,7 +57,7 @@ AppAsset::register($this);
             ['label' => 'Ratings', 'url' => ['/rating'], 'active'=>Yii::$app->controller->id == 'rating',
                 'items' => [
                     ['label' => 'Blitz', 'url' => ['/rating/blitz'], 'active'=>Yii::$app->controller->id == 'rating' && Yii::$app->requestedAction->id=='blitz'],
-                    ['label' => 'Rapid', 'url' => ['/rating/rapid'], 'active'=>Yii::$app->controller->id == 'rating' && Yii::$app->requestedAction->id=='classical'],
+                   // ['label' => 'Rapid', 'url' => ['/rating/rapid'], 'active'=>Yii::$app->controller->id == 'rating' && Yii::$app->requestedAction->id=='classical'],
                     //['label' => 'Bullet', 'url' => ['/rating/bullet'], 'active'=>Yii::$app->controller->id == 'rating' && Yii::$app->requestedAction->id=='bullet'],
                 ],
             ],

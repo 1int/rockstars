@@ -43,10 +43,9 @@ $this->params['breadcrumbs'][] = 'About';
     <div class="well">
         <h4>Team events</h4>
         <div>
-            <p>We love to participate in team battles!
-            On our <a href="/tourney" target="_blank">team battles</a> page you can view our team battle history or even create your own event!
-            Just fulfil  the 'New Team Battle' form and you will be redirected to your tournament page. Then simply play the games
-            on lichess and hit 'update results' when you're finished! It's that easy.
+            <p>Team battles are fun, we love those!
+            On our <a href="/tourney" target="_blank">team battles</a> page you can view our team battle history or even create your own event.
+            If you dare challenge us for a fight, <a href="https://lichess.org/inbox/new?user=linto" target="_blank">message me on lichess</a>
             </p>
         </div>
     </div>

@@ -1,6 +1,6 @@
 .navbar-inverse {
-    background-color: #bbbbff;
-    border-color: #ccccff;
+    background-color: #7cb5ec;
+    border-color: #8dc6fd;
 }
 
 .navbar-inverse .navbar-nav > li > a {
@@ -13,13 +13,14 @@
 }
 
 .navbar-inverse .navbar-nav > li > a:hover {
-    background-color: #aaaaff;
+    background-color: #7cb5ec;
 }
 
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
-    background-color: #aaaaff;
+    background-color: #6ba4db;
 }
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
-    background-color: #aaaaff;
+    background-color: #6ba4db;
 }
+

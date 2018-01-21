@@ -30,8 +30,16 @@
             <div class="event-info">
                 <h2><?=$e->name?></h2>
                 <span><?=$e->dayOfWeek?>, <a href="http://www.thetimezoneconverter.com/?t=<?=$e->startTime?>&amp;tz=Moscow" title="See the time in your local timezone" target="_blank"><?=$e->startTime?></a>
-                    by <a href="<?=$e->master->link?>" target="_blank"><?=$e->master->name?></a>
+
+                 <?php if($e->master) { ?>
+                    by <?=$e->master->nameWithLink;?>
+                 <?php } ?>
                 </span>
+                <?php if($e->hasPairings) { ?>
+                    <div class="pairings">
+                        Pairs: <?=$e->pairings;?>
+                    </div>
+                <?php } ?>
             </div>
             <hr/>
         </div>

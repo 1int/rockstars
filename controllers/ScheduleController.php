@@ -22,7 +22,7 @@
             // How many times one event can show up in the list
             $repeatEventsLimit = 50;
             // How many total events are shown
-            $totalEventsLimit = 8;
+            $totalEventsLimit = 10;
 
 
             /** @var Event[] $ret */
@@ -33,7 +33,11 @@
             $events = Event::find()->where('repeatsInDays > 0 AND active = 1')->all();
 
 
+
             $today = new DateTime();
+            // dirty timezone hack, I'm sorry
+            $today->add(\DateInterval::createfromdatestring('+3 hours'));
+
             $todayString = $today->format('Y-d-m');
             $thresholdDate = new DateTime();
             $thresholdDate->sub(new \DateInterval('P365D'));
@@ -44,13 +48,8 @@
                 $thisEventLimit = $repeatEventsLimit;
                 while($thisEventLimit > 0 || $e->date < $thresholdDate) {
                     if( $e->date >= $thresholdDate ) {
-                        if( $e->skipNext == 0 ) {
-                            $ret[] = $this->cloneEvent($e);
-                            $thisEventLimit--;
-                        }
-                        else {
-                            $e->skipNext--;
-                        }
+                        $ret[] = $this->cloneEvent($e);
+                        $thisEventLimit--;
                     }
                     $e->setDateToNextTime();
                 }
@@ -91,7 +90,6 @@
                 return $e->date >= $today;
             });
 
-
             if( count($ret) > $totalEventsLimit ) {
                 $ret = array_chunk($ret, $totalEventsLimit)[0];
             }
@@ -107,6 +105,7 @@
         protected function cloneEvent($source) {
             $ret = new Event();
             $ret->attributes = $source->attributes;
+            $ret->id = $source->id;
             $ret->setTimestamp($source->getTimestamp());
             $ret->populateRelation('master', $source->master);
             return $ret;
