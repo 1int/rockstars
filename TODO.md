@@ -5,6 +5,7 @@ TODO:
 + Best players
 + Playing... fix
 + Адптировать schedule под мобилки
++ Fix table header
 
 1.3.1
 - Добавить язык и вид ивента (skype, offline, etc.)

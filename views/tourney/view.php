@@ -21,7 +21,7 @@
             <?php } ?>
         </div>
         <div class="well container-fluid" id="tourney-general-info">
-            <div class="col-sm-6">
+            <div class="col-sm-4 col-sm-offset-2">
                 <h4>Match details</h4>
                 <table id="tourney-details">
                     <tr><td>Status</td><td><?=$t->isFinished ? 'Finished' : 'Playing'?></td></tr>
@@ -31,9 +31,9 @@
                     <tr><td><?=str_replace(' ', '&nbsp;', $t->team2name)?>&nbsp;players</td><td><?=$t->team2PlayersWithLinks?></td></tr>
                 </table>
             </div>
-            <div class="col-sm-6">
-                <h4>Best players</h4>
-                <table id="tourney-best-players">
+            <div class="col-sm-5 col-sm-offset-1" style="text-align: center">
+                <table id="tourney-best-players" style="text-align: left">
+                    <caption>Best players</caption>
                     <?php
                         /** @var PlayerScore $score */
                         foreach($t->bestPlayers as $score) {

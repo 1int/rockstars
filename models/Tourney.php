@@ -302,7 +302,7 @@ class Tourney extends ActiveRecord
              foreach($matches as $m) {
                  $res->score += $m->getScoreForPlayer($p);
              }
-             $res->scoreString = sprintf("%.2f - %.2f", $res->score, 2*$this->totalRounds - $res->score);
+             $res->scoreString = sprintf("%.2f&nbsp;-&nbsp;%.2f", $res->score, 2*$this->totalRounds - $res->score);
              $scores[] = $res;
          }
 
