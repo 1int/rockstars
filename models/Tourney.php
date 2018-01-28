@@ -27,9 +27,15 @@ use \yii\db\ActiveRecord;
  * @property string $team1PlayersWithLinks
  * @property string $team2PlayersWithLinks
  * @property Match[] $matches
+ * @property PlayerScore[] $bestPlayers
  */
 class Tourney extends ActiveRecord
 {
+    /**
+     * @var PlayerScore[] $_bestPlayers
+     */
+    private $_bestPlayers = null;
+
     /**
      * @inheritdoc
      */
@@ -70,6 +76,14 @@ class Tourney extends ActiveRecord
     public function getMatches()
     {
         return $this->hasMany(Match::className(), ['tourney_id' => 'id']);
+    }
+
+    /**
+     * @param $player string
+     * @return Match[]
+     */
+    public function getPlayerMatches($player) {
+        return Match::find()->where('tourney_id=:id AND (white=:player OR black=:player)', ['id'=>$this->id, 'player'=>$player])->all();
     }
 
     /**
@@ -267,5 +281,86 @@ class Tourney extends ActiveRecord
         }
 
         return sprintf("%.1f%s%.1f", $team1score, $separator, $team2score);
+    }
+
+    /**
+     * @return PlayerScore[]
+     */
+    public function getBestPlayers() {
+
+         if( $this->_bestPlayers != null ) {
+             return $this->_bestPlayers;
+         }
+         $scores = [];
+         $players = array_merge($this->getPlayersOfTeam1(), $this->getPlayersOfTeam2());
+
+         foreach($players as $p) {
+             $matches = $this->getPlayerMatches($p);
+
+             $res = new PlayerScore($p);
+             $res->score = 0;
+             foreach($matches as $m) {
+                 $res->score += $m->getScoreForPlayer($p);
+             }
+             $res->scoreString = sprintf("%.2f - %.2f", $res->score, 2*$this->totalRounds - $res->score);
+             $scores[] = $res;
+         }
+
+
+         // calculate average opponent points (to resolve equal points situation)
+         foreach($scores as &$s) {
+             $matches = $this->getPlayerMatches($s->player);
+             $wins = 0;
+             $totalRating = 0;
+             foreach($matches as $m) {
+                 if( $m->getScoreForPlayer($s->player) == 1 ) {
+                     $oppName = $m->white == $s->player ? $m->black : $m->white;
+
+                     $opp = array_filter($scores,
+                         function ($e) use ($oppName) {
+                             return $e->player == $oppName;
+                         }
+                     );
+                     $opp = reset($opp);
+                     if( !isset($opp) || !isset($opp->score)) {
+                         // opponent not found, probably somebody replaced him for the match
+                         continue;
+                     }
+                     $totalRating += $opp->score;
+                     $wins++;
+                 }
+             }
+
+             if( $wins > 0 ) {
+                 $s->avgOpponentScore = $totalRating / $wins;
+             }
+             else {
+                 $s->avgOpponentScore = 0;
+             }
+         }
+
+         uasort( $scores, function($a, $b) {
+            /** @var PlayerScore $a, $b */
+            if($a->score == $b->score) {
+                return $a->avgOpponentScore <= $b->avgOpponentScore;
+            }
+            else {
+                return $a->score <= $b->score;
+            }
+         });
+
+        $this->_bestPlayers = $scores;
+        return $scores;
+    }
+}
+
+class PlayerScore {
+    public $player;
+    public $score;
+    public $scoreString;
+    public $avgOpponentScore;
+
+    function __construct($player) {
+        $this->player = $player;
     }
 }

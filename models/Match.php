@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\base\Exception;
 use \yii\db\ActiveRecord;
 
 /**
@@ -99,6 +100,26 @@ class Match extends ActiveRecord
             case 0.5: return '[0.5 - 0.5]';
             case -1: return '[0 - 1]';
             default: return '';
+        }
+    }
+
+    /**
+     * @param $player string
+     * @throws \Exception
+     * @return float
+     */
+    public function getScoreForPlayer($player) {
+        if($this->result == 0.5) {
+            return 0.5;
+        }
+        if( $player == $this->white ) {
+            return $this->result == 1 ? 1 : 0;
+        }
+        else if( $player == $this->black ) {
+            return $this->result == 1 ? 0 : 1;
+        }
+        else {
+            throw new \Exception("Everything's made to be broken");
         }
     }
 }

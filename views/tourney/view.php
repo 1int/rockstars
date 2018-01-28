@@ -1,5 +1,6 @@
 <?php
     use app\models\Tourney;
+    use app\models\PlayerScore;
 
     /** @var $this yii\web\View */
     /** @var Tourney $tourney */
@@ -19,15 +20,29 @@
             <span class="tourney-finished">(Finished)</span>
             <?php } ?>
         </div>
-        <div class="well" id="tourney-general-info">
-            <h4>Match details</h4>
-            <table id="tourney-details">
-                <tr><td>Status</td><td><?=$t->isFinished ? 'Finished' : 'Playing'?></td></tr>
-                <tr><td>Date</td><td><?=$t->date?></td></tr>
-                <tr><td>Time Control</td><td><?=$t->timeControlFullString?></td></tr>
-                <tr><td><?=$t->team1name?> players</td><td><?=$t->team1PlayersWithLinks?></td></tr>
-                <tr><td><?=$t->team2name?> players</td><td><?=$t->team2PlayersWithLinks?></td></tr>
-            </table>
+        <div class="well container-fluid" id="tourney-general-info">
+            <div class="col-sm-6">
+                <h4>Match details</h4>
+                <table id="tourney-details">
+                    <tr><td>Status</td><td><?=$t->isFinished ? 'Finished' : 'Playing'?></td></tr>
+                    <tr><td>Date</td><td><?=$t->date?></td></tr>
+                    <tr><td>Time Control</td><td><?=$t->timeControlFullString?></td></tr>
+                    <tr><td><?=str_replace(' ', '&nbsp;', $t->team1name)?>&nbsp;players</td><td><?=$t->team1PlayersWithLinks?></td></tr>
+                    <tr><td><?=str_replace(' ', '&nbsp;', $t->team2name)?>&nbsp;players</td><td><?=$t->team2PlayersWithLinks?></td></tr>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h4>Best players</h4>
+                <table id="tourney-best-players">
+                    <?php
+                        /** @var PlayerScore $score */
+                        foreach($t->bestPlayers as $score) {
+                            printf("<tr><td><a href='https://lichess.org/@/%s' target='_blank'>%s</a></td><td>%s</td><td style='color: rgba(255,255,255,0.33)'>%f<td>\n",
+                                $score->player, $score->player, $score->scoreString, $score->avgOpponentScore);
+                        }
+                    ?>
+                </table>
+            </div>
         </div>
     </header>
 
@@ -38,7 +53,7 @@
     for($round = 1; $round <= $rounds; $round++) {
         print '<div class="round-number">Round '.  $round ;
         if(!$t->isRoundFinished($round)) {
-            if($round == 1 || $t->isRoundFinished($round)) {
+            if($round == 1 || $t->isRoundFinished($round-1)) {
                 print '<span class="round-playing">playing...</span>';
             }
         }

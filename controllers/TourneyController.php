@@ -19,7 +19,7 @@
     class TourneyController extends Controller
     {
         function actionIndex() {
-            return $this->render('list', ['tourneys'=>Tourney::find()->all()]);
+            return $this->render('list', ['tourneys'=>Tourney::find()->orderBy('id DESC')->all()]);
         }
 
         function actionView($slug) {
