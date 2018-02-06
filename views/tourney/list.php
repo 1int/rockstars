@@ -53,7 +53,7 @@ $lastId = $lastTourney->id;
                     </div>
                     <div class="form-group">
                         <label for="team1-players">Team #1 players:</label>
-                        <input id="team1-players" name="team1players" class="form-control" value="linto,kabacis,robotverter,GlebKl,suvkos,Tatiana91"/>
+                        <input id="team1-players" name="team1players" class="form-control" value="linto,kabacis,asuka2,GlebKl,Tatiana91"/>
                     </div>
                     <div class="form-group">
                         <label for="team1-logo">Team #1 logo:</label>
