@@ -66,6 +66,7 @@ AppAsset::register($this);
                 ],
             ],
             ['label' => 'Schedule', 'url' => ['/schedule'], 'active'=>Yii::$app->controller->id == 'schedule'],
+            ['label' => 'Tactics Tests', 'url' => ['/tactics'], 'active'=>Yii::$app->controller->id == 'tactics'],
             ['label' => 'Team Battles', 'url' => ['/tourney'], 'active'=>Yii::$app->controller->id == 'tourney'],
             ['label' => 'About', 'url' => ['/site/about'], 'active'=>Yii::$app->controller->id == 'site'],
         ],

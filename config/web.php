@@ -53,6 +53,8 @@ $config = [
                 '/tourney/update'=>'tourney/update',
                 '/tourney/<slug:[-a-zA-Z0-9]+>'=>'tourney/view',
                 '/tourneys'=>'tourney/index',
+                '/tactics/<slug:[-a-zA-Z0-9]+>'=>'tactics/level',
+                '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>'=>'tactics/test',
             ]
         ],
 

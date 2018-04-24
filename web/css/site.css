@@ -633,3 +633,65 @@ a.logout-link {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.5) !important;
 }
+
+div#tactics-level-list {
+    width: 50%;
+    margin: 50px auto 0 auto;
+}
+
+div.level-title {
+    font-size: 32px;
+    color: #333;
+}
+
+div.level-description {
+    color: #777;
+}
+
+div.tactics-level {
+    cursor: pointer;
+    padding: 10px 20px 10px 20px;
+}
+
+div.tactics-level:hover {
+    background-color: #f5f5f5;
+}
+
+a.tactics-level:hover, a.tactics-level:visited {
+    text-decoration: none;
+}
+
+div#tests-list {
+    width: 50%;
+    margin: auto;
+}
+
+a.tactics-test {
+    color: #777;
+    font-size: 13px;
+}
+
+a.tactics-test:hover, a.tactics-test:visited {
+    text-decoration: none;
+}
+
+div.tactics-test {
+    #text-align: center;
+    background-color: #f5f5f5;
+    margin-bottom: 5px;
+    font-size: 18px;
+    border-right: solid 5px white;
+    cursor: pointer;
+    position: relative;
+    transition: left 0.2s;
+    top: 0px;
+    left: 0px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+div.tactics-test:hover {
+    background-color: #eaeaea;
+    #top: -2px;
+    left: -3px;
+}
