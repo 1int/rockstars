@@ -41,8 +41,11 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
+
+    $title = Yii::$app->user->isGuest ? Yii::$app->name : 'Rockstars! @ ' . (Yii::$app->user->getIdentity()->username );
     NavBar::begin([
-        'brandLabel' => '<img id="logo" src="/images/logo2.jpg"/><a id="brand" class="navbar-brand" href="/"> ' . Yii::$app->name . '</a>',
+        'brandLabel' => '<img id="logo" src="/images/logo2.jpg"/><a id="brand" class="navbar-brand" href="/"> ' . $title . '</a>' .
+            (Yii::$app->user->isGuest ? '' : '<a href="/site/logout" class="navbar-brand logout-link"><i class="glyphicon glyphicon-log-out"></i></a>'),
         'brandUrl' => Yii::$app->homeUrl,
        //'brandImage' => '/images/logo2.jpg',
         'options' => [

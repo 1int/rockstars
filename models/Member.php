@@ -18,8 +18,9 @@ use \yii\db\ActiveRecord;
  * @property string $link
  * @property string $usernameWithLink
  * @property string $nameWithLink
+ * @property string $password
  */
-class Member extends ActiveRecord
+class Member extends ActiveRecord implements \yii\web\IdentityInterface
 {
     /**
      * @inheritdoc
@@ -78,6 +79,52 @@ class Member extends ActiveRecord
      */
     public function getNameWithLink() {
         return sprintf('<a href="http://lichess.org/@/%s" target="_blank">%s</a>', $this->username, $this->name);
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function validateAuthKey($key) {
+        return false;
+    }
+
+    public function validatePassword($p) {
+        return $this->password == md5('rockstar'.$p);
+    }
+
+    /**
+     * @param int|string $id
+     * @return Member|null
+     */
+    public static function findIdentity($id) {
+        return Member::findOne($id);
+    }
+
+    /**
+     * @param mixed $token
+     * @return Member|null
+     */
+    public static function findIdentityByAccessToken($token, $type = null) {
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthKey() {
+        return "";
+    }
+
+    /**
+     * @return string
+     */
+    public function getId() {
+        return $this->getPrimaryKey();
+    }
+
+    static function findByUsername($name) {
+        return Member::find()->where('username = :username', ['username' => $name])->one();
     }
 
 }
