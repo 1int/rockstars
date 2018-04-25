@@ -76,4 +76,36 @@ class TacticsTest extends ActiveRecord
     public function getNumber() {
         return $this->id;
     }
+
+    public function clearAnswer($a) {
+        $ret = preg_replace( '/[+!\. ]*/', '' , $a);
+        $ret = preg_replace( '/^1/', '' , $ret);
+        return strtolower($ret);
+    }
+
+    public function finish($userId) {
+        /** @var TacticsTestResult $result */
+        $result = TacticsTestResult::find()->where('test_id=:test_id AND player_id=:player_id',
+            ['player_id'=>$userId, 'test_id'=>$this->id])->one();
+
+        if( !$result->start || $result->finish ) {
+            // not started or already finished, something is wrong
+            return;
+        }
+
+        $result->finish = time();
+        $answers = TacticsAnswer::find()->where('player_id=:player_id AND test_id=:test_id',
+            ['player_id'=>$userId, 'test_id'=>$this->id])->all();
+
+        $score = 0;
+
+        /** @var TacticsAnswer $answer  */
+        foreach($answers as $answer) {
+            if( $answer->clearAnswer == strtolower($answer->position->answer) ) {
+                $score += $answer->position->points;
+            }
+        }
+        $result->score = $score;
+        $result->save();
+    }
 }

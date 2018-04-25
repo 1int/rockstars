@@ -21,6 +21,7 @@ class AppAsset extends AssetBundle
         'css/site.css', 'css/theme-lightblue.css'
     ];
     public $js = [
+        'js/tactics.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

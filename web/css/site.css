@@ -695,3 +695,138 @@ div.tactics-test:hover {
     #top: -2px;
     left: -3px;
 }
+
+div#start-test {
+    width: 100%;
+    margin-top: 150px;
+    text-align: center;
+}
+
+div#start-test span {
+    width: 150px;
+    height: 40px;
+    background-color: #f5f5f5;
+    line-height: 40px;
+    color: #777;
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    transition: left 0.2s;
+    left: 0;
+}
+
+div#start-test span:hover {
+    background-color: #eaeaea;
+    left: -3px;
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 850px !important;
+    }
+}
+
+div.countdown {
+    width: 100%;
+    margin-top: 150px;
+    text-align: center;
+    line-height: 40px;
+    color: #333;
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.9s;
+    left: 0;
+    top: 0;
+    font-size: 128px;
+}
+
+img#img-position {
+    width: 300px;
+    height: 300px;
+    display: block;
+    margin: 10px auto 10px auto;
+}
+
+div#test-container {
+    width: 300px;
+    height: 300px;
+    margin: auto;
+}
+
+div#test-container > .btn:nth-child(3) {
+    margin-left: 15px;
+}
+
+div#test-container > .btn:nth-child(4) {
+    float: right;
+}
+
+#tactics-timer {
+    font-weight: bold;
+    font-size: 20px;
+    float: right;
+    margin-top: -5px;
+    letter-spacing: 1.1px;
+}
+
+.btn-primary:hover {
+    background-color: #6ba4db;
+    border-color: #777;
+}
+
+.btn-primary {
+    background-color: #7cb5ec;
+    border-color: #999;
+}
+
+div#answer-holder {
+    background-color: #f5f5f5;
+    padding: 10px 0;
+    margin: 0 0 10px 15px;
+    text-align: center;
+}
+
+div#answer-holder input {
+    width: 75%;
+    margin: auto;
+}
+
+span#your-result {
+    font-size: 100px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: #333;
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-top: -10px;
+}
+
+h2.score-title {
+    text-align: center;
+    color: #777;
+    font-size: 18px;
+    margin-top: 0;
+}
+
+table#tactics-best td {
+    padding-right: 10px;
+}
+
+table#tactics-best td a {
+    color: #777;
+}
+
+div#score-content {
+    margin-top: 40px;
+}
+
+div#score-content table caption {
+    margin-top: 0;
+}
+
+div#tactics-comment {
+    text-align: center;
+    color: #777;
+}

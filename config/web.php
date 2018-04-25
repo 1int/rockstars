@@ -23,6 +23,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\Member',
             'enableAutoLogin' => true,
+            'loginUrl' => '/site/login'
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -55,6 +56,11 @@ $config = [
                 '/tourneys'=>'tourney/index',
                 '/tactics/<slug:[-a-zA-Z0-9]+>'=>'tactics/level',
                 '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>'=>'tactics/test',
+                '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/start'=>'tactics/start',
+                '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/answer'=>'tactics/answer',
+                '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/finish'=>'tactics/finish',
+                '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/result'=>'tactics/result',
+                '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/image<position:[0-9]+>'=>'tactics/image',
             ]
         ],
 

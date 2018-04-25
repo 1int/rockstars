@@ -127,4 +127,26 @@ class Member extends ActiveRecord implements \yii\web\IdentityInterface
         return Member::find()->where('username = :username', ['username' => $name])->one();
     }
 
+    /**
+     * @param TacticsTest $test
+     * @return bool
+     */
+    function hasFinishedTest($test) {
+        /**
+         * @var TacticsTestResult $result
+         */
+        $result = TacticsTestResult::find()->where('test_id=:test_id AND player_id=:player_id',
+            ['test_id'=>$test->id, 'player_id'=>$this->id])->one();
+        if( $result == null ) {
+            return false;
+        }
+        if( $result->finish )
+            return true;
+
+        if( $result->timePassed() ) {
+            $test->finish();
+            return true;
+        }
+    }
+
 }

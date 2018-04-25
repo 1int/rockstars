@@ -27,6 +27,9 @@ class TacticsTestResult extends ActiveRecord
         return 'tactics_results';
     }
 
+    public static function primaryKey() {
+        return array('test_id', 'player_id');
+    }
     /**
      * {@inheritdoc}
      */
@@ -69,5 +72,12 @@ class TacticsTestResult extends ActiveRecord
     public function getPlayer()
     {
         return $this->hasOne(Member::className(), ['id' => 'player_id']);
+    }
+
+    /**
+     * @return bool
+     */
+    public function timePassed() {
+        return time() - doubleval($this->start) > 60 * $this->test->level->time;
     }
 }
