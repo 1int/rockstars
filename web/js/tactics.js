@@ -4,12 +4,18 @@
 
 
     var countdown = 3;
-    var initialSeconds = 600; //TODO: get from the html
+    var initialSeconds = timeLeft;
     var timerRef;
     var currentPosition = 0;
-    const TOTAL_POSITIONS = 12; //TODO: same
+    const TOTAL_POSITIONS = 12;
 
     function startCountdown() {
+        if( isStarted ) {
+            $("#countdown").hide();
+            startTest();
+            return;
+        }
+        $.post(window.location.href.toString() + "/start");
         $("#countdown" + countdown).html(countdown).show().css({"font-size": "300px", "color":"rgba(33,33,33,0)"});
         setTimeout(nextNumber, 1000);
     }
@@ -102,7 +108,7 @@
 
     function startTest() {
         startTimer();
-        $.post(window.location.href.toString() + "/start");
+        $("#img-position").attr("src", window.location.href + "/image1");
         $("#test-container").show();
         $("#tactics-timer").show();
     }

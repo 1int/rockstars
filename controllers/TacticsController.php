@@ -38,7 +38,7 @@
             if( $level == null ) {
                 throw new NotFoundHttpException();
             }
-            return $this->render('tests-list', ['level' => $level, 'tests'=>$level->tests]);
+            return $this->render('tests-list', ['level' => $level, 'tests'=>$level->publishedTests]);
         }
 
         public function actionTest($level, $test) {
@@ -46,13 +46,28 @@
                 throw new NotFoundHttpException();
             }
             $this->loadEntities($level, $test);
+            if( !$this->test->published ) {
+                throw new NotFoundHttpException();
+            }
             /** @var Member $user */
             $user = Yii::$app->user->identity;
             if($user->hasFinishedTest($this->test)) {
                 return $this->redirect('/tactics/' . $this->level->slug . '/' . $this->test->id . '/result');
             }
 
-            return $this->render('test', ['test'=>$this->test, 'level'=>$this->level]);
+            if( $this->test->isInProgressFor($user->id) ) {
+                $result = TacticsTestResult::find()->where('test_id=:test_id AND player_id=:uid',
+                    ['test_id'=>$this->test->id, 'uid'=>$user->id])->one();
+                /** @var TacticsTestResult $result */
+                $timeLeft = intval(60 * $this->test->level->time - (time() - doubleval($result->start)));
+                $isStarted = true;
+            }
+            else {
+                $timeLeft = intval($this->test->level->time * 60);
+                $isStarted = false;
+            }
+
+            return $this->render('test', ['test'=>$this->test, 'level'=>$this->level, 'timeLeft'=>$timeLeft, 'isStarted'=>$isStarted]);
         }
 
         public function actionResult($level, $test) {
@@ -60,9 +75,21 @@
                 throw new NotFoundHttpException();
             }
             $this->loadEntities($level, $test);
+            $userId = Yii::$app->user->identity->getId();
 
 
-            return $this->render('result', ['test'=>$this->test, 'level'=>$this->level]);
+            $result = TacticsTestResult::find()->where('test_id=:test_id AND player_id=:player_id',
+                ['test_id'=>$this->test->id, 'player_id'=>$userId])->one();
+
+            if( !$result ) {
+                throw new NotFoundHttpException();
+            }
+
+            $highscores = TacticsTestResult::find()->where('test_id=:test_id',
+                 ['test_id'=>$this->test->id])->orderBy('score DESC')->all();
+
+            return $this->render('result', ['test'=>$this->test, 'level'=>$this->level, 'result'=>$result, 'highscores'=>
+                                            $highscores]);
         }
 
         public function actionImage($level, $test, $position) {
@@ -71,7 +98,8 @@
             }
             $this->loadEntities($level, $test);
 
-            if( $position == 0 ) {
+
+            if( $position == 0 || !$this->test->isInProgressFor(Yii::$app->user->getId())) {
                 $path =  Yii::getAlias('@app') . '/assets/tactics/default.jpeg';
             }
             else {
@@ -120,15 +148,20 @@
             $userId = Yii::$app->user->identity->getId();
             $text = Yii::$app->request->post("answer");
             $position_index = Yii::$app->request->post('position');
+            $position_id = 12*($this->test->number-1) + $position_index + 1;
 
-            $answer = new TacticsAnswer();
+            $answer = TacticsAnswer::find()->where('player_id=:uid AND position_id=:position_id',
+                ['uid'=>$userId, 'position_id'=>$position_id])->one();
+            if( !$answer ) {
+                $answer = new TacticsAnswer();
+                $answer->test_id = $this->test->id;
+                $answer->position_id = $position_id;
+                $answer->player_id = $userId;
+            }
             $answer->answer = $text;
-            $answer->test_id = $this->test->id;
-            $answer->player_id = $userId;
-            //TODO: refactor next line
-            $answer->position_id = 12*($this->test->number-1) + $position_index + 1;
+
             if($answer->save()) {
-                return "started";
+                return "ok";
             }
             else {
                 return "error: " . print_r($answer->getErrors(), true);

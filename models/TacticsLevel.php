@@ -15,6 +15,7 @@ use \yii\db\ActiveRecord;
  * @property string $description
  *
  * @property TacticsTest[] $tests
+ * @property TacticsTest[] $publishedTests
  */
 class TacticsLevel extends ActiveRecord
 {
@@ -58,6 +59,13 @@ class TacticsLevel extends ActiveRecord
     public function getTests()
     {
         return $this->hasMany(TacticsTest::className(), ['level_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPublishedTests() {
+        return $this->hasMany(TacticsTest::className(), ['level_id' => 'id'])->where('published = 1');
     }
 
     /**

@@ -17,7 +17,8 @@
     <div id="tests-list">
         <!--<h4 id="level-title"><?=$level->name?></h4>-->
         <?php foreach($tests as $test) { $i++; if( $i > 3 ) { break; }?>
-            <div class="col-sm-4 tactics-test"><a href="/tactics/<?=$level->slug?>/<?=$test->id?>" class="tactics-test">Test <?=$test->id?></a></div>
+            <div class="col-sm-4 tactics-test"><a href="/tactics/<?=$level->slug?>/<?=$test->id?>" class="tactics-test">
+            <?=$test->isFinishedByCurrentUser()? '<i class="glyphicon glyphicon-ok-circle"></i>' : (true ? '' : '<i class="glyphicon glyphicon-play-circle"></i>')?> Test <?=$test->id?> </a></div>
         <?php }?>
     </div>
 

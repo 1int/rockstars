@@ -11,6 +11,8 @@ use \yii\db\ActiveRecord;
  * @property int $id
  * @property string $level_id
  * @property int $number
+ * @property bool $published
+ * @property bool $allowGuest
  *
  * @property TacticsPosition[] $tacticsPositions
  * @property TacticsTestResult[] $tacticsResults
@@ -108,4 +110,57 @@ class TacticsTest extends ActiveRecord
         $result->score = $score;
         $result->save();
     }
+
+    /**
+     * @param string $userId
+     * @return bool
+     */
+    public function isFinishedBy($userId) {
+        $result = TacticsTestResult::find()->where('test_id=:test_id AND player_id=:uid',
+                ['test_id'=>$this->id, 'uid'=>$userId])->one();
+        if( !$result ) {
+            return false;
+        }
+        /** @var TacticsTestResult $result */
+        if( $result->finish ) {
+            return true;
+        }
+
+        if( $result->timePassed() ) {
+            $this->finish($userId);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isInProgressFor($userId) {
+        $result = TacticsTestResult::find()->where('test_id=:test_id AND player_id=:uid',
+            ['test_id'=>$this->id, 'uid'=>$userId])->one();
+        if( !$result ) {
+            return false;
+        }
+        /** @var TacticsTestResult $result */
+        if( $result->finish ) {
+            return false;
+        }
+
+        if( $result->timePassed() ) {
+            $this->finish($userId);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFinishedByCurrentUser() {
+        if( Yii::$app->user->isGuest ) {
+            return false;
+        }
+        return $this->isFinishedBy(Yii::$app->user->identity->getId());
+    }
+
 }

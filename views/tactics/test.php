@@ -1,13 +1,18 @@
 <?php
     use app\models\TacticsTest;
     use app\models\TacticsLevel;
+    use yii\web\View;
     /**
      * Crafted by Pavel Lint 24/04/2018
      * Mail to: pavel@1int.org
      *
-     * @var TacticsLevel $level;
-     * @var TacticsTest $test;
+     * @var TacticsLevel $level
+     * @var TacticsTest $test
+     * @var int $timeLeft
+     * @var bool $isStarted
+     * @var View $this
      */
+
 
     $this->title = 'Rockstars  — Tactics: ' . $level->name . ' #' . $test->id;
     //$this->params['breadcrumbs'][] = 'Tactics Tests';
@@ -25,7 +30,7 @@
     <p id="tactics-timer" style="display: none">10:00</p>
 
     <div id="test-container" style="display: none">
-        <img id="img-position" src="/images/default-tactics.jpeg" alt=""/>
+        <img id="img-position" src="" alt=""/>
         <div id="answer-holder">
             <input class="input form-control" id="answer" placeholder="Nf3"></input>
         </div>
@@ -43,3 +48,9 @@
         $("#btn-prev").click(previousPosition);
         $("#btn-next").click(nextPosition);
 <?php $this->registerJs(ob_get_clean()); ?>
+
+<?php ob_start();?>
+        var timeLeft = <?=$timeLeft?>;
+        var isStarted = <?=$isStarted ? 'true' : 'false'?>;
+<?php $this->registerJs(ob_get_clean(), View::POS_BEGIN); ?>
+<?php $this->registerJsFile('/js/tactics.js', ['position'=>View::POS_END]);

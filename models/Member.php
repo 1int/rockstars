@@ -144,7 +144,7 @@ class Member extends ActiveRecord implements \yii\web\IdentityInterface
             return true;
 
         if( $result->timePassed() ) {
-            $test->finish();
+            $test->finish($this->id);
             return true;
         }
     }
