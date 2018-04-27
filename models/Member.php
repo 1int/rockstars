@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use \yii\db\ActiveRecord;
+use \yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "members".
@@ -14,13 +15,15 @@ use \yii\db\ActiveRecord;
  * @property string $avatar
  * @property string $bio
  * @property int $role
- * @property int $show_in_graph
+ * @property int $show_on_graph
+ * @property int $show_on_homepage
+ * @property int $show_in_pairings
  * @property string $link
  * @property string $usernameWithLink
  * @property string $nameWithLink
  * @property string $password
  */
-class Member extends ActiveRecord implements \yii\web\IdentityInterface
+class Member extends ActiveRecord implements IdentityInterface
 {
     /**
      * @inheritdoc
@@ -36,8 +39,8 @@ class Member extends ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['name', 'username', 'bio', 'role'], 'required'],
-            [['bio'], 'string'],
+            [['name', 'username', 'role'], 'required'],
+            [['bio'], 'safe'],
             [['role', 'show_on_graph'], 'integer'],
             [['name', 'avatar'], 'string', 'max' => 255],
             [['username'], 'string', 'max' => 127],

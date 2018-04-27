@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\InviteForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -51,6 +52,25 @@ class SiteController extends Controller
         return $this->render('login', [
             'model' => $model,
         ]);
+    }
+
+    public function actionInvite() {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new InviteForm();
+        if($model->load(Yii::$app->request->post()) && $model->registerUser()) {
+            if (isset($_REQUEST['returnUrl'])) {
+                $url = $_REQUEST['returnUrl'];
+            }
+            else {
+                $url = null;
+            }
+
+            return $this->goBack($url);
+        }
+        return $this->render('invite', ['model'=>$model]);
     }
 
     public function actionLogout() {
