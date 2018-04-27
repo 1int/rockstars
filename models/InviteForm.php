@@ -24,7 +24,7 @@ class InviteForm extends Model
         return [
             ['name', 'safe'],
             [['password', 'password_repeat', 'username'], 'required'],
-            ['password', 'compare', 'compareAttribute' => 'password_repeat'],
+            ['password_repeat', 'compare', 'compareAttribute' => 'password'],
         ];
     }
 
@@ -68,5 +68,16 @@ class InviteForm extends Model
             return Yii::$app->user->login($newMember, 3600*24*30);
         }
         return false;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'password_repeat' => 'Repeat Password',
+        ];
     }
 }

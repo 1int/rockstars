@@ -21,16 +21,15 @@
         <p>Congratulations! Please fill in the form to continue.</p>
 
         <?php $form = ActiveForm::begin([
-            'id' => 'login-form',
-            'layout' => 'default',
-            'fieldConfig' => ['template' => "{label}\n{input}\n{hint}"]
-
+            'id' => 'invite-form',
+            'layout' => 'default'
         ]); ?>
 
-        <?= $form->errorSummary($model) ?>
         <?= $form->field($model, 'name')->textInput(['autofocus' => true]) ?>
         <?= $form->field($model, 'username')->textInput(['enabled'=>false, 'value'=>Yii::$app->request->get('uname'), 'disabled'=>true]) ?>
-        <?= $form->field($model, 'username')->hiddenInput(['value'=>Yii::$app->request->get('uname')]) ?>
+        <?php $field = $form->field($model, 'username')->hiddenInput(['value'=>Yii::$app->request->get('uname')])->label(false);
+              $field->enableError = false;
+              print $field;?>
 
         <?= $form->field($model, 'password')->passwordInput() ?>
 

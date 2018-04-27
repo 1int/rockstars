@@ -23,7 +23,7 @@ class Invite extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'invite';
+        return 'invites';
     }
 
     /**
