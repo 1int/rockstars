@@ -89,4 +89,6 @@ class TacticsAnswer extends ActiveRecord
     public function getClearAnswer() {
         return RockstarsApp::ClearTacticsAnswer($this->answer);
     }
+
+
 }

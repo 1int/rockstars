@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use \yii\db\ActiveRecord;
+use RockstarsApp;
 
 /**
  * This is the model class for table "tactics_positions".
@@ -13,6 +14,7 @@ use \yii\db\ActiveRecord;
  * @property int $points
  * @property int $dotdotdot
  * @property string $answer
+ * @property string $prettyAnswer
  *
  * @property TacticsTest $test
  */
@@ -59,5 +61,28 @@ class TacticsPosition extends ActiveRecord
     public function getTest()
     {
         return $this->hasOne(TacticsTest::className(), ['id' => 'test_id']);
+    }
+
+    /**
+     * @param $uid
+     * @return TacticsAnswer|null
+     */
+    public function answerForPlayer($uid) {
+        return TacticsAnswer::find()->where('player_id=:uid AND position_id=:id', ['uid'=>$uid, 'id'=>$this->id])->one();
+    }
+
+    /**
+     * @param TacticsAnswer|null $answer
+     * @return bool
+     */
+    public function isAnswerCorrect($answer) {
+        if( !$answer ) {
+            return false;
+        }
+        return RockstarsApp::ClearTacticsAnswer($answer->answer) == RockstarsApp::ClearTacticsAnswer($this->answer);
+    }
+
+    public function getPrettyAnswer() {
+        return ucfirst($this->answer);
     }
 }

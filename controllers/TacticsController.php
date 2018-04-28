@@ -43,7 +43,7 @@
 
         public function actionTest($level, $test) {
             if( Yii::$app->user->isGuest ) {
-                throw new NotFoundHttpException();
+                return Yii::$app->user->loginRequired();
             }
             $this->loadEntities($level, $test);
             if( !$this->test->published ) {
@@ -98,8 +98,9 @@
             }
             $this->loadEntities($level, $test);
 
-
-            if( $position == 0 || !$this->test->isInProgressFor(Yii::$app->user->getId())) {
+            $uid = Yii::$app->user->getId();
+            $ok = $this->test->isFinishedBy($uid) || $this->test->isInProgressFor($uid);
+            if( $position == 0 || !$ok ) {
                 $path =  Yii::getAlias('@app') . '/assets/tactics/default.jpeg';
             }
             else {

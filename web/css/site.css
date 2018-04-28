@@ -831,3 +831,73 @@ div#tactics-comment {
     text-align: center;
     color: #777;
 }
+
+div.result-answer b {
+    font-weight: normal;
+}
+
+div.result-answer {
+    color: #777;
+}
+
+div.wrong i {
+    color: red;
+    font-size: 10px;
+}
+
+div.correct i {
+    color: green;
+    font-size: 10px;
+}
+
+div.result-answer s {
+    color: red;
+}
+
+div.correct  {
+    color: #777;
+}
+
+div.result-answer p {
+    display: inline;
+}
+
+div.wrong p {
+    color: red;
+}
+
+div.wrong b {
+    margin-left: 2px;
+}
+
+div#result-answers {
+    position: relative;
+}
+
+div#result-answers img {
+    position: absolute;
+    top: -5px;
+    width: 210px;
+    height: 210px;
+    left: 120px;
+    z-index: 1;
+    padding: 5px;
+    background: white;
+}
+
+div.result-answer {
+    user-select: none;
+    cursor: pointer;
+}
+
+div.result-answer span {
+    padding: 2px 5px 2px 3px;
+}
+
+div.result-answer:hover span {
+    background-color: #f5f5f5;
+}
+
+div.result-answer.selected span{
+    background-color: #f5f5f5;
+}
