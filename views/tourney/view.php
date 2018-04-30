@@ -1,6 +1,7 @@
 <?php
     use app\models\Tourney;
     use app\models\PlayerScore;
+    use app\models\Member;
 
     /** @var $this yii\web\View */
     /** @var Tourney $tourney */
@@ -9,6 +10,9 @@
     $this->params['breadcrumbs'][] = $tourney->team1name . ' vs ' . $tourney->team2name;
     $rounds = $tourney->getTotalRounds();
     $t = $tourney;
+
+    /** @var Member $user */
+    $user = Yii::$app->user->identity;
 ?>
 
     <header id="tourney-general-info">
@@ -88,6 +92,7 @@
     }
 ?>
 
+<?php if($user && $user->canManageTourneys() ) { ?>
 <a id="btn-update-results" href="javascript: void(0)" class="admin-button">Update Results</a>
 
 
@@ -118,11 +123,10 @@
     </div>
 </div>
 
+
 <?php ob_start() ?>
 $("#btn-update-results").detach().appendTo($("ul.breadcrumb")).click(function() {
 $("#modal-update-results").modal();
 });;
 <?php $this->registerJs(ob_get_clean()); ?>
-
-
-
+<?php } ?>

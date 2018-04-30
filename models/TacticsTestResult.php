@@ -45,20 +45,6 @@ class TacticsTestResult extends ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'test_id' => 'Test ID',
-            'player_id' => 'Player ID',
-            'start' => 'Start',
-            'finish' => 'Finish',
-            'score' => 'Score',
-        ];
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getTest()

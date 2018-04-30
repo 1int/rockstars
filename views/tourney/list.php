@@ -1,9 +1,10 @@
 <?php
 use app\models\Tourney;
+use app\models\Member;
 
+/** @var $this yii\web\View */
+/** @var Tourney[] $tourneys */
 
-/* @var $this yii\web\View */
-/* @var Tourney[] $tourneys */
 $this->title = 'Rockstars! — Team Battles';
 $this->params['breadcrumbs'][] = 'Team Battles';
 
@@ -32,7 +33,11 @@ $lastId = $lastTourney->id;
         <?php } ?>
     </div>
 
-
+    <?php
+        /** @var Member $user */
+        $user = Yii::$app->getUser()->getIdentity();
+        if($user && $user->canManageTourneys()) {
+    ?>
     <a id="btn-create-tourney" href="javascript: void(0)" class="admin-button">New Team Battle</a>
 
 <!-- Modal -->
@@ -109,3 +114,4 @@ $("#btn-create-tourney").detach().appendTo($("ul.breadcrumb")).click(function() 
     $("#modal-create-tourney").modal();
 });;
 <?php $this->registerJs(ob_get_clean()); ?>
+<?php } ?>

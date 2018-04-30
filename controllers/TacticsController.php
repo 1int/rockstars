@@ -26,6 +26,7 @@
 
         public function actionIndex() {
             $levels = TacticsLevel::find()->all();
+
             return $this->render('index', ['levels'=>$levels]);
         }
 
@@ -72,7 +73,7 @@
 
         public function actionResult($level, $test) {
             if( Yii::$app->user->isGuest ) {
-                throw new NotFoundHttpException();
+                return Yii::$app->user->loginRequired();
             }
             $this->loadEntities($level, $test);
             $userId = Yii::$app->user->identity->getId();
@@ -150,6 +151,10 @@
             $text = Yii::$app->request->post("answer");
             $position_index = Yii::$app->request->post('position');
             $position_id = 12*($this->test->number-1) + $position_index + 1;
+
+            if( !$text ) {
+                return "ok";
+            }
 
             $answer = TacticsAnswer::find()->where('player_id=:uid AND position_id=:position_id',
                 ['uid'=>$userId, 'position_id'=>$position_id])->one();

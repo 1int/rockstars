@@ -50,19 +50,6 @@ class TacticsAnswer extends ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'test_id' => 'Test ID',
-            'player_id' => 'Player ID',
-            'answer' => 'Answer',
-            'timestamp' => 'Timestamp',
-        ];
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getPlayer()

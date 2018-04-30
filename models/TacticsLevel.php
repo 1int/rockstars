@@ -40,20 +40,6 @@ class TacticsLevel extends ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'slug' => 'Slug',
-            'time' => 'Time',
-            'description' => 'Description',
-        ];
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getTests()

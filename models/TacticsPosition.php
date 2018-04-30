@@ -42,20 +42,6 @@ class TacticsPosition extends ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'test_id' => 'Test ID',
-            'points' => 'Points',
-            'dotdotdot' => 'Dotdotdot',
-            'answer' => 'Answer',
-        ];
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getTest()
@@ -83,6 +69,7 @@ class TacticsPosition extends ActiveRecord
     }
 
     public function getPrettyAnswer() {
-        return ucfirst($this->answer);
+        return strlen($this->answer) == 2 ? strtolower($this->answer) :
+                ucfirst(strtolower($this->answer));
     }
 }

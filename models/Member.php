@@ -25,6 +25,10 @@ use \yii\web\IdentityInterface;
  */
 class Member extends ActiveRecord implements IdentityInterface
 {
+    const USER = 0;
+    const ADMIN = 1;
+    const MANAGER = 2;
+
     /**
      * @inheritdoc
      */
@@ -152,4 +156,7 @@ class Member extends ActiveRecord implements IdentityInterface
         }
     }
 
+    function canManageTourneys() {
+        return $this->role == self::ADMIN || $this->role = self::MANAGER;
+    }
 }

@@ -8,6 +8,7 @@
     var timerRef;
     var currentPosition = 0;
     const TOTAL_POSITIONS = 12;
+    var answers = [];
 
     function startCountdown() {
         if( isStarted ) {
@@ -72,8 +73,15 @@
             return;
         }
         submitAnswer();
-        $("input#answer").val('');
+        answers[currentPosition] = $("input#answer").val();
         currentPosition++;
+        if( answers[currentPosition] !== undefined ) {
+            $("input#answer").val(answers[currentPosition]);
+        }
+        else {
+            $("input#answer").val('');
+        }
+
         $("#btn-prev").show();
 
         if( currentPosition == TOTAL_POSITIONS - 1 ) {
@@ -99,7 +107,12 @@
         if( currentPosition == TOTAL_POSITIONS - 2 ) {
             $("#btn-next").html('Next <i class="glyphicon glyphicon-circle-arrow-right"></i>');
         }
-        $("input#answer").val('');
+        if( answers[currentPosition] !== undefined ) {
+            $("input#answer").val(answers[currentPosition]);
+        }
+        else {
+            $("input#answer").val('');
+        }
 
         //var src = $("#img-position").attr("src");
         //src = src.replace(/(\/images\/tests\/test[\d]*_)([\d]*)(.jpeg)/g, "$1" + (currentPosition+1).toString() + "$3");
