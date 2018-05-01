@@ -13,6 +13,7 @@
 
     use app\models\Tourney;
     use app\models\Match;
+    use app\models\Member;
     use app\classes\lichess\Api;
     use app\classes\lichess\Game;
 
@@ -31,13 +32,10 @@
         }
 
         function actionUpdate($id) {
-            $password = Yii::$app->request->post('admin-password');
-            if( $password != '666' && $password != 'friends' ) {
-                throw new HttpException(403, 'Wrong admin password');
-            }
-
-            if( !Yii::$app->request->isPost ) {
-                throw new HttpException(403, 'Everything is made to be broken');
+            /** @var Member $member */
+            $member = Yii::$app->user->identity;
+            if( !$member || !$member->canManageTourneys() ) {
+                return new HttpException(403, 'You cannot do this to me');
             }
 
             /** @var Tourney $tourney */
@@ -73,16 +71,15 @@
         }
 
         function actionNew() {
-            $password = Yii::$app->request->post('admin-password');
-            if( $password != '666' && $password != 'friends' ) {
-                throw new HttpException(403, 'Wrong admin password');
+            /** @var Member $member */
+            $member = Yii::$app->user->identity;
+            if( !$member || !$member->canManageTourneys() ) {
+                return new HttpException(403, 'You cannot do this to me');
             }
 
             $tourney = new Tourney();
             $tourney->setAttributes($_POST);
             $tourney->slug = str_replace(' ', '-', $tourney->slug);
-            //Konstantin_Zinkowski,nodiko500,Arevalz,DavidCecxladze,Aleksandr_Kalugin,Pirs07
-           // $tourney->date = (\DateTime::createFromFormat('d/m/Y', $tourney->date))->format('Y-m-d');
 
             $logo1 = $_FILES['logo1']['tmp_name'];
             if( $logo1 && $tourney->team2name ) {
@@ -115,7 +112,4 @@
             }
 
         }
-
-
-
     }

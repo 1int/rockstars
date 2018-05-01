@@ -130,6 +130,10 @@ class Member extends ActiveRecord implements IdentityInterface
         return $this->getPrimaryKey();
     }
 
+    /**
+     * @param $name
+     * @return Member|null
+     */
     static function findByUsername($name) {
         return Member::find()->where('username = :username', ['username' => $name])->one();
     }

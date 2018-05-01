@@ -93,40 +93,10 @@
 ?>
 
 <?php if($user && $user->canManageTourneys() ) { ?>
-<a id="btn-update-results" href="javascript: void(0)" class="admin-button">Update Results</a>
-
-
-<div id="modal-update-results" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Update Results</h4>
-            </div>
-            <form action="/tourney/update?id=<?=$t->id?>" method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="admin-password">Admin password:</label>
-                        <input id="admin-password" name="admin-password" class="form-control" type="password"/>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
-                    <button type="submit" class="btn btn-primary">Update</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-
-    </div>
-</div>
+<a id="btn-update-results" href="/tourney/update?id=<?=$t->id?>)" class="admin-button">Update Results</a>
 
 
 <?php ob_start() ?>
-$("#btn-update-results").detach().appendTo($("ul.breadcrumb")).click(function() {
-$("#modal-update-results").modal();
-});;
+$("#btn-update-results").detach().appendTo($("ul.breadcrumb"));
 <?php $this->registerJs(ob_get_clean()); ?>
 <?php } ?>

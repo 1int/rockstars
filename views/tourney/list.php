@@ -92,11 +92,6 @@ $lastId = $lastTourney->id;
                         <label for="slug">Slug:</label>
                         <input id="slug" name="slug" class="form-control" value="tourney-<?=($lastId+1)?>"/>
                     </div>
-
-                    <div class="form-group">
-                        <label for="admin-password">Admin password:</label>
-                        <input id="admin-password" name="admin-password" class="form-control" type="password"/>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />

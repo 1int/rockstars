@@ -152,4 +152,18 @@ class TacticsTest extends ActiveRecord
         return $this->isFinishedBy(Yii::$app->user->identity->getId());
     }
 
+    /**
+     * @param string $uid
+     * @return int
+     */
+    public function scoreFor($uid) {
+        $result = TacticsTestResult::find()->where('player_id = :uid AND test_id=:id',
+            ['uid'=>$uid, 'id'=>$this->id])->one();
+        if( !$result ) {
+            return 0;
+        }
+        /** @var  TacticsTestResult $result */
+        return $result->score;
+    }
+
 }
