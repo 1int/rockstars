@@ -60,6 +60,7 @@ $config = [
                 '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/answer'=>'tactics/answer',
                 '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/finish'=>'tactics/finish',
                 '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/result'=>'tactics/result',
+                '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/refresh'=>'tactics/refresh',
                 '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/image<position:[0-9]+>'=>'tactics/image',
                 '/@/<uname:[a-zA-Z0-9_]+>' => 'profile/index'
             ]

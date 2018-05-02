@@ -31,18 +31,6 @@
             foreach($tests as $test) {
                 $labels[] = 'Test ' . $test->id;
                 $scores[] = $test->scoreFor($member->id);
-                $labels[] = 'Test ' . $test->id;
-                $scores[] = $test->scoreFor($member->id);
-                $labels[] = 'Test ' . $test->id;
-                $scores[] = $test->scoreFor($member->id);
-                $labels[] = 'Test ' . $test->id;
-                $scores[] = $test->scoreFor($member->id);
-                $labels[] = 'Test ' . $test->id;
-                $scores[] = $test->scoreFor($member->id);
-                $labels[] = 'Test ' . $test->id;
-                $scores[] = $test->scoreFor($member->id);
-                $labels[] = 'Test ' . $test->id;
-                $scores[] = $test->scoreFor($member->id);
             }
 
             return $this->render('index', ['member'=>$member, 'labels'=>$labels, 'scores'=>$scores]);

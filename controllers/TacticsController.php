@@ -87,7 +87,7 @@
             }
 
             $highscores = TacticsTestResult::find()->where('test_id=:test_id',
-                 ['test_id'=>$this->test->id])->orderBy('score DESC')->all();
+                 ['test_id'=>$this->test->id])->orderBy('score DESC, finish ASC')->all();
 
             return $this->render('result', ['test'=>$this->test, 'level'=>$this->level, 'result'=>$result, 'highscores'=>
                                             $highscores]);
@@ -182,6 +182,20 @@
             $userId = Yii::$app->user->identity->getId();
             $this->test->finish($userId);
             print "ok";
+        }
+
+        public function actionRefresh($level, $test) {
+            if (Yii::$app->user->isGuest) {
+                throw new NotFoundHttpException();
+            }
+            $this->loadEntities($level, $test);
+            $results = TacticsTestResult::find()->where('test_id=:id', ['id'=>$this->test->id])->all();
+            /**
+             * @var TacticsTestResult $res
+             */
+            foreach($results as $res) {
+                $this->test->finish($res->player_id, true);
+            }
         }
 
         protected function loadEntities($level, $test) {

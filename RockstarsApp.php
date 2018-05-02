@@ -23,10 +23,10 @@
          * @return string the canonical answer (Nd7)
          */
         static public function ClearTacticsAnswer($a) {
-            $ret = preg_replace( '/[+!\. xXхХ#:]*/', '' , $a);
-            $ret = preg_replace( '/^1/', '' , $ret);
-            $ret = mb_strtolower($ret);
+            $ret = mb_strtolower($a);
             $ret = str_replace(['кр', 'с', 'к', 'ф', 'л'], ['k', 'b', 'n', 'q', 'r'], $ret);
+            $ret = preg_replace( '/[+!\. xXхХ#:]*/', '' , $ret);
+            $ret = preg_replace( '/^1/', '' , $ret);
             return $ret;
         }
     }

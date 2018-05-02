@@ -74,17 +74,19 @@ class TacticsTest extends ActiveRecord
         return strtolower($ret);
     }
 
-    public function finish($userId) {
+    public function finish($userId, $refresh = false) {
         /** @var TacticsTestResult $result */
         $result = TacticsTestResult::find()->where('test_id=:test_id AND player_id=:player_id',
             ['player_id'=>$userId, 'test_id'=>$this->id])->one();
 
-        if( !$result->start || $result->finish ) {
+        if( !$result->start || ($result->finish && !$refresh) ) {
             // not started or already finished, something is wrong
             return;
         }
 
-        $result->finish = time();
+        if( !$refresh ) {
+            $result->finish = time();
+        }
         $answers = TacticsAnswer::find()->where('player_id=:player_id AND test_id=:test_id',
             ['player_id'=>$userId, 'test_id'=>$this->id])->all();
 
