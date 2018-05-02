@@ -14,6 +14,7 @@
 
     use yii\web\Controller;
     use yii\web\NotFoundHttpException;
+    use yii\db\Expression;
     use Yii;
 
     class TacticsController extends Controller {
@@ -86,8 +87,8 @@
                 throw new NotFoundHttpException();
             }
 
-            $highscores = TacticsTestResult::find()->where('test_id=:test_id',
-                 ['test_id'=>$this->test->id])->orderBy('score DESC, finish ASC')->all();
+            $highscores = TacticsTestResult::find()->where('test_id=:test_id AND finish IS NOT NULL',
+                 ['test_id'=>$this->test->id])->orderBy([new Expression('score DESC, finish - start ASC')])->all();
 
             return $this->render('result', ['test'=>$this->test, 'level'=>$this->level, 'result'=>$result, 'highscores'=>
                                             $highscores]);
