@@ -163,4 +163,8 @@ class Member extends ActiveRecord implements IdentityInterface
     function canManageTourneys() {
         return $this->role == self::ADMIN || $this->role = self::MANAGER;
     }
+
+    function canInputAnswers() {
+        return $this->role == self::ADMIN || $this->username == 'marisha';
+    }
 }
