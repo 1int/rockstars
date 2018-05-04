@@ -20,8 +20,8 @@
         'options' => [
             'legend'=> ['enabled' => false],
             'chart' => [
-                'height' => 150,
-                'width' => 400,
+                'height' => 75,
+                'width' => 200,
             ],
             'title' => false,
             'yAxis' => [

@@ -31,8 +31,8 @@
                 <?php for( $i = 0; $i < 12; $i++) { ?>
                     <tr>
                         <td># <?=($i+1)?></td>
-                        <td><input name="answers[]" class="form-control" type="text" style="width: 80px" placeholder="Nf3"/></td>
-                        <td><input name="points[]" class="form-control" type="text" style="width: 80px" placeholder="3"/></td>
+                        <td><input name="answers[]" class="form-control" type="text" style="width: 80px"/></td>
+                        <td><input name="points[]" class="form-control" type="text" style="width: 80px"/></td>
                         <td><input name="dot<?=$i?>" type="checkbox" class="form-check-input"/></td>
                         <td></td>
                     </tr>

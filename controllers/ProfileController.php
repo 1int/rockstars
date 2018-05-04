@@ -30,7 +30,21 @@
             $labels = [];
             foreach($tests as $test) {
                 $labels[] = 'Test ' . $test->id;
-                $scores[] = $test->scoreFor($member->id);
+                $scores[] = rand(2, 25);
+                $labels[] = 'Test ' . $test->id;
+                $scores[] = rand(2, 25);
+                $labels[] = 'Test ' . $test->id;
+                $scores[] = rand(2, 25);
+                $labels[] = 'Test ' . $test->id;
+                $scores[] = rand(2, 25);
+                $labels[] = 'Test ' . $test->id;
+                $scores[] = rand(2, 25);
+                $labels[] = 'Test ' . $test->id;
+                $scores[] = rand(2, 25);
+                $labels[] = 'Test ' . $test->id;
+                $scores[] = rand(2, 25);
+                $labels[] = 'Test ' . $test->id;
+                $scores[] =rand(2, 25);
             }
 
             return $this->render('index', ['member'=>$member, 'labels'=>$labels, 'scores'=>$scores]);
