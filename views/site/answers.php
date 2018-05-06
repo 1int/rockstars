@@ -7,7 +7,7 @@
     $this->title = 'Rockstars! — Test answers';
     $this->params['breadcrumbs'][] = 'Test answers';
 ?>
-    <form method="post" action="/marina">
+    <form method="post" action="/marisha">
         <div class="form-group">
             <label for="admin-password">Test number:</label>
             <input id="test_id" name="test_id" class="form-control" type="text"/>
