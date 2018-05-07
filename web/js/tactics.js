@@ -52,7 +52,6 @@
         if( initialSeconds == 0 ) {
             finish();
             clearInterval(timerRef);
-            return;
         }
     }
 
@@ -67,7 +66,6 @@
             $("#btn-prev").hide();
             var a = $("input#answer").val();
             $.post(window.location.href.toString() + "/answer", {answer: a, position: currentPosition}).done(function() {
-                debugger;
                 finish();
             });
             return;
@@ -88,11 +86,7 @@
             $("#btn-next").html("Finish");
         }
 
-        //
-       // var src = $("#img-position").attr("src");
-       // src = src.replace(/(\/images\/tests\/test[\d]*_)([\d]*)(.jpeg)/g, "$1" + (currentPosition+1).toString() + "$3");
         $("#img-position").attr("src", window.location.href + "/image" + (currentPosition+1).toString());
-
     }
 
     function previousPosition() {
@@ -114,8 +108,6 @@
             $("input#answer").val('');
         }
 
-        //var src = $("#img-position").attr("src");
-        //src = src.replace(/(\/images\/tests\/test[\d]*_)([\d]*)(.jpeg)/g, "$1" + (currentPosition+1).toString() + "$3");
         $("#img-position").attr("src", window.location.href + "/image" + (currentPosition+1).toString());
     }
 

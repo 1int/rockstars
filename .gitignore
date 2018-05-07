@@ -47,3 +47,4 @@ phpunit.phar
 views/doctors
 controllers/DoctorsController.php
 *.csv
+/web/images/avatars/*

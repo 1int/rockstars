@@ -902,9 +902,14 @@ div.result-answer.selected span{
     background-color: #f5f5f5;
 }
 
-div#avatar img {
-    width: 180px;
+div#avatar {
+    position: relative;
     margin: 0 10px 0 10px;
+}
+
+img#avatar-image {
+    width: 180px;
+    height: 180px;
     border: 1px solid #ddd;
 }
 
@@ -934,11 +939,10 @@ div#profile-right-column {
 
 h2.section-title {
     margin: 30px 0 0 0;
-    padding: 0;
     font-size: 16px;
     color: #333;
     font-weight: 400;
-    padding-bottom: 5px;
+    padding: 0 0 5px 0;
     border-bottom: 1px solid #ddd;
 }
 
@@ -952,4 +956,58 @@ h2#profile-title {
 div#profile-description {
     color: #777;
     font-size: 14px;
+    position: relative;
+}
+
+div#profile-description .edit-link {
+    visibility: hidden;
+}
+
+div#profile-description.owner:hover .edit-link {
+    visibility: visible;
+}
+
+div#avatar .edit-link {
+    visibility: hidden;
+}
+
+div#avatar.owner:hover .edit-link {
+    visibility: visible;
+    right: 2px;
+    top: 2px;
+}
+
+
+.edit-link::after {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 100;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    content: "\e065";
+    color: #7cb5ec;
+    font-size: 16px;
+}
+
+.edit-link {
+    position: absolute;
+    top: 0;
+    right: -25px;
+}
+
+.owner {
+    cursor: pointer;
+}
+
+input#avatar-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
