@@ -24,11 +24,11 @@ $("#avatar-form").submit(function(e) {
 });
 
 
-$("#profile-description").click(divClicked);
+$("#profile-description.owner").click(divClicked);
 
 // This is from Stackoverflow: https://stackoverflow.com/questions/2441565/how-do-i-make-a-div-element-editable-like-a-textarea-when-i-click-it
 function divClicked() {
-    var divHtml = $(this).html().replace('<span class="edit-link"></span>', '').replace('(click to edit)', '').trim();
+    var divHtml = $(this).html().replace('<span class="edit-link"></span>', '').replace('(click to edit your bio)', '').trim();
     var width = $(this).width();
     var height = $(this).height();
     var editableText = $("<textarea />");
@@ -37,7 +37,7 @@ function divClicked() {
     editableText.val(divHtml.trim());
     editableText.eq(0).scrollTop = 0;
     $(this).replaceWith(editableText);
-   // editableText.focus();
+    editableText.focus();
     setCaretPosition('profile-description-edit', 0);
     editableText.blur(editableTextBlurred);
 }

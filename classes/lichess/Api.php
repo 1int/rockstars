@@ -59,4 +59,30 @@
             return null;
         }
 
+        /**
+         * @param string[] $players
+         * @return Player[]
+         */
+        public static function getPlayersInfo($players) {
+
+            $url = sprintf("%s/users", self::APIURL);
+            $curl = new curl\Curl();
+            $curl->setRawPostData(implode(',', $players));
+
+            $response = $curl->post($url);
+            if( $curl->errorCode == null ) {
+                $json = JSON::decode($response);
+                $ret = [];
+                foreach( $json as $p ) {
+                    $ret[] = new Player($p);
+                }
+                return $ret;
+            }
+            else {
+                // TODO: error handling
+                var_dump($curl->errorText);
+                return [];
+            }
+        }
+
     }

@@ -8,6 +8,8 @@
     use miloschuman\highcharts\Highcharts;
     use yii\web\View;
     use yii\web\JqueryAsset;
+    use app\classes\lichess\Api;
+    use app\classes\lichess\Player;
 
     /* @var $this yii\web\View */
     /* @var $member Member */
@@ -22,6 +24,8 @@
     }
 
     $ownerClass = $owner ? ' class="owner"' : '';
+
+    $player = Api::getPlayersInfo([$member->username])[0];
 ?>
     <div id="profile-wrapper">
         <div id="profile-left-column">
@@ -35,6 +39,14 @@
                 <?php } ?>
 
                 <span class="edit-link"></span>
+                <div>
+                    <h2>Ratings</h2>
+                    <ul>
+                        <li>Blitz: <?=$player->getBlitzRating()?></li>
+                        <li>Bullet: <?=$player->getBulletRating()?></li>
+                        <li>Rapid: <?=$player->getRapidRating()?></li>
+                    </ul>
+                </div>
             </div>
             <div id="tactics-chart" >
                 <?= Highcharts::widget([
@@ -73,7 +85,7 @@
         <div id="profile-right-column">
             <h2 id="profile-title"><?=$member->name . ' (@' . $member->username . ')'?></h2>
             <div id="profile-description" <?=$ownerClass?>>
-                <?=$member->bio != '' ? $member->bio : '(click to edit)'?>
+                <?=$member->bio != '' ? $member->bio : ($owner ? '(click to edit your bio)':'')?>
                 <span class="edit-link"></span>
             </div>
             <div id="notable-games">
