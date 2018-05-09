@@ -5,6 +5,9 @@ namespace app\models;
 use Yii;
 use \yii\db\ActiveRecord;
 use \yii\web\IdentityInterface;
+use \app\classes\lichess\Player;
+use yii\helpers\Json;
+
 
 /**
  * This is the model class for table "members".
@@ -22,6 +25,10 @@ use \yii\web\IdentityInterface;
  * @property string $usernameWithLink
  * @property string $nameWithLink
  * @property string $password
+ * @property int $rating_blitz
+ * @property int $rating_bullet
+ * @property int $rating_rapid
+ * @property string $lichess_profile
  */
 class Member extends ActiveRecord implements IdentityInterface
 {
@@ -166,5 +173,16 @@ class Member extends ActiveRecord implements IdentityInterface
 
     function canInputAnswers() {
         return $this->role == self::ADMIN || $this->username == 'marisha';
+    }
+
+    /**
+     * @param Player $p
+     */
+    public function updateLichessData($p) {
+        $this->rating_blitz = intval($p->getBlitzRating());
+        $this->rating_bullet = intval($p->getBulletRating());
+        $this->rating_rapid = intval($p->getRapidRating());
+        $this->lichess_profile = JSON::encode($p);
+        $this->save();
     }
 }

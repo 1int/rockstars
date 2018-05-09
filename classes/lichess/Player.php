@@ -44,6 +44,14 @@
                     $this->{$key} = $value;
                 }
             }
+            $profile = $json['profile'];
+            if( $profile ) {
+                foreach ($profile as $key => $value) {
+                    if (property_exists($this, $key)) {
+                        $this->{$key} = $value;
+                    }
+                }
+            }
 
             try {
                 foreach($json['perfs'] as $k => $v) {

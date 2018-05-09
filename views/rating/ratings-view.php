@@ -30,6 +30,7 @@ use miloschuman\highcharts\Highstock;
 
             <?= Highstock::widget([
                 'options' => [
+                    'credits' => ['enabled' => false],
                     'title' => ['text' => 'Rating history'],
                     'yAxis' => [
                         'title' => ['text' => 'Rating']
