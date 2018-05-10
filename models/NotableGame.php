@@ -59,4 +59,14 @@ class NotableGame extends ActiveRecord
     {
         return $this->hasOne(Member::className(), ['id' => 'player_id']);
     }
+
+
+    public function getIframe() {
+        if( $this->lichess_id  == '' || $this->lichess_id == null ) {
+            return "<div class='match-not-played other-matches-are-finished'>×</div>";
+        }
+
+        return sprintf("<iframe width='%s' height='%s' frameborder=0 src='https://lichess.org/embed/%s?theme=auto&bg=auto'
+    ></iframe>", '345', '243', $this->lichess_id);
+    }
 }

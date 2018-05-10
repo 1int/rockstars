@@ -29,6 +29,8 @@ use yii\helpers\Json;
  * @property int $rating_bullet
  * @property int $rating_rapid
  * @property string $lichess_profile
+ *
+ * @property NotableGame[] $notableGames
  */
 class Member extends ActiveRecord implements IdentityInterface
 {
@@ -184,5 +186,12 @@ class Member extends ActiveRecord implements IdentityInterface
         $this->rating_rapid = intval($p->getRapidRating());
         $this->lichess_profile = JSON::encode($p);
         $this->save();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotableGames() {
+        return $this->hasMany(NotableGame::className(), ['player_id' => 'id']);
     }
 }

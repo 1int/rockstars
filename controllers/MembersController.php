@@ -81,7 +81,7 @@
                     if( isset($matches[1]) ) {
                         $game = new NotableGame();
                         $game->player_id = $member->id;
-                        $game->lichess_id = $matches[1];
+                        $game->lichess_id = substr($matches[1], 0, 8);
                         if( !$game->save() ){
                             throw new HttpException(400, 'Failed to save game');
                         }
