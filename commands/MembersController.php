@@ -17,7 +17,7 @@
             $members = Member::find()->all();
             $uids = array_map( function($e){
                 /** @var Member $e */
-                return $e->username;
+                return strtolower($e->username);
             }, $members);
 
             $players = Api::getPlayersInfo($uids);

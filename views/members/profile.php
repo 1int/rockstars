@@ -25,8 +25,10 @@
 
     $ownerClass = $owner ? ' class="owner"' : '';
 
-    $player = Api::getPlayersInfo([$member->username])[0];
-    $member->updateLichessData($player);
+    $member->updateLichessData(Api::getPlayersInfo([$member->username])[0]);
+
+
+    //https://lichess.org/Ot9yJnMlMY4n
 ?>
     <div id="profile-wrapper">
         <div id="profile-left-column">
@@ -43,11 +45,11 @@
             <div>
                 <h2 class="left-column-title">Ratings</h2>
                 <span class="rating rating-title">Blitz</span>
-                <span class="rating rating-value"><?=$player->getBlitzRating()?></span>
+                <span class="rating rating-value"><?=$member->rating_blitz?></span>
                 <span class="rating rating-title">Bullet</span>
-                <span class="rating rating-value"><?=$player->getBulletRating()?></span>
+                <span class="rating rating-value"><?=$member->rating_bullet?></span>
                 <span class="rating rating-title">Rapid</span>
-                <span class="rating rating-value"><?=$player->getRapidRating()?></span>
+                <span class="rating rating-value"><?=$member->rating_rapid?></span>
             </div>
             <div>
                 <h2 class="left-column-title">Tactics Progress</h2>
@@ -103,7 +105,7 @@
                 <span class="edit-link"></span>
             </div>
             <div id="notable-games">
-                <h2 class="section-title">Notable games</h2>
+                <h2 class="section-title">Notable games <span class="button-add" id="add-game" data-toggle="modal" data-target="#modal-add-game"><i class="glyphicon glyphicon-plus"></i></span></h2>
             </div>
             <div id="upcoming-events">
                 <h2 class="section-title">Upcoming events by <?=$member->name?></h2>
@@ -114,4 +116,30 @@
         </div>
     </div>
 
-    <?php $this->registerJsFile('/js/profile.js', ['position'=>View::POS_END, 'depends' => [JqueryAsset::className()]]); ?>
+
+    <!-- Modal -->
+    <div id="modal-add-game" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add new notable game</h4>
+                </div>
+                <form action="" method="POST" id="frm-add-game">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="gameurl">Lichess game url:</label>
+                            <input id="gameurl" name="gameurl" class="form-control" placeholder="https://lichess.org/Ot9yJnMl"/>
+                        </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
+                        <button type="button" class="btn btn-primary" id="btn-add-game">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<?php $this->registerJsFile('/js/profile.js', ['position'=>View::POS_END, 'depends' => [JqueryAsset::className()]]); ?>

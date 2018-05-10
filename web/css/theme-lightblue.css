@@ -24,3 +24,17 @@
     background-color: #6ba4db;
 }
 
+.btn-primary:focus, .btn-primary.focus {
+    background-color: #6ba4db !important;
+    border-color: #777 !important;
+}
+
+.btn-primary:hover {
+    background-color: #6ba4db;
+    border-color: #777;
+}
+
+.btn-primary {
+    background-color: #7cb5ec;
+    border-color: #999;
+}

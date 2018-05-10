@@ -13,6 +13,7 @@
     use yii\web\NotFoundHttpException;
     use app\models\TacticsLevel;
     use yii\web\UploadedFile;
+    use app\models\NotableGame;
 
     class MembersController extends Controller
     {
@@ -72,6 +73,22 @@
                 if( $bio ) {
                     $member->bio = strip_tags($bio, '<br><b><s><u><i>');
                     $member->save();
+                }
+                $gameurl = Yii::$app->request->post('gameurl');
+                if( $gameurl ) {
+                    $matches = [];
+                    preg_match('/https:\/\/lichess.org\/([a-zA-Z0-9]{7,20})/', $gameurl, $matches );
+                    if( isset($matches[1]) ) {
+                        $game = new NotableGame();
+                        $game->player_id = $member->id;
+                        $game->lichess_id = $matches[1];
+                        if( !$game->save() ){
+                            throw new HttpException(400, 'Failed to save game');
+                        }
+                    }
+                    else {
+                        throw new HttpException(400, 'Invalid lichess game url');
+                    }
                 }
 
                 return "ok";

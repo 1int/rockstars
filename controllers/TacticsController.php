@@ -88,7 +88,9 @@
             }
 
             $highscores = TacticsTestResult::find()->where('test_id=:test_id AND finish IS NOT NULL',
-                 ['test_id'=>$this->test->id])->orderBy([new Expression('score DESC, finish - start ASC')])->all();
+                 ['test_id'=>$this->test->id])->orderBy([
+                new Expression('score DESC, finish - start ASC,'.
+                    '(SELECT AVG(score) from tactics_results as b where player_id = b.player_id) asc')])->all();
 
             return $this->render('result', ['test'=>$this->test, 'level'=>$this->level, 'result'=>$result, 'highscores'=>
                                             $highscores]);

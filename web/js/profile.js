@@ -81,3 +81,24 @@ function setCaretPosition(elemId, caretPos) {
     }
 }
 
+$("#btn-add-game").click(function() {
+    var $input = $("input[name=gameurl]");
+    var $form = $("#frm-add-game");
+    var url = $input.val();
+    if( url.trim() != "" ) {
+        $.ajax({
+            type: "POST",
+            url: window.location.href,
+            data: {gameurl: url},
+            error: function(xhr, status, error) {
+                alert(xhr.responseText);
+            }
+        });
+        $("#modal-add-game").modal('hide');
+        $input.val('');
+
+        //TODO: add game locally
+    }
+
+});
+

@@ -17,7 +17,7 @@
         public $title;
         public $online;
         public $playing;
-        public $sreaming;
+        public $streaming;
         public $createdAt;
         public $seenAt;
         public $bio;
@@ -44,11 +44,14 @@
                     $this->{$key} = $value;
                 }
             }
-            $profile = $json['profile'];
-            if( $profile ) {
-                foreach ($profile as $key => $value) {
-                    if (property_exists($this, $key)) {
-                        $this->{$key} = $value;
+
+            if( isset($json['profile']) ) {
+                $profile = $json['profile'];
+                if ($profile) {
+                    foreach ($profile as $key => $value) {
+                        if (property_exists($this, $key)) {
+                            $this->{$key} = $value;
+                        }
                     }
                 }
             }
