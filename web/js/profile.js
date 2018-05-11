@@ -83,13 +83,14 @@ function setCaretPosition(elemId, caretPos) {
 
 $("#btn-add-game").click(function() {
     var $input = $("input[name=gameurl]");
-    var $form = $("#frm-add-game");
+    var $text  = $("textarea[name=gamedesc]");
     var url = $input.val();
-    if( url.trim() != "" ) {
+    var text = $text.val();
+    if( url.trim() != "" && text.trim() != "" ) {
         $.ajax({
             type: "POST",
             url: window.location.href,
-            data: {gameurl: url},
+            data: {gameurl: url, gamedesc: text},
             error: function(xhr, status, error) {
                 alert(xhr.responseText);
             }

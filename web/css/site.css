@@ -1073,32 +1073,38 @@ div.notable-game {
     width: 214px;
     height: 214px;
     overflow: hidden;
-    display: inline-block;
-    margin-left: 20px;
+    #display: inline-block;
+    #margin-left: 20px;
 }
 
 div.notable-game-container {
     display: inline-block;
-    padding: 15px 0 0 30px;
-    cursor: pointer;
+    padding: 15px 0 0 0;
+    #cursor: pointer;
     color: #333;
-
+    margin-right: 10px;
 }
 
 span.nb-description {
     color: #777;
-    font-style: italic;
-    height: 214px;
+    #font-style: italic;
+    #height: 214px;
     display: inline-block;
     width: 224px;
     overflow: scroll;
-    float: left;
-    text-align: justify;
-    padding: 7px;
-    background-color: #f5f5f5;
+    #float: left;
+    #text-align: justify;
+    padding: 3px 7px;
+    #background-color: #f5f5f5;
 }
 
-span.nb-description::first-letter {
-    color: #333;
-    font-size: 21px;
+div#notable-games-container {
+    margin-left: 25px;
+    margin-top: 20px;
+}
+
+div#notable-games-container span:first-child {
+    display: block;
+    margin: 0;
+    color: #ccc;
 }
