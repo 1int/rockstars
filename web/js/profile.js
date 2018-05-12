@@ -100,6 +100,21 @@ $("#btn-add-game").click(function() {
 
         //TODO: add game locally
     }
+});
 
+$("#btn-close").click(function() {
+    if( window.confirm("Are you sure?") ) {
+        var $game = $(this).closest('.notable-game-container');
+        var game_id = $game.attr('data-gid');
+        $.ajax({
+            type: "DELETE",
+            url: window.location.href,
+            data: {gid: game_id},
+            error: function(xhr, status, error) {
+                alert(xhr.responseText);
+            }
+        });
+        $game.remove();
+    }
 });
 

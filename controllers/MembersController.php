@@ -94,6 +94,13 @@
                 return "ok";
             }
 
+            if( Yii::$app->request->isDelete ) {
+                $id = Yii::$app->request->bodyParams['gid'];
+                $game = NotableGame::findOne($id);
+                $game->delete();
+                return "ok";
+            }
+
             return $this->render('profile', ['member'=>$member, 'labels'=>$labels, 'scores'=>$scores]);
         }
     }

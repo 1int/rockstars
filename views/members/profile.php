@@ -25,10 +25,7 @@
 
     $ownerClass = $owner ? ' class="owner"' : '';
 
-    $member->updateLichessData(Api::getPlayersInfo([$member->username])[0]);
-
-
-    //https://lichess.org/Ot9yJnMlMY4n
+    //$member->updateLichessData(Api::getPlayersInfo([$member->username])[0]);
 ?>
     <div id="profile-wrapper">
         <div id="profile-left-column">
@@ -111,13 +108,14 @@
                     <span>Click the game and use ← → keys to navigate</span>
                     <?php $i = 0; foreach($member->notableGames as $game) {
                             /** @var NotableGame $game */ $i++; ?>
-                        <div class="notable-game-container">
+                        <div class="notable-game-container <?=$owner?"owner":""?>" data-gid="<?=$game->id?>">
                             <div class="notable-game">
                                   <?=$game->getIframe()?>
                             </div>
                             <span class="nb-description">
                                 I'm losing my favourite game You're losing your mind again
                             </span>
+                            <i id="btn-close" class="glyphicon glyphicon-remove"></i>
                         </div>
 
                     <?php /*if( $i % 2 == 0 ) print "<br/>"; */ } ?>

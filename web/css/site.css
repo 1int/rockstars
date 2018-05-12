@@ -1083,6 +1083,7 @@ div.notable-game-container {
     #cursor: pointer;
     color: #333;
     margin-right: 10px;
+    position: relative;
 }
 
 span.nb-description {
@@ -1107,4 +1108,18 @@ div#notable-games-container span:first-child {
     display: block;
     margin: 0;
     color: #ccc;
+}
+
+div.notable-game-container i {
+    visibility: hidden;
+}
+
+div.notable-game-container.owner:hover i {
+    position: absolute;
+    right: -13px;
+    color: #6ba4db;
+    top: 14px;
+    font-size: 19px;
+    cursor: pointer;
+    visibility: visible;
 }
