@@ -102,7 +102,7 @@
                 <span class="edit-link"></span>
             </div>
             <div id="notable-games">
-                <h2 class="section-title">Notable games <span class="button-add" id="add-game" data-toggle="modal" data-target="#modal-add-game"><i class="glyphicon glyphicon-plus"></i></span></h2>
+                <h2 class="section-title">Notable games <span class="button-add <?=$owner?'owner':''?>" id="add-game" data-toggle="modal" data-target="#modal-add-game"><i class="glyphicon glyphicon-plus"></i></span></h2>
                 <div id="notable-games-container">
                     <?php if( count($member->notableGames) > 0 ) { ?>
                     <span>Click the game and use ← → keys to navigate</span>
@@ -113,9 +113,9 @@
                                   <?=$game->getIframe()?>
                             </div>
                             <span class="nb-description">
-                                I'm losing my favourite game You're losing your mind again
+                                <?=$game->description?>
                             </span>
-                            <i id="btn-close" class="glyphicon glyphicon-remove"></i>
+                            <i class="btn-close glyphicon glyphicon-remove"></i>
                         </div>
 
                     <?php /*if( $i % 2 == 0 ) print "<br/>"; */ } ?>

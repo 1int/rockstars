@@ -87,14 +87,14 @@ class Member extends ActiveRecord implements IdentityInterface
      * @return string
      */
     public function getUsernameWithLink() {
-        return sprintf('<a href="http://lichess.org/@/%s" target="_blank">%s</a>', $this->username, $this->username);
+        return sprintf('<a href="/@/%s" target="_blank">%s</a>', $this->username, $this->username);
     }
 
     /**
      * @return string
      */
     public function getNameWithLink() {
-        return sprintf('<a href="http://lichess.org/@/%s" target="_blank">%s</a>', $this->username, $this->name);
+        return sprintf('<a href="/@/%s" target="_blank">%s</a>', $this->username, $this->name);
     }
 
     /**

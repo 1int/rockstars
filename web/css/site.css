@@ -1059,7 +1059,7 @@ span#add-game {
     visibility: hidden;
 }
 
-div#notable-games h2:hover span#add-game {
+div#notable-games h2:hover span.owner#add-game {
     visibility: visible;
 }
 
@@ -1079,10 +1079,10 @@ div.notable-game {
 
 div.notable-game-container {
     display: inline-block;
-    padding: 15px 0 0 0;
+    padding: 15px 10px 0 0;
     #cursor: pointer;
     color: #333;
-    margin-right: 10px;
+    margin-right: 0px;
     position: relative;
 }
 
@@ -1097,6 +1097,7 @@ span.nb-description {
     #text-align: justify;
     padding: 3px 7px;
     #background-color: #f5f5f5;
+    height: 60px;
 }
 
 div#notable-games-container {
@@ -1112,14 +1113,14 @@ div#notable-games-container span:first-child {
 
 div.notable-game-container i {
     visibility: hidden;
-}
-
-div.notable-game-container.owner:hover i {
     position: absolute;
-    right: -13px;
+    right: 0;
     color: #6ba4db;
     top: 14px;
     font-size: 19px;
     cursor: pointer;
+}
+
+div.notable-game-container.owner:hover i {
     visibility: visible;
 }

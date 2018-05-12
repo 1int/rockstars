@@ -86,23 +86,48 @@ $("#btn-add-game").click(function() {
     var $text  = $("textarea[name=gamedesc]");
     var url = $input.val();
     var text = $text.val();
+
+
+
+
     if( url.trim() != "" && text.trim() != "" ) {
+        var regex = /https:\/\/lichess.org\/([a-zA-Z0-9]{7,20})/g;
+        var match = regex.exec(url);
+        var id = match[1];
+        if( !id ) {
+            alert("Invalid game url");
+            return;
+        }
+        else {
+            id = id.substr(0, 8);
+        }
         $.ajax({
             type: "POST",
             url: window.location.href,
             data: {gameurl: url, gamedesc: text},
             error: function(xhr, status, error) {
                 alert(xhr.responseText);
+            },
+            success: function(theid, status, error) {
+                var template = '<div class="notable-game-container owner" data-gid="' + theid + '">' +
+                    '<div class="notable-game">' +
+                    '<iframe width="345" height="243" frameborder="0" src="https://lichess.org/embed/' + id + '?theme=auto&amp;bg=auto"></iframe></div>' +
+                    '<span class="nb-description">' + text +
+                    '</span>' +
+                    '<i class="btn-close glyphicon glyphicon-remove"></i>' +
+                    '</div>';
+
+                $("#notable-games-container").append(template);
             }
         });
         $("#modal-add-game").modal('hide');
         $input.val('');
 
-        //TODO: add game locally
+
     }
 });
 
-$("#btn-close").click(function() {
+$(document).on('click', '.btn-close', function() {
     if( window.confirm("Are you sure?") ) {
         var $game = $(this).closest('.notable-game-container');
         var game_id = $game.attr('data-gid');

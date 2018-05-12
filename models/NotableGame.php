@@ -12,6 +12,7 @@ use  \yii\db\ActiveRecord;
  * @property int $player_id
  * @property string $lichess_id
  * @property string $created
+ * @property string $description
  *
  * @property Member $player
  */
@@ -35,6 +36,7 @@ class NotableGame extends ActiveRecord
             [['player_id'], 'integer'],
             [['created'], 'safe'],
             [['lichess_id'], 'string', 'max' => 20],
+            [['description'], 'string'],
             [['player_id'], 'exist', 'skipOnError' => true, 'targetClass' => Member::className(), 'targetAttribute' => ['player_id' => 'id']],
         ];
     }
