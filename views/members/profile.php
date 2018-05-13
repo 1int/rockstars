@@ -10,12 +10,14 @@
     use yii\web\JqueryAsset;
     use app\classes\lichess\Api;
     use app\models\NotableGame;
+    use app\models\Event;
 
     /* @var $this yii\web\View */
     /* @var $member Member */
     /** @var array $scores */
     /** @var array $labels */
     /** @var $this View */
+    /** @var Event[] $events */
 
     $this->title = $member->name . ' @ Rockstars!';
     $owner = false;
@@ -133,6 +135,29 @@
             </div>
             <div id="upcoming-events">
                 <h2 class="section-title">Upcoming events by <?=$member->name?></h2>
+                <div id="upcoming-events-list">
+                    <?php if(count($events) == 0) { ?>
+                        <span>No events</span>
+                    <?php } else  {
+                        foreach($events as $e) {
+                            /** @var Event $e */
+                        ?>
+                            <div class="upcoming-event">
+                                <div class="upcoming-event-date">
+                                    <p><?=$e->dateOfMonth?></p>
+                                    <p><?=$e->month?></p>
+                                    <comment></comment>
+                                </div>
+                                <img src="<?=$e->image?>" alt="<?=$e->name?>">
+
+                                <div class="upcoming-event-info">
+                                    <h2><?=$e->name?></h2>
+                                    <span><?=$e->dayOfWeek?>, <a href="http://www.thetimezoneconverter.com/?t=<?=$e->startTime?>&amp;tz=Moscow" title="See the time in your local timezone" target="_blank"><?=$e->startTime?></a>
+                                       </span>
+                                </div>
+                            </div>
+                    <?php }}?>
+                </div>
             </div>
             <div id="private-contacts">
                 <h2 class="section-title">Private contacts</h2>

@@ -14,6 +14,7 @@
     use app\models\TacticsLevel;
     use yii\web\UploadedFile;
     use app\models\NotableGame;
+    use app\models\Event;
 
     class MembersController extends Controller
     {
@@ -106,6 +107,7 @@
                 return "ok";
             }
 
-            return $this->render('profile', ['member'=>$member, 'labels'=>$labels, 'scores'=>$scores]);
+            $events = Event::GetUpcomingEventsList($member->id, 4);
+            return $this->render('profile', ['member'=>$member, 'labels'=>$labels, 'scores'=>$scores, 'events'=>$events]);
         }
     }

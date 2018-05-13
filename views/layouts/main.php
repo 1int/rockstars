@@ -43,10 +43,11 @@ AppAsset::register($this);
     <?php
 
     $title = Yii::$app->user->isGuest ? Yii::$app->name : 'Rockstars! @ ' . (Yii::$app->user->getIdentity()->username );
+    $href = Yii::$app->user->isGuest ? Yii::$app->homeUrl : '/@/' . Yii::$app->user->getIdentity()->username;
     NavBar::begin([
-        'brandLabel' => '<img id="logo" src="/images/logo2.jpg"/><a id="brand" class="navbar-brand" href="/"> ' . $title . '</a>' .
+        'brandLabel' => '<img id="logo" src="/images/logo2.jpg"/><a id="brand" class="navbar-brand" href="'. $href .'"> ' . $title . '</a>' .
             (Yii::$app->user->isGuest ? '' : '<a href="/site/logout" class="navbar-brand logout-link"><i class="glyphicon glyphicon-log-out"></i></a>'),
-        'brandUrl' => Yii::$app->homeUrl,
+        'brandUrl' => $href,
        //'brandImage' => '/images/logo2.jpg',
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
