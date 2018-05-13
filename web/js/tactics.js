@@ -94,6 +94,9 @@
             return;
         }
 
+        var currentAnswer = $("input#answer").val();
+        answers[currentPosition] = currentAnswer;
+
         currentPosition--;
         if( currentPosition == 0 ) {
             $("#btn-prev").hide();

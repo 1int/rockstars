@@ -1195,23 +1195,29 @@ div.upcoming-event-info {
     display: inline-block;
     vertical-align: top;
     font-weight: 300;
+    margin-left: 5px;
 }
 
 
 div.upcoming-event-info > h2 {
-    margin: 0 0 0 15px;
+    margin: 0;
     padding: 0;
     font-size: 16px;
-    letter-spacing: 1px;
-    color: #888;
-    font-weight: 300;
+    color: #777;
+    font-weight: 400;
 }
 
 div.upcoming-event-info > span {
-    margin: 0 0 0 15px;
+    margin: 0;
     font-size: 12px;
 }
 
 div#upcoming-events-list {
     margin: 15px 0 0 25px;
+}
+
+div#upcoming-events-list span:first-child {
+    display: block;
+    margin: 0;
+    color: #ccc;
 }
