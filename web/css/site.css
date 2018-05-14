@@ -1255,6 +1255,19 @@ span.hint {
 div#private-contacts-list button {
     margin-top: 10px;
 }
+
+span#profile-stars {
+    margin-bottom: 2px;
+    display: block;
+    user-select: none;
+}
+
+span#profile-stars img {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
 /*
 .container {
         display: flex;

@@ -101,7 +101,15 @@
 
 
         <div id="profile-right-column">
+             <span id="profile-stars">
+                    <img src="/images/star-on.svg"/>
+                    <img src="/images/star-on.svg"/>
+                    <img src="/images/star-on.svg"/>
+                    <img src="/images/star-on.svg"/>
+                    <img src="/images/star-off.svg"/>
+                </span>
             <h2 id="profile-title"><?=$member->name . ' (@' . $member->username . ')'?></h2>
+
             <div id="profile-description" <?=$ownerClass?>>
                 <?=$member->bio != '' ? $member->bio : ($owner ? '(click to edit your bio)':'')?>
                 <span class="edit-link"></span>
