@@ -24,7 +24,7 @@ $i = 0;
                 <?php foreach($members as $member) { ?>
                 <div class="member col-lg-4" style="display: none">
                     <h2><?=$member->name?></h2>
-                    <img src="<?=$member->avatar?>" class="avatar" alt="<?=$member->name?>"/>
+                    <img src="<?=$member->avatarUrl?>" class="avatar" alt="<?=$member->name?>"/>
                     <p class="member-text"><?=$member->bio?></p>
                     <!--<p><a class="btn btn-default" href="<?=$member->link?>" target="_blank">@<?=$member->username?></a></p>-->
                     <script>lichess_widgets.profile_scores("light", "<?=$member->username?>");</script>

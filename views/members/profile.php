@@ -32,7 +32,7 @@
     <div id="profile-wrapper">
         <div id="profile-left-column">
             <div id="avatar" <?=$ownerClass?>>
-                <img id="avatar-image" src="<?=$member->avatar?>" <?=$ownerClass?>>
+                <img id="avatar-image" src="<?=$member->avatarUrl?>" <?=$ownerClass?>>
                 <?php if($owner) { ?>
                 <form id="avatar-form" action="" method="post" enctype="multipart/form-data">
                     <input type="file" id="avatar-input" name="avatar"/>
@@ -60,6 +60,7 @@
                         'height' => 100,
                         'width' => 200,
                         'backgroundColor' => null,
+                        'type' => 'area'
                     ],
                     'title' => false,
                     'yAxis' => [
@@ -87,15 +88,17 @@
                     'series' => [
                         ['name' => 'Result', 'data' => $scores, 'labels'=>$labels ],
                     ],
-                    'plotOptions' =>
-                        ['series'=>
-                         ['marker' => ['enabled'=>false]]
+                    'plotOptions' =>  [
+                        'series'=>  [
+                            'marker' => ['enabled'=>false],
+                             'fillOpacity' => 0.25,
                         ],
-
-                ]
-                ]);?>
+                    ],
+                ]]);?>
             </div>
         </div>
+
+
 
         <div id="profile-right-column">
             <h2 id="profile-title"><?=$member->name . ' (@' . $member->username . ')'?></h2>
@@ -107,28 +110,28 @@
                 <h2 class="section-title">Notable games <span class="button-add <?=$owner?'owner':''?>" id="add-game" data-toggle="modal" data-target="#modal-add-game"><i class="glyphicon glyphicon-plus"></i></span></h2>
                 <div id="notable-games-container">
                     <?php if( count($member->notableGames) > 0 ) { ?>
-                    <span>Click the game and use ← → keys to navigate</span>
-                    <?php $i = 0; foreach($member->notableGames as $game) {
+                        <span>Click the game and use ← → keys to navigate</span>
+                        <?php $i = 0; foreach($member->notableGames as $game) {
                             /** @var NotableGame $game */ $i++; ?>
-                        <div class="notable-game-container <?=$owner?"owner":""?>" data-gid="<?=$game->id?>">
-                            <div class="notable-game">
-                                  <?=$game->getIframe()?>
-                            </div>
+                            <div class="notable-game-container <?=$owner?"owner":""?>" data-gid="<?=$game->id?>">
+                                <div class="notable-game">
+                                    <?=$game->getIframe()?>
+                                </div>
                             <span class="nb-description">
                                 <?=$game->description?>
                             </span>
-                            <i class="btn-close glyphicon glyphicon-remove"></i>
-                        </div>
+                                <i class="btn-close glyphicon glyphicon-remove"></i>
+                            </div>
 
-                    <?php /*if( $i % 2 == 0 ) print "<br/>"; */ } ?>
+                            <?php /*if( $i % 2 == 0 ) print "<br/>"; */ } ?>
                     <?php } else {
-                            if (!$owner) {
-                                print '<span>' . $member->name . ' has not added any games yet.</span>';
-                            }
-                            else {
-                                print '<span>' . 'You have not added any games yet. Click the plus buton to tell the world a little bit about your play.</span>';
-                            }
+                        if (!$owner) {
+                            print '<span>' . $member->name . ' has not added any games yet.</span>';
                         }
+                        else {
+                            print '<span>' . 'You have not added any games yet. Add a game to tell the world a little bit about your play.</span>';
+                        }
+                    }
                     ?>
 
                 </div>
@@ -141,7 +144,7 @@
                     <?php } else  {
                         foreach($events as $e) {
                             /** @var Event $e */
-                        ?>
+                            ?>
                             <div class="upcoming-event">
                                 <div class="upcoming-event-date">
                                     <p><?=$e->dateOfMonth?></p>
@@ -156,11 +159,38 @@
                                        </span>
                                 </div>
                             </div>
-                    <?php }}?>
+                        <?php }}?>
                 </div>
             </div>
             <div id="private-contacts">
-                <h2 class="section-title">Private contacts</h2>
+                <h2 class="section-title">Contacts</h2>
+                <div id="private-contacts-list">
+
+                    <div>
+                        <label>Lichess:</label>
+                        <span class="contact"><a href="<?=$member->link?>" target="_blank"><?=$member->link?></a></span>
+                    </div>
+                    <?php if($owner) { ?>
+                    <form action="" method="post">
+                        <div>
+                            <label for="private-email">Email*:</label>
+                            <input class="form-control" type="email" name="private-email" id="private-email" placeholder="xxxxx@xxxxx.xx"/>
+                        </div>
+                        <div>
+                            <label for="private-email">Phone*:</label>
+                            <input class="form-control" name="private-phone" id="private-phone" placeholder="+x (xxx) xxx-xx-xx"/>
+                        </div>
+                        <div>
+                            <a href="javascript: void(0)" data-toggle="modal" data-target="modal-password">Change password</a>
+                            <hr/>
+                            <span class="hint">*only you can see this</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" type="submit">Update</button>
+                        </div>
+                    </form>
+                    <?php } ?>
+                </div>
             </div>
         </div>
     </div>

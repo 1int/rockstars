@@ -29,6 +29,9 @@ use yii\helpers\Json;
  * @property int $rating_bullet
  * @property int $rating_rapid
  * @property string $lichess_profile
+ * @property string $avatarUrl
+ * @property string $email
+ * @property string $phone
  *
  * @property NotableGame[] $notableGames
  */
@@ -193,5 +196,9 @@ class Member extends ActiveRecord implements IdentityInterface
      */
     public function getNotableGames() {
         return $this->hasMany(NotableGame::className(), ['player_id' => 'id']);
+    }
+
+    public function getAvatarUrl() {
+        return $this->avatar ? $this->avatar : '/images/default-avatar.jpeg';
     }
 }
