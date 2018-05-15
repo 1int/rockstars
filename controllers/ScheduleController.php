@@ -7,12 +7,9 @@
     namespace app\controllers;
 
     use Yii;
-    use yii\web\Controller;
     use app\models\Event;
-    use app\models\Holiday;
-    use \DateTime;
 
-    class ScheduleController extends Controller
+    class ScheduleController extends BaseController
     {
         /**
          * @return string

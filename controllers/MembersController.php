@@ -8,7 +8,6 @@
 
     use app\models\Member;
     use Yii;
-    use yii\web\Controller;
     use yii\web\HttpException;
     use yii\web\NotFoundHttpException;
     use app\models\TacticsLevel;
@@ -16,7 +15,7 @@
     use app\models\NotableGame;
     use app\models\Event;
 
-    class MembersController extends Controller
+    class MembersController extends BaseController
     {
         /**
          * Displays homepage.
@@ -67,14 +66,36 @@
                         throw new HttpException(400, 'Unable to save file');
                     }
                     $member->avatar = Yii::getAlias('@web') . $path;
-                    $member->save();
                 }
 
                 $bio = Yii::$app->request->post('description');
                 if( $bio ) {
                     $member->bio = strip_tags($bio, '<br><b><s><u><i>');
-                    $member->save();
                 }
+                $email = Yii::$app->request->post('private-email');
+                if( $email ) {
+                    $member->email = $email;
+                }
+
+                $phone = Yii::$app->request->post('private-phone');
+                if( $phone ) {
+                    $member->phone = $phone;
+                }
+                $pass = Yii::$app->request->post('pass');
+                if( $pass ) {
+                    $repeat = Yii::$app->request->post('repeat');
+                    $pass = trim($pass);
+                    $repeat = trim($repeat);
+                    if( $pass != $repeat ) {
+                        throw new HttpException(400, 'Password do not match');
+                    }
+                    if( strlen($pass) < 3 ) {
+                        throw new HttpException(400, 'Password is too short');
+                    }
+                    $member->password = Member::hashPassword($pass);
+                }
+                $member->save();
+
                 $gameurl = Yii::$app->request->post('gameurl');
                 if( $gameurl ) {
                     $matches = [];
@@ -94,7 +115,9 @@
                     }
                 }
 
-                return "ok";
+                if( Yii::$app->request->isAjax ) {
+                    return "ok";
+                }
             }
 
             if( Yii::$app->request->isDelete ) {

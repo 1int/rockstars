@@ -26,6 +26,8 @@
     }
 
     $ownerClass = $owner ? ' class="owner"' : '';
+    $onStars = $member->rockstarsRating;
+    $offStars = 5 - $onStars;
 
     //$member->updateLichessData(Api::getPlayersInfo([$member->username])[0]);
 ?>
@@ -96,18 +98,24 @@
                     ],
                 ]]);?>
             </div>
+            <div id="rockstar-rating-holder">
+                <h2 class="left-column-title">Rockstars rating</h2>
+                 <span id="profile-stars">
+                     <?php
+                         for($i = 0; $i < $onStars; $i++ ) {
+                             print '<i class="glyphicon glyphicon-star star-on"></i>' . "\n";
+                         }
+                         for($i = 0; $i < $offStars; $i++ ) {
+                             print '<i class="glyphicon glyphicon-star star-off"></i>' . "\n";
+                         }
+                     ?>
+                </span>
+            </div>
         </div>
 
 
 
         <div id="profile-right-column">
-             <span id="profile-stars">
-                    <img src="/images/star-on.svg"/>
-                    <img src="/images/star-on.svg"/>
-                    <img src="/images/star-on.svg"/>
-                    <img src="/images/star-on.svg"/>
-                    <img src="/images/star-off.svg"/>
-                </span>
             <h2 id="profile-title"><?=$member->name . ' (@' . $member->username . ')'?></h2>
 
             <div id="profile-description" <?=$ownerClass?>>
@@ -134,10 +142,10 @@
                             <?php /*if( $i % 2 == 0 ) print "<br/>"; */ } ?>
                     <?php } else {
                         if (!$owner) {
-                            print '<span>' . $member->name . ' has not added any games yet.</span>';
+                            print '<span>' . $member->firstName . ' has not added any games yet.</span>';
                         }
                         else {
-                            print '<span>' . 'You have not added any games yet. Add a game to tell the world a little bit about your play.</span>';
+                            print '<span>' . 'You have not added any games yet. <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-add-game">Add a game</a> to tell the world a little bit about your play.</span>';
                         }
                     }
                     ?>
@@ -145,7 +153,7 @@
                 </div>
             </div>
             <div id="upcoming-events">
-                <h2 class="section-title">Upcoming events by <?=$member->name?></h2>
+                <h2 class="section-title">Upcoming events by <?=$member->firstName?></h2>
                 <div id="upcoming-events-list">
                     <?php if(count($events) == 0) { ?>
                         <span>No events</span>
@@ -180,16 +188,19 @@
                     </div>
                     <?php if($owner) { ?>
                     <form action="" method="post">
+                        <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
                         <div>
                             <label for="private-email">Email*:</label>
-                            <input class="form-control" type="email" name="private-email" id="private-email" placeholder="xxxxx@xxxxx.xx"/>
+                            <input class="form-control" type="email" name="private-email"
+                                   id="private-email"  value="<?=$member->email?>" placeholder="xxxxx@xxxxx.xx"/>
                         </div>
                         <div>
                             <label for="private-email">Phone*:</label>
-                            <input class="form-control" name="private-phone" id="private-phone" placeholder="+x (xxx) xxx-xx-xx"/>
+                            <input class="form-control" name="private-phone"
+                                   id="private-phone" value="<?=$member->phone?>" placeholder="+x (xxx) xxx-xx-xx"/>
                         </div>
                         <div>
-                            <a href="javascript: void(0)" data-toggle="modal" data-target="modal-password">Change password</a>
+                            <a href="#" data-toggle="modal" data-target="#modal-change-password">Change password</a>
                             <hr/>
                             <span class="hint">*only you can see this</span>
                         </div>
@@ -223,9 +234,39 @@
                             <label for="gamedesc">Say a few words about this game:</label>
                             <textarea rows="7" id="gamedesc" name="gamedesc" class="form-control" required="required"></textarea>
                         </div>
+                    </div>
                     <div class="modal-footer">
                         <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
                         <button type="button" class="btn btn-primary" id="btn-add-game">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-change-password" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Change password</h4>
+                </div>
+                <form action="" method="POST" id="frm-change-password">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="pass">New password:</label>
+                            <input id="pass" name="pass" class="form-control" type="password" required="required" minlength="3" />
+                        </div>
+                        <div class="form-group">
+                            <label for="repeat">Repeat please:</label>
+                            <input id="repeat" name="repeat" class="form-control" type="password" required="required" minlength="3" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
+                        <button type="button" class="btn btn-primary" id="btn-change-password">Save</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>

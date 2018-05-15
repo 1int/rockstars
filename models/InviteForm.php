@@ -52,17 +52,28 @@ class InviteForm extends Model
     public function registerUser()
     {
         if ($this->validate()) {
-            $newMember = new Member();
-            $newMember->username = $this->username;
-            $newMember->name = $this->name;
-            $newMember->password = md5('rockstar'.$this->password);
-            $newMember->bio = '';
-            $newMember->role = 0;
-            $newMember->show_on_graph = 0;
-            $newMember->show_in_pairings = 0;
-            $newMember->show_on_homepage = 0;
+            $oldMember = Member::findByUsername($this->username);
+            if( $oldMember ) {
+                $newMember = $oldMember;
+                $pass = trim($this->password);
+                if( strlen($pass) < 3 ) {
+                    throw new HttpException(400, "That's a shitty password");
+                }
+                $newMember->password = Member::hashPassword($pass);
+            }
+            else {
+                $newMember = new Member();
+                $newMember->username = $this->username;
+                $newMember->name = $this->name;
+                $newMember->password = Member::hashPassword($this->password);
+                $newMember->bio = '';
+                $newMember->role = 0;
+                $newMember->show_on_graph = 0;
+                $newMember->show_in_pairings = 0;
+                $newMember->show_on_homepage = 0;
+            }
 
-            if(!$newMember->save()) {
+            if (!$newMember->save()) {
                 throw new HttpException(500, 'Failed to create user: ' . print_r($newMember->getErrors(), true));
             }
             return Yii::$app->user->login($newMember, 3600*24*30);

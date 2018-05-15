@@ -1134,11 +1134,10 @@ div.upcoming-event-date {
 }
 
 div.upcoming-event-date > p:first-child {
-    margin: 0;
+    margin: -2px 0 0 0;
     font-size: 25px;
     line-height: 25px;
     font-weight: 500;
-    margin-bottom: -2px;
     text-align: center;
 }
 
@@ -1146,11 +1145,12 @@ div.upcoming-event-date > p:nth-child(2) {
     margin: 0;
     text-align: center;
     font-weight: 400;
-    margin-bottom: -12px;
+    margin-bottom: -10px;
     letter-spacing: 3px;
     color: #555;
     text-transform: uppercase;
     font-size: 12px;
+    width: 33px;
 }
 
 div.upcoming-event-date > comment {
@@ -1183,8 +1183,9 @@ div.upcoming-event > img {
     display: inline-block;
     width: 45px;
     height: 45px;
-    border-radius: 50%;
+    #border-radius: 50%;
     vertical-align: top;
+    margin-left: 3px;
 }
 
 div.upcoming-event > hr {
@@ -1260,12 +1261,44 @@ span#profile-stars {
     margin-bottom: 2px;
     display: block;
     user-select: none;
+    padding-right: 10px;
 }
 
 span#profile-stars img {
     display: inline-block;
-    width: 16px;
-    height: 16px;
+    width: 21px;
+    height: 21px;
+}
+
+span#profile-stars i {
+    font-size: 23px;
+    color: #ccc;
+    transition-property: color;
+    transition-duration: 0.2s;
+}
+
+span#profile-stars i:not(.star-off):nth-child(1) {
+    transition-delay: 0.6s;
+}
+
+span#profile-stars i:not(.star-off):nth-child(2) {
+    transition-delay: 0.7s;
+}
+
+span#profile-stars i:not(.star-off):nth-child(3) {
+    transition-delay: 0.8s;
+}
+
+span#profile-stars i:not(.star-off):nth-child(4) {
+    transition-delay: 0.9s;
+}
+
+span#profile-stars i:not(.star-off):nth-child(5) {
+    transition-delay: 1s;
+}
+
+div#rockstar-rating-holder {
+    margin-top: -25px;
 }
 
 /*

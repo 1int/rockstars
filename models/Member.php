@@ -32,8 +32,14 @@ use yii\helpers\Json;
  * @property string $avatarUrl
  * @property string $email
  * @property string $phone
+ * @property string $firstName
+ * @property string $lastseen
+ * @property string $regdate
+ * @property int $rockstarsRating
  *
  * @property NotableGame[] $notableGames
+ * @property Event[] $events
+ * @property TacticsTestResult[] $testResults
  */
 class Member extends ActiveRecord implements IdentityInterface
 {
@@ -109,7 +115,7 @@ class Member extends ActiveRecord implements IdentityInterface
     }
 
     public function validatePassword($p) {
-        return $this->password == md5('rockstar'.$p);
+        return $this->password == Member::hashPassword($p);
     }
 
     /**
@@ -198,7 +204,81 @@ class Member extends ActiveRecord implements IdentityInterface
         return $this->hasMany(NotableGame::className(), ['player_id' => 'id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEvents() {
+        return $this->hasMany(Event::className(), ['master_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTestResults() {
+        return $this->hasMany(TacticsTestResult::className(), ['player_id' => 'id']);
+    }
+
+    /**
+     * @return string
+     */
     public function getAvatarUrl() {
         return $this->avatar ? $this->avatar : '/images/default-avatar.jpeg';
+    }
+
+    public function getFirstName() {
+        $arr = explode(' ', $this->name);
+        return $arr[0];
+    }
+
+    public function hasLoggedInPastTwoWeeks() {
+        $timestamp = strtotime($this->lastseen);
+        return time() - $timestamp <= (3600*24*7*2);
+    }
+
+    public function hasRegisteredLongAgo() {
+        $timestamp = strtotime($this->regdate);
+        return time() - $timestamp >= (3600 * 24 * 180);
+    }
+
+    public static function hashPassword($p) {
+        return md5( 'rockstar'. $p );
+    }
+
+    public function getRockstarsRating() {
+        //заполненность, ведет ли лекции, заходил на сайт, полгода с нами, участие в командных битвах, прошел все тесты, ссылка на сайт
+        $ret = 0;
+
+        //1. One star if added a notable game
+        if( count($this->notableGames) > 0 ) {
+            $ret++;
+        }
+
+        //2. Has events
+        if( count($this->events) > 0 ) {
+            $ret++;
+        }
+
+        //3. Registered more than half a year ago
+        if( $this->hasRegisteredLongAgo() ) {
+            $ret++;
+        }
+
+        //4. Played in a team match
+        $sql = "SELECT COUNT(*) FROM tourney_match WHERE white=:name OR black=:name";
+        if( Yii::$app->db->createCommand($sql, ['name'=>$this->username])->queryScalar() > 0 ) {
+            $ret++;
+        }
+
+        //5. Прошел все тесты
+        if( count($this->testResults) == TacticsTest::find()->where('published=1')->count() ) {
+            $ret++;
+        }
+
+        //6. Ссылка на сайт
+        if( $this->lichess_profile && strpos($this->lichess_profile, 'rockstarschess.com') !== false ) {
+            $ret++;
+        }
+
+        return min($ret, 5);
     }
 }

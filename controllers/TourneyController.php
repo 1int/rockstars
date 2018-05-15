@@ -7,7 +7,6 @@
     namespace app\controllers;
 
     use Yii;
-    use yii\web\Controller;
     use yii\web\HttpException;
     use yii\web\NotFoundHttpException;
 
@@ -17,7 +16,7 @@
     use app\classes\lichess\Api;
     use app\classes\lichess\Game;
 
-    class TourneyController extends Controller
+    class TourneyController extends BaseController
     {
         function actionIndex() {
             return $this->render('list', ['tourneys'=>Tourney::find()->orderBy('id DESC')->all()]);

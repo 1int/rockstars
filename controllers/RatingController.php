@@ -5,7 +5,6 @@
      */
 
     namespace app\controllers;
-    use yii\web\Controller;
 
     use linslin\yii2\curl;
     use DateTime;
@@ -14,7 +13,7 @@
 
     use app\models\Member;
 
-    class RatingController extends Controller
+    class RatingController extends BaseController
     {
 
         /**

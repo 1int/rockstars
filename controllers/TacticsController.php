@@ -12,13 +12,11 @@
     use app\models\TacticsTestResult;
     use app\models\Member;
 
-    use yii\web\Controller;
     use yii\web\NotFoundHttpException;
     use yii\db\Expression;
     use Yii;
 
-    class TacticsController extends Controller {
-
+    class TacticsController extends BaseController {
 
         /** @var  TacticsLevel $level */
         protected $level;

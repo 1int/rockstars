@@ -87,9 +87,6 @@ $("#btn-add-game").click(function() {
     var url = $input.val();
     var text = $text.val();
 
-
-
-
     if( url.trim() != "" && text.trim() != "" ) {
         var regex = /https:\/\/lichess.org\/([a-zA-Z0-9]{7,20})/g;
         var match = regex.exec(url);
@@ -127,6 +124,35 @@ $("#btn-add-game").click(function() {
     }
 });
 
+
+$("#btn-change-password").click(function() {
+    var $pass = $("input[name=pass]");
+    var $repeat  = $("input[name=repeat]");
+    var pass = $pass.val();
+    var repeat = $repeat.val();
+
+    if( pass.trim() == '' || repeat.trim() == '' ) {
+        return;
+    }
+
+    if( pass != repeat ) {
+        alert('Passwords do not match!');
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: window.location.href,
+        data: {pass: pass, repeat: repeat},
+        error: function (xhr, status, error) {
+            alert(xhr.responseText);
+        }
+    });
+    $("#modal-change-password").modal('hide');
+    $pass.val('');
+    $repeat.val('');
+});
+
 $(document).on('click', '.btn-close', function() {
     if( window.confirm("Are you sure?") ) {
         var $game = $(this).closest('.notable-game-container');
@@ -141,5 +167,9 @@ $(document).on('click', '.btn-close', function() {
         });
         $game.remove();
     }
+});
+
+$(function() {
+    $("i.star-on").css({color: "#333"});
 });
 

@@ -5,16 +5,13 @@ namespace app\controllers;
 use app\models\InviteForm;
 use app\models\TacticsPosition;
 use Yii;
-use yii\web\Controller;
 use yii\web\Response;
 use app\models\LoginForm;
 use app\models\Member;
-use yii\Web\HttpException;
 
 
-class SiteController extends Controller
+class SiteController extends BaseController
 {
-
 
     /**
      * @inheritdoc
