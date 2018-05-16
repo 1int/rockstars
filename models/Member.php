@@ -279,6 +279,6 @@ class Member extends ActiveRecord implements IdentityInterface
             $ret++;
         }
 
-        return min($ret, 5);
+        return max(min($ret, 5), 1);
     }
 }

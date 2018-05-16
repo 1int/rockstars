@@ -1046,6 +1046,7 @@ div#the-chart:before {
     height: 1px;
     position: absolute;
     bottom: 0;
+    left: 0;
     background-color: #ddd;
 }
 
@@ -1301,16 +1302,19 @@ div#rockstar-rating-holder {
     margin-top: -25px;
 }
 
-/*
-.container {
-        display: flex;
+@media (max-width: 768px) {
+    div#profile-left-column {
+        float: none;
+        margin-left: 30px;
+        display: block;
     }
 
-    .left {
-        width: 180px;
+    div#profile-right-column {
+        margin-left: 30px;
+        margin-top: 30px;
     }
 
-    .right {
-        flex-grow: 1;
+    div.notable-game {
+        width: auto;
     }
-*/
+}

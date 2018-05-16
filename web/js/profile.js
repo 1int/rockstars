@@ -115,6 +115,7 @@ $("#btn-add-game").click(function() {
                     '</div>';
 
                 $("#notable-games-container").append(template);
+                $("#notable-games-container span:first-child").html('Click the game and use ← → keys to navigate');
             }
         });
         $("#modal-add-game").modal('hide');
@@ -166,6 +167,9 @@ $(document).on('click', '.btn-close', function() {
             }
         });
         $game.remove();
+        if( $('.notable-game-container').length == 0 ) {
+            $("#notable-games-container span:first-child").html('No games');
+        }
     }
 });
 
