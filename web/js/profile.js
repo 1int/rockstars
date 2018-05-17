@@ -173,7 +173,19 @@ $(document).on('click', '.btn-close', function() {
     }
 });
 
+function isMobile() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        return true;
+    }
+    return false;
+}
+
 $(function() {
     $("i.star-on").css({color: "#333"});
+    if( isMobile() ) {
+        $("#profile-description").detach().prependTo("#profile-left-column");
+        $("#profile-title").detach().prependTo("#profile-left-column");
+    }
+
 });
 

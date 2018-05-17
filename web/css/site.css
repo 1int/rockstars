@@ -1305,16 +1305,34 @@ div#rockstar-rating-holder {
 @media (max-width: 768px) {
     div#profile-left-column {
         float: none;
-        margin-left: 30px;
+        margin-left: -40px;
         display: block;
+        width: auto;
     }
 
     div#profile-right-column {
-        margin-left: 30px;
+        margin-left: -40px;
         margin-top: 30px;
     }
 
-    div.notable-game {
-        width: auto;
+    div#notable-games {
+        display: none; /* lichess iframes sucks on mobile, maybe test it later */
+    }
+
+    div#profile-description {
+        margin-bottom: 20px;
+    }
+
+    div#profile-lichess-ratings {
+        width: 180px;
+    }
+
+    span.rating-value {
+        text-align: right;
+        width: 48%;
+    }
+
+    span.edit-link {
+        display: none;
     }
 }

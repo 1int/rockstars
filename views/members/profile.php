@@ -43,7 +43,7 @@
                 <?php } ?>
                 <span class="edit-link"></span>
             </div>
-            <div>
+            <div id="profile-lichess-ratings">
                 <h2 class="left-column-title">Ratings</h2>
                 <span class="rating rating-title">Blitz</span>
                 <span class="rating rating-value"><?=$member->rating_blitz?></span>

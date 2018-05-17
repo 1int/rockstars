@@ -46,7 +46,8 @@ AppAsset::register($this);
     $href = Yii::$app->user->isGuest ? Yii::$app->homeUrl : '/@/' . Yii::$app->user->getIdentity()->username;
     NavBar::begin([
         'brandLabel' => '<img id="logo" src="/images/logo2.jpg"/><a id="brand" class="navbar-brand" href="'. $href .'"> ' . $title . '</a>' .
-            (Yii::$app->user->isGuest ? '' : '<a href="/site/logout" class="navbar-brand logout-link"><i class="glyphicon glyphicon-log-out"></i></a>'),
+            (Yii::$app->user->isGuest ? '<a href="/site/login" class="navbar-brand logout-link"><i class="glyphicon glyphicon-log-in"></i></a>' :
+        '<a href="/site/logout" class="navbar-brand logout-link"><i class="glyphicon glyphicon-log-out"></i></a>'),
         'brandUrl' => $href,
        //'brandImage' => '/images/logo2.jpg',
         'options' => [

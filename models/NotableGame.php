@@ -68,7 +68,14 @@ class NotableGame extends ActiveRecord
             return "<div class='match-not-played other-matches-are-finished'>×</div>";
         }
 
-        return sprintf("<iframe width='%s' height='%s' frameborder=0 src='https://lichess.org/embed/%s?theme=auto&bg=auto'
-    ></iframe>", '345', '243', $this->lichess_id);
+        $width = 345;
+        $height = 243;
+        if( \RockstarsApp::isMobile() ) {
+            $width /= 1.5;
+            $height /= 1.5;
+        }
+
+        return sprintf("<iframe width='%.2f' height='%.2f' frameborder=0 src='https://lichess.org/embed/%s?theme=auto&bg=auto'
+    ></iframe>", $width, $height, $this->lichess_id);
     }
 }
