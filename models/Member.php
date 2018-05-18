@@ -7,6 +7,7 @@ use \yii\db\ActiveRecord;
 use \yii\web\IdentityInterface;
 use \app\classes\lichess\Player;
 use yii\helpers\Json;
+use yii\image\drivers\Image;
 
 
 /**
@@ -36,6 +37,8 @@ use yii\helpers\Json;
  * @property string $lastseen
  * @property string $regdate
  * @property int $rockstarsRating
+ * @property string $smallAvatar
+ * @property string $mediumAvatar
  *
  * @property NotableGame[] $notableGames
  * @property Event[] $events
@@ -281,4 +284,62 @@ class Member extends ActiveRecord implements IdentityInterface
 
         return max(min($ret, 5), 1);
     }
+
+    /**
+     * @return string
+     */
+    public function getMediumAvatar() {
+        return $this->getAvatarOfSize(180);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSmallAvatar() {
+        return $this->getAvatarOfSize(35);
+    }
+
+    /**
+     * @param $size
+     * @return string
+     * @throws \yii\base\ErrorException
+     */
+    protected function getAvatarOfSize($size) {
+
+        $dir = Yii::getAlias('@webroot') . '/images/avatars/' . $size;
+        if( !is_dir($dir) ) {
+            mkdir($dir);
+        }
+
+        if( !$this->avatar ) {
+            $path =  $dir . '/default.jpeg';
+            if( !file_exists($path) ) {
+                $p = Yii::getAlias('@webroot') . '/images/default-avatar.jpeg';
+                $img = Yii::$app->image->load($p);
+                $img->resize($size, $size, Image::CROP)->save($path);
+            }
+            return '/images/avatars/' . $size . '/default.jpeg';
+        }
+
+        $path = Yii::getAlias('@webroot') . '/images/avatars/'.$size.'/' . $this->id . '.jpeg';
+        if( !file_exists($path) ) {
+            /** @var Image $img */
+            $p = Yii::getAlias('@webroot') . '/' . $this->avatar;
+            $img = Yii::$app->image->load($p);
+            $img->resize($size, $size, Image::CROP)->save($path);
+        }
+        return '/images/avatars/'. $size .'/' . $this->id . '.jpeg';
+    }
+
+    public function clearThumbs() {
+        $medium = Yii::getAlias('@webroot') . '/images/avatars/180/' . $this->id . '.jpeg';
+        $small = Yii::getAlias('@webroot') . '/images/avatars/35/' . $this->id . '.jpeg';
+        if( file_exists($medium) ) {
+            unlink($medium);
+        }
+        if( file_exists($small) ) {
+            unlink($small);
+        }
+    }
+
 }

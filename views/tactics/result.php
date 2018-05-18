@@ -62,7 +62,7 @@
             <caption>Best&nbsp;results</caption>
             <tbody>
                 <?php foreach($highscores as $r) { ?>
-                    <tr><td><?=$r->player->usernameWithLink?></td><td><?=$r->score?></td></tr>
+                    <tr><td><img class="round" src="<?=$r->player->smallAvatar?>"></td><td><?=$r->player->usernameWithLink?></td><td><?=$r->score?></td></tr>
                 <?php } ?>
             </tbody>
         </table>

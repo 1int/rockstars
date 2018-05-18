@@ -34,7 +34,7 @@
     <div id="profile-wrapper">
         <div id="profile-left-column">
             <div id="avatar" <?=$ownerClass?>>
-                <img id="avatar-image" src="<?=$member->avatarUrl?>" <?=$ownerClass?>>
+                <img id="avatar-image" src="<?=$member->mediumAvatar?>" <?=$ownerClass?>>
                 <?php if($owner) { ?>
                 <form id="avatar-form" action="" method="post" enctype="multipart/form-data">
                     <input type="file" id="avatar-input" name="avatar"/>

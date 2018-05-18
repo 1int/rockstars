@@ -66,6 +66,7 @@
                         throw new HttpException(400, 'Unable to save file');
                     }
                     $member->avatar = Yii::getAlias('@web') . $path;
+                    $member->clearThumbs();
                 }
 
                 $bio = Yii::$app->request->post('description');

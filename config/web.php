@@ -67,6 +67,12 @@ $config = [
             ]
         ],
 
+        'image' => [
+            'class' => 'yii\image\ImageDriver',
+            'driver' => 'Imagick'
+        ],
+
+
     ],
     'params' => $params,
 ];

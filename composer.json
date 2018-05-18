@@ -21,7 +21,8 @@
         "linslin/yii2-curl" : "*",
         "miloschuman/yii2-highcharts-widget": "^6.0",
         "bower-asset/textillate": ">=0.4",
-        "calcinai/php-imagick": "*"
+        "calcinai/php-imagick": "*",
+        "yurkinx/yii2-image": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

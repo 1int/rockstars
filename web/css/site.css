@@ -811,6 +811,10 @@ table#tactics-best td a {
     color: #777;
 }
 
+table#tactics-best td:first-child {
+    padding-bottom: 2px;
+}
+
 div#score-content {
     margin-top: 40px;
 }
@@ -1335,4 +1339,8 @@ div#rockstar-rating-holder {
     span.edit-link {
         display: none;
     }
+}
+
+img.round {
+    border-radius: 50%;
 }
