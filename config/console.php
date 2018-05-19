@@ -21,6 +21,11 @@ $config = [
             ],
         ],
         'db' => $db,
+        'image' => [
+            'class' => 'yii\image\ImageDriver',
+            'driver' => 'Imagick'
+        ],
+
     ],
     'params' => $params,
     /*
