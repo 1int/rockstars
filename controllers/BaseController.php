@@ -22,7 +22,9 @@
                 /**
                  * @var Member|null $member
                  */
+
                 if( $member ) {
+                    date_default_timezone_set('Europe/Moscow');
                     $member->lastseen = date('Y-m-d H:i:s', time());
                     $member->save();
                 }

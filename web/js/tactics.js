@@ -97,6 +97,10 @@
         var currentAnswer = $("input#answer").val();
         answers[currentPosition] = currentAnswer;
 
+        if( currentPosition == TOTAL_POSITIONS -1 ) {
+            submitAnswer();
+        }
+
         currentPosition--;
         if( currentPosition == 0 ) {
             $("#btn-prev").hide();
