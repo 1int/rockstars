@@ -189,6 +189,10 @@ class Member extends ActiveRecord implements IdentityInterface
         return $this->role == self::ADMIN || $this->username == 'marisha';
     }
 
+    function canSendSms() {
+        return $this->role == self::ADMIN; //allow someone else to send team sms maybe?
+    }
+
     /**
      * @param Player $p
      */
