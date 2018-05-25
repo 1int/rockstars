@@ -10,10 +10,6 @@ $this->title = 'Rockstars! — Members';
 $i = 0;
 ?>
 
-<link rel="stylesheet" href="https://rubenwardy.com/lichess_widgets/lichess_widgets.css" />
-<script src="js/lichess_widgets.js"></script>
-<link rel="stylesheet" href="https://rubenwardy.com/lichess_widgets/light.css" />
-
 <div class="site-index">
     <div class="body-content">
         <div class="rockstars-animated">
@@ -23,11 +19,9 @@ $i = 0;
             <div class="row">
                 <?php foreach($members as $member) { ?>
                 <div class="member col-lg-4" style="display: none">
-                    <h2><?=$member->name?></h2>
-                    <img src="<?=$member->mediumAvatar?>" class="avatar" alt="<?=$member->name?>"/>
+                    <h2 class="member-name"><?=$member->nameWithLink?></h2>
+                    <a href="<?=$member->link?>" target="_blank"><img src="<?=$member->mediumAvatar?>" class="avatar" alt="<?=$member->name?>"/></a>
                     <p class="member-text"><?=$member->bio?></p>
-                    <!--<p><a class="btn btn-default" href="<?=$member->link?>" target="_blank">@<?=$member->username?></a></p>-->
-                    <script>lichess_widgets.profile_scores("light", "<?=$member->username?>");</script>
                 </div>
                 <?php
                 $i++;

@@ -1344,3 +1344,9 @@ div#rockstar-rating-holder {
 img.round {
     border-radius: 50%;
 }
+
+h2.member-name a, h2.member-name a:hover, h2.member-name a:visited {
+    text-decoration: none;
+    color: #333;
+    font-size: 26px;
+}

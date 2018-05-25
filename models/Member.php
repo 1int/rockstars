@@ -92,7 +92,7 @@ class Member extends ActiveRecord implements IdentityInterface
      * @return string
      */
     public function getLink() {
-        return sprintf("http://lichess.org/@/%s", $this->username);
+        return sprintf("/@/%s", $this->username);
     }
 
     /**
