@@ -23,6 +23,7 @@ use yii\image\drivers\Image;
  * @property int $show_on_homepage
  * @property int $show_in_pairings
  * @property string $link
+ * @property string $lichessLink
  * @property string $usernameWithLink
  * @property string $nameWithLink
  * @property string $password
@@ -93,6 +94,13 @@ class Member extends ActiveRecord implements IdentityInterface
      */
     public function getLink() {
         return sprintf("/@/%s", $this->username);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLichessLink() {
+        return sprintf("https://lichess.org/@/%s", $this->username);
     }
 
     /**

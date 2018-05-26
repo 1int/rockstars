@@ -184,7 +184,7 @@
 
                     <div>
                         <label>Lichess:</label>
-                        <span class="contact"><a href="<?=$member->link?>" target="_blank"><?=$member->link?></a></span>
+                        <span class="contact"><a href="<?=$member->lichessLink?>" target="_blank"><?=$member->lichessLink?></a></span>
                     </div>
                     <?php if($owner) { ?>
                     <form action="" method="post">
