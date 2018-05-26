@@ -9,8 +9,12 @@
     use app\models\TacticsTest;
     use Yii;
     use yii\image\drivers\Image;
+    use \Imagick;
+    use app\classes\compareImages\compareImages;
 
     class TacticsController extends Controller {
+
+        var $split = 4;
 
         public function actionPublish() {
             /** @var TacticsTest $test */
@@ -250,4 +254,206 @@
             }
         }
 
+        protected function avgPixel($img, $x, $y, $w, $h) {
+            return 255;
+        }
+
+
+        /**
+         * Get the average pixel value in regions
+         * @param Imagick $img
+         * @return array 1-dimensional array of average region pixel values
+         */
+        protected function getPixelMap($img) {
+
+            $w = $img->getImageWidth() / $this->split;
+            $h = $img->getImageHeight() / $this->split;
+
+            $ret = [];
+
+            for( $x_region = 0; $x_region < $this->split; $x_region++ ) {
+                for( $y_region = 0; $y_region < $this->split; $y_region++ ) {
+                    $avg = 0;
+                    $count = 0;
+                    for( $x = $w * $x_region; $x <  $w*($x_region+1); $x++ ) {
+                        for( $y = $h * $y_region; $y < $h*($y_region+1); $y++ ) {
+                            $pixel = $img->getImagePixelColor($x, $y)->getColor();
+                            $avg +=  ($pixel['r'] + $pixel['g'] + $pixel['b']) / 3;
+                            $count++;
+                        }
+                    }
+                    if( $count == 0 ) {
+                        $ret[$x_region * $this->split + $y_region] = -1;
+                    }
+                    else {
+                        $ret[$x_region * $this->split + $y_region] = $avg / $count;
+                    }
+
+                }
+            }
+
+            $sum = array_sum($ret);
+            foreach($ret as &$val) {
+                $val /= $sum;
+                $val *= 1000;
+            }
+
+            return $ret;
+        }
+
+        /**
+         * @param array $map1
+         * @param array $map2
+         * @return float
+         */
+        protected function pixelMapDiff($map1, $map2) {
+            $ret = 0;
+            for($i = 0; $i < count($map1); $i++) {
+                $ret += abs($map1[$i] - $map2[$i]);
+            }
+            return $ret / count($map1);
+        }
+
+        public function actionFen($testNumber) {
+            $home = Yii::getAlias('@app') . '/assets/tactics_orig';
+            $models = [];
+            $models['white'] = [];
+            $models['black'] = [];
+
+            $dir = new \DirectoryIterator($home . '/model/white');
+            foreach ($dir as $file) {
+                if (!$file->isDot()  && $file->getFilename() != '.DS_Store') {
+                    $isBlack = $file->getExtension() == 'jpg';
+                    $name = $file->getBasename();
+                    $name = str_replace('.jpeg', '', $name);
+                    $name = str_replace('.jpg', '', $name);
+                    if( !$isBlack ) {
+                        $name = strtoupper($name);
+                    }
+                    $path = $dir->getPath() . '/' . $file->getFilename();
+                    $models['white'][$name] = [];
+                    $models['white'][$name]['path'] = $path;
+                    $img = new \Imagick($path);
+                    $img->cropImage(90, 90, 20, 20);
+                    $img->writeImage('white' . $name . ($isBlack? '.jpg':'.jpeg'));
+                    $models['white'][$name]['img'] = $img;
+                    $models['white'][$name]['map'] = $this->getPixelMap($models['white'][$name]['img']);
+                }
+            }
+
+            $dir = new \DirectoryIterator($home . '/model/black');
+            foreach( $dir as $file ) {
+                if (!$file->isDot() && $file->getFilename() != '.DS_Store') {
+                    $isBlack = $file->getExtension() == 'jpg';
+                    $name = $file->getBasename();
+                    $name = str_replace('.jpeg', '', $name);
+                    $name = str_replace('.jpg', '', $name);
+                    if( !$isBlack ) {
+                        $name = strtoupper($name);
+                    }
+                    $path = $dir->getPath() . '/' . $file->getFilename();
+                    $models['black'][$name] = [];
+                    $models['black'][$name]['path'] = $path;
+                    $img = new \Imagick($path);
+                    $img->cropImage(90, 90, 20, 20);
+                    $img->writeImage('black' . $name . ($isBlack? '.jpg':'.jpeg'));
+                    $models['black'][$name]['img'] = $img;
+                    $models['black'][$name]['map'] = $this->getPixelMap($models['white'][$name]['img']);
+                }
+            }
+
+
+            $dir = $home . '/test1_' . $testNumber;
+            $ret = '';
+            for( $y = 0; $y < 8; $y++ ) {
+                for( $x = 0; $x < 8; $x++) {
+                    $path = $dir . '/' . $x . '.' . $y . '.jpeg';
+                    $isBlack = ($x + $y) % 2 == 1;
+                    $src = $isBlack ? $models['black'] : $models['white'];
+
+                    $img = new Imagick($path);
+                    $img->cropImage(90, 90, 20, 20);
+                    $img->writeImage($x . '-' . $y . '.jpeg');
+
+                    $map = $this->getPixelMap($img);
+                    $minDiff = -1;
+                    $recognizedName = '';
+
+                    foreach($src as $name => $value) {
+                        $diff = $this->pixelMapDiff($value['map'], $map);
+                        if( $diff < $minDiff || $minDiff == -1 ) {
+                            $recognizedName = $name;
+                            $minDiff = $diff;
+                        }
+                    }
+                    $ret .= $recognizedName;
+                }
+                $ret .= '/';
+            }
+
+            print "FEN: " . $ret . "\n";
+            return "FEN: " . $ret . "\n";
+        }
+
+
+        public function actionTest() {
+            $class = new compareImages;
+            print "Similarity empty -> knight: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test1.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
+            print "\nSimilarity empty -> empty: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test1.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
+            print "\nSimilarity empty -> knight #2: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test2.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
+            print "\nSimilarity empty -> empty #2: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test2.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
+            print "\nSimilarity empty -> knight #3: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test3.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
+            print "\nSimilarity empty -> empty #3: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test3.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
+            print "\nSimilarity empty -> knight #4: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test4.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
+            print "\nSimilarity empty -> empty #4: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test4.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
+            print "\nSimilarity knight -> knight #5: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test5.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
+            print "\nSimilarity knight -> empty #5: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test5.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
+            print "\nSimilarity knight -> knight #6: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test6.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
+            print "\nSimilarity knight -> empty #6: ";
+            echo $class->compare('/Users/Lint/Desktop/Test/test6.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
+            print "\n";
+        }
+
+        public function actionTest2() {
+            $img = new Imagick('/Users/Lint/Desktop/test/tes/test.jpeg');
+            $data = $this->getPixelMap($img);
+            print_r($data);
+
+            $img = new Imagick('/Users/Lint/Desktop/test/tes/black1.jpeg');
+            $data2 = $this->getPixelMap($img);
+            print_r($data2);
+
+
+            $img = new Imagick('/Users/Lint/Desktop/test/tes/blackN.jpeg');
+            $data3 = $this->getPixelMap($img);
+            print_r($data3);
+
+            print "\n\n";
+            print "Diff to empty: " . $this->pixelMapDiff($data, $data2) . "\n";
+            print "Diff to knight: " . $this->pixelMapDiff($data, $data3) . "\n";
+        }
+
+        public function actionTest3() {
+            for( $q = 1; $q <= 30; $q++) {
+                $this->split = $q;
+                print "Split: {$q}\n";
+                $fen = $this->actionFen(5);
+                if( strstr($fen, 'q') !== false ) {
+                    print "Ok.\n";
+                    print "Fen: " . $fen . "\n";
+                    break;
+                }
+            }
+        }
     }
