@@ -10,11 +10,11 @@
     use Yii;
     use yii\image\drivers\Image;
     use \Imagick;
-    use app\classes\compareImages\compareImages;
 
     class TacticsController extends Controller {
 
         var $split = 4;
+        var $level = 1;
 
         public function actionPublish() {
             /** @var TacticsTest $test */
@@ -249,15 +249,9 @@
                         }
                     }
 
-                   // die;
                 }
             }
         }
-
-        protected function avgPixel($img, $x, $y, $w, $h) {
-            return 255;
-        }
-
 
         /**
          * Get the average pixel value in regions
@@ -301,6 +295,25 @@
             return $ret;
         }
 
+
+        /**
+         * @param Imagick $img
+         * @return float
+         */
+        protected function getAvgPixel($img) {
+            $w = $img->getImageWidth();
+            $h = $img->getImageHeight();
+            $avg = 0;
+            for( $x = 0; $x < $w; $x++ ) {
+                for( $y = 0; $y < $h; $y++ ) {
+                    $pixel = $img->getImagePixelColor($x, $y)->getColor();
+                    $avg +=  ($pixel['r'] + $pixel['g'] + $pixel['b']) / 3;
+                }
+            }
+
+            return $avg / ($w * $h);
+        }
+
         /**
          * @param array $map1
          * @param array $map2
@@ -335,7 +348,6 @@
                     $models['white'][$name]['path'] = $path;
                     $img = new \Imagick($path);
                     $img->cropImage(90, 90, 20, 20);
-                    $img->writeImage('white' . $name . ($isBlack? '.jpg':'.jpeg'));
                     $models['white'][$name]['img'] = $img;
                     $models['white'][$name]['map'] = $this->getPixelMap($models['white'][$name]['img']);
                 }
@@ -356,7 +368,6 @@
                     $models['black'][$name]['path'] = $path;
                     $img = new \Imagick($path);
                     $img->cropImage(90, 90, 20, 20);
-                    $img->writeImage('black' . $name . ($isBlack? '.jpg':'.jpeg'));
                     $models['black'][$name]['img'] = $img;
                     $models['black'][$name]['map'] = $this->getPixelMap($models['white'][$name]['img']);
                 }
@@ -373,7 +384,6 @@
 
                     $img = new Imagick($path);
                     $img->cropImage(90, 90, 20, 20);
-                    $img->writeImage($x . '-' . $y . '.jpeg');
 
                     $map = $this->getPixelMap($img);
                     $minDiff = -1;
@@ -391,69 +401,77 @@
                 $ret .= '/';
             }
 
-            print "FEN: " . $ret . "\n";
-            return "FEN: " . $ret . "\n";
+
+
+            $fen = $this->fixQueens($ret, $testNumber);
+            print "FEN: " . $fen . "\n";
+            return "FEN: " . $fen . "\n";
         }
 
+        /**
+         * @param Imagick $img
+         * @return float
+         */
+        protected function getLongestVerticalBlackLine($img) {
+            $w = $img->getImageWidth();
+            $h = $img->getImageHeight();
+            $longest = 0;
 
-        public function actionTest() {
-            $class = new compareImages;
-            print "Similarity empty -> knight: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test1.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
-            print "\nSimilarity empty -> empty: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test1.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
-            print "\nSimilarity empty -> knight #2: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test2.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
-            print "\nSimilarity empty -> empty #2: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test2.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
-            print "\nSimilarity empty -> knight #3: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test3.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
-            print "\nSimilarity empty -> empty #3: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test3.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
-            print "\nSimilarity empty -> knight #4: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test4.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
-            print "\nSimilarity empty -> empty #4: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test4.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
-            print "\nSimilarity knight -> knight #5: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test5.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
-            print "\nSimilarity knight -> empty #5: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test5.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
-            print "\nSimilarity knight -> knight #6: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test6.jpeg','/Users/Lint/Desktop/Test/n.jpeg');
-            print "\nSimilarity knight -> empty #6: ";
-            echo $class->compare('/Users/Lint/Desktop/Test/test6.jpeg','/Users/Lint/Desktop/Test/1.jpeg');
-            print "\n";
-        }
-
-        public function actionTest2() {
-            $img = new Imagick('/Users/Lint/Desktop/test/tes/test.jpeg');
-            $data = $this->getPixelMap($img);
-            print_r($data);
-
-            $img = new Imagick('/Users/Lint/Desktop/test/tes/black1.jpeg');
-            $data2 = $this->getPixelMap($img);
-            print_r($data2);
-
-
-            $img = new Imagick('/Users/Lint/Desktop/test/tes/blackN.jpeg');
-            $data3 = $this->getPixelMap($img);
-            print_r($data3);
-
-            print "\n\n";
-            print "Diff to empty: " . $this->pixelMapDiff($data, $data2) . "\n";
-            print "Diff to knight: " . $this->pixelMapDiff($data, $data3) . "\n";
-        }
-
-        public function actionTest3() {
-            for( $q = 1; $q <= 30; $q++) {
-                $this->split = $q;
-                print "Split: {$q}\n";
-                $fen = $this->actionFen(5);
-                if( strstr($fen, 'q') !== false ) {
-                    print "Ok.\n";
-                    print "Fen: " . $fen . "\n";
-                    break;
+            for( $x = $w/2 - 5; $x < $w/2 + 5; $x++ ) {
+                $current = 0;
+                for( $y = 0; $y < $h; $y++ ) {
+                    $pixel = $img->getImagePixelColor($x, $y)->getColor();
+                    $avg = ($pixel['r'] + $pixel['g'] + $pixel['b']) / 3;
+                    if( $avg < 20 ) {
+                        $current++;
+                    }
+                    else {
+                        if( $current > $longest ) {
+                            $longest = $current;
+                        }
+                        $current = 0;
+                    }
+                }
+                if( $current > $longest ) {
+                    $longest = $current;
                 }
             }
+
+            return $longest;
+        }
+
+        /**
+         * Queens are very similar, so we use a different approach to tell them apart:
+         * the max continuous black line lenght in the center.
+         *
+         * @param string $fen
+         * @param int $testNumber
+         * @return string
+         */
+        protected function fixQueens($fen, $testNumber) {
+            $home = Yii::getAlias('@app') . '/assets/tactics_orig';
+            $dir = $home . '/test' . $this->level . '_' . $testNumber . '/';
+            $index = -1;
+
+            $model1 = new Imagick($home . '/model/white/q.jpeg');
+            $model1->cropImage(90, 90, 20, 20);
+            $whiteMaxLine = $this->getLongestVerticalBlackLine($model1);
+            $model2 = new Imagick($home . '/model/black/q.jpg');
+            $model2->cropImage(90, 90, 20, 20);
+            $blackMaxLine = $this->getLongestVerticalBlackLine($model2);
+
+            while (($index = stripos($fen, 'q', $index + 1)) !== false) {
+                $path = $dir . (($index % 9) . '.' . intval($index / 9)) . '.jpeg';
+                $img = new Imagick($path);
+                $img->cropImage(90, 90, 20, 20);
+                $line = $this->getLongestVerticalBlackLine($img);
+                if (abs($line - $blackMaxLine) > abs($line - $whiteMaxLine)) {
+                    $fen[$index] = 'Q';
+                }
+                else {
+                    $fen[$index] = 'q';
+                }
+            }
+            return $fen;
         }
     }
