@@ -327,7 +327,7 @@
             return $ret / count($map1);
         }
 
-        public function actionFen($testNumber) {
+        public function actionTestFen($positionNumber) {
             $home = Yii::getAlias('@app') . '/assets/tactics_orig';
             $models = [];
             $models['white'] = [];
@@ -374,7 +374,7 @@
             }
 
 
-            $dir = $home . '/test1_' . $testNumber;
+            $dir = $home . '/test1_' . $positionNumber;
             $ret = '';
             for( $y = 0; $y < 8; $y++ ) {
                 for( $x = 0; $x < 8; $x++) {
@@ -403,9 +403,9 @@
 
 
 
-            $fen = $this->fixQueens($ret, $testNumber);
+            $fen = $this->fixQueens($ret, $positionNumber);
             print "FEN: " . $fen . "\n";
-            return "FEN: " . $fen . "\n";
+            return $fen;
         }
 
         /**
@@ -473,5 +473,30 @@
                 }
             }
             return $fen;
+        }
+
+        public function actionTestStockfish($positionNumber) {
+            $fen = $this->actionTestFen($positionNumber);
+            $shell = "#!/bin/sh\n" .
+                     "(\n".
+                     sprintf("echo \"position fen %s b - -\";\n", $fen) .
+                     "echo \"go depth 15\";\n" .
+                     "sleep 1;\n" .
+                     ") | stockfish";
+            $path = sys_get_temp_dir() . '/stockfish.sh';
+            file_put_contents($path, $shell);
+            chmod($path,  0777);
+            $ret = exec($path);
+
+            $matches = [];
+            $regexp = '/bestmove ([a-h][1-8])([a-h][1-8])/';
+            if( preg_match($regexp, $ret, $matches) === 1 ) {
+                print "from " . $matches[1] . ' to ' . $matches[2];
+            }
+            else {
+                 // invalid position probably
+                print "Error!\n" . $ret;
+            }
+            unlink($path);
         }
     }
