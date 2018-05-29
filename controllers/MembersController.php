@@ -76,6 +76,12 @@
                 $email = Yii::$app->request->post('private-email');
                 if( $email ) {
                     $member->email = $email;
+                    if( Yii::$app->request->post('private-sms') ) {
+                        $member->receive_sms = true;
+                    }
+                    else {
+                        $member->receive_sms = false;
+                    }
                 }
 
                 $phone = Yii::$app->request->post('private-phone');

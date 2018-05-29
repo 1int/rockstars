@@ -54,7 +54,7 @@
                     $data = new \stdClass();
                     $data->multi = [ ];
 
-                    $members = Member::find()->where('show_on_homepage=1')->all();
+                    $members = Member::find()->where('receive_sms=1')->all();
 
                     foreach ($members as $m) {
                         /** @var Member $m */

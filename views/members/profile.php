@@ -179,7 +179,7 @@
                 </div>
             </div>
             <div id="private-contacts">
-                <h2 class="section-title">Contacts</h2>
+                <h2 class="section-title"><?=$owner?"Private Settings":"Contacts"?></h2>
                 <div id="private-contacts-list">
 
                     <div>
@@ -198,6 +198,12 @@
                             <label for="private-email">Phone*:</label>
                             <input class="form-control" name="private-phone"
                                    id="private-phone" value="<?=$member->phone?>" placeholder="+x (xxx) xxx-xx-xx"/>
+                        </div>
+                        <div>
+                            <input type="checkbox" class="form-check-input" name="private-sms" id="private-sms"
+                                   <?=$member->receive_sms? 'checked="checked"':''?>
+                                   style="height: auto"/>
+                            <label for="private-sms" style="width: auto; color: #337ab7; font-weight: normal">Receive SMS notifications</label>
                         </div>
                         <div>
                             <a href="#" data-toggle="modal" data-target="#modal-change-password">Change password</a>
