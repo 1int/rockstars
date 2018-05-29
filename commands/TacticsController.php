@@ -10,11 +10,25 @@
     use Yii;
     use yii\image\drivers\Image;
     use \Imagick;
+    use yii\base\Action;
 
     class TacticsController extends Controller {
 
         var $split = 4;
         var $level = 1;
+        var $home = '';
+
+        /**
+         * @param Action $action
+         * @return bool
+         */
+        public function beforeAction($action) {
+            if( parent::beforeAction($action) ) {
+                $this->home = Yii::getAlias('@app') . '/assets/tactics_orig';
+                return true;
+            }
+            return false;
+        }
 
         public function actionPublish() {
             /** @var TacticsTest $test */
@@ -34,14 +48,13 @@
         }
 
         public function actionCropBoard() {
-            $dir = Yii::getAlias('@app') . '/assets/tactics_orig';
+            $dir = $this->home;
             for($test = 1; $test <=50; $test++) {
                 for($pos = 1; $pos <= 12; $pos++) {
                     print( "Image {$test}_{$pos}\n");
                     $img = new \Imagick($dir . '/' . "test{$test}_{$pos}.jpeg");
                     $w = $img->getImageWidth();
                     $h = $img->getImageHeight();
-
 
 
 
@@ -499,4 +512,101 @@
             }
             unlink($path);
         }
+
+        /**
+         * @param Imagick $img
+         * @return bool
+         */
+        protected function isBlackToMove($img) {
+
+            $w = $img->getImageWidth();
+            $h = $img->getImageHeight();
+            $left = 0;
+            $bottom = 0;
+
+            $x = 0;
+            $y = $h / 2;
+            $count = 0;
+            $hadBorder = false;
+
+            // find left border
+            do {
+                $p = $img->getImagePixelColor($x, $y)->getColor();
+                $avg = ($p['r'] + $p['g'] + $p['b']) / 3;
+                if( $avg < 20 ) {
+                    $hadBorder = true;
+                }
+                if( $avg >= 200 && $hadBorder ) {
+                    $count++;
+                }
+
+                if( $count >= 8 ) {
+                    $left = $x - 8;
+                    break;
+                }
+                $x++;
+            }
+            while(true);
+
+            $x = $w / 2;
+            $y = $h;
+            $avg = 100;
+
+            // find bottom border
+            do {
+                $prev = $avg;
+                $p = $img->getImagePixelColor($x, $y)->getColor();
+                $avg = ($p['r'] + $p['g'] + $p['b']) / 3;
+                if( $avg < 20 && $prev < 20 ) {
+                    $bottom = $y + 1;
+                    break;
+                }
+                $y--;
+            }
+            while(true);
+
+            // find the lowest black pixel (the bottom of "1.")
+            for( $x = $left; $x < $left + 50; $x++ ) {
+                for ($y = $bottom; $y < $h; $y++) {
+                    $p = $img->getImagePixelColor($x, $y)->getColor();
+                    $avg = ($p['r'] + $p['g'] + $p['b']) / 3;
+                    if ($avg < 20 && $prev < 20) {
+                        $bottom = $y;
+                    }
+                }
+            }
+
+            //Now, count the black/white change count horizontally
+            $colorChangeCount = 0;
+            for( $y = $bottom; $y > $bottom - 25; $y--) {
+                $prev = 0;
+                $count = 0;
+                for( $x = $left; $x < $w; $x++ ) {
+                    $p = $img->getImagePixelColor($x, $bottom)->getColor();
+                    $avg = ($p['r'] + $p['g'] + $p['b']) / 3;
+                    if( $avg < 20 && $prev > 100 ) {
+                        $bottom = $y;
+                        $count++;
+                        if( $count > $colorChangeCount ) {
+                            $colorChangeCount = $count;
+                        }
+                    }
+                    $prev = $avg;
+                }
+            }
+
+            // If we have "..." then black to white change count will be 5 or more
+            print "color change count: " . $colorChangeCount . "\n";
+            return $colorChangeCount > 4;
+        }
+
+        public function actionTestBlackMove($positionNumber) {
+            $path = $this->home . '/test1_' . $positionNumber . '.jpeg';
+            $img = new Imagick($path);
+            $isBlack = $this->isBlackToMove($img);
+
+            print "Black: " . ($isBlack ? "true" : "false");
+            print "\n";
+        }
+
     }
