@@ -15,6 +15,9 @@ use RockstarsApp;
  * @property int $dotdotdot
  * @property string $answer
  * @property string $prettyAnswer
+ * @property string $stockfish_answer
+ * @property string $fen
+ * @property bool $verified
  *
  * @property TacticsTest $test
  */

@@ -5,12 +5,16 @@
      */
 
     namespace app\commands;
-    use yii\console\Controller;
-    use app\models\TacticsTest;
+    use app\models\TacticsPosition;
     use Yii;
-    use yii\image\drivers\Image;
+    use yii\console\Controller;
+
     use \Imagick;
+    use yii\image\drivers\Image;
     use yii\base\Action;
+
+    use app\models\TacticsTest;
+    use app\classes\stockfish\Stockfish;
 
     class TacticsController extends Controller {
 
@@ -24,7 +28,7 @@
          */
         public function beforeAction($action) {
             if( parent::beforeAction($action) ) {
-                $this->home = Yii::getAlias('@app') . '/assets/tactics_orig';
+                $this->home = Yii::getAlias('@app') . '/assets/tactics_orig/level' . $this->level;
                 return true;
             }
             return false;
@@ -340,13 +344,12 @@
             return $ret / count($map1);
         }
 
-        public function actionTestFen($positionNumber) {
-            $home = Yii::getAlias('@app') . '/assets/tactics_orig';
+        public function actionTestFen($testNumber, $positionNumber) {
             $models = [];
             $models['white'] = [];
             $models['black'] = [];
 
-            $dir = new \DirectoryIterator($home . '/model/white');
+            $dir = new \DirectoryIterator($this->home . '/model/white');
             foreach ($dir as $file) {
                 if (!$file->isDot()  && $file->getFilename() != '.DS_Store') {
                     $isBlack = $file->getExtension() == 'jpg';
@@ -366,7 +369,7 @@
                 }
             }
 
-            $dir = new \DirectoryIterator($home . '/model/black');
+            $dir = new \DirectoryIterator($this->home . '/model/black');
             foreach( $dir as $file ) {
                 if (!$file->isDot() && $file->getFilename() != '.DS_Store') {
                     $isBlack = $file->getExtension() == 'jpg';
@@ -387,7 +390,7 @@
             }
 
 
-            $dir = $home . '/test1_' . $positionNumber;
+            $dir = $this->home . '/data/test' . $testNumber . '_' . $positionNumber;
             $ret = '';
             for( $y = 0; $y < 8; $y++ ) {
                 for( $x = 0; $x < 8; $x++) {
@@ -417,7 +420,9 @@
 
 
             $fen = $this->fixQueens($ret, $positionNumber);
-            print "FEN: " . $fen . "\n";
+            if( !defined('NO_PRINT') ) {
+                print "FEN: " . $fen . "\n";
+            }
             return $fen;
         }
 
@@ -462,14 +467,13 @@
          * @return string
          */
         protected function fixQueens($fen, $testNumber) {
-            $home = Yii::getAlias('@app') . '/assets/tactics_orig';
-            $dir = $home . '/test' . $this->level . '_' . $testNumber . '/';
+            $dir = $this->home . '/data/test' . $this->level . '_' . $testNumber . '/';
             $index = -1;
 
-            $model1 = new Imagick($home . '/model/white/q.jpeg');
+            $model1 = new Imagick($this->home . '/model/white/q.jpeg');
             $model1->cropImage(90, 90, 20, 20);
             $whiteMaxLine = $this->getLongestVerticalBlackLine($model1);
-            $model2 = new Imagick($home . '/model/black/q.jpg');
+            $model2 = new Imagick($this->home . '/model/black/q.jpg');
             $model2->cropImage(90, 90, 20, 20);
             $blackMaxLine = $this->getLongestVerticalBlackLine($model2);
 
@@ -488,30 +492,17 @@
             return $fen;
         }
 
-        public function actionTestStockfish($positionNumber) {
-            $fen = $this->actionTestFen($positionNumber);
-            $shell = "#!/bin/sh\n" .
-                     "(\n".
-                     sprintf("echo \"position fen %s b - -\";\n", $fen) .
-                     "echo \"go depth 15\";\n" .
-                     "sleep 1;\n" .
-                     ") | stockfish";
-            $path = sys_get_temp_dir() . '/stockfish.sh';
-            file_put_contents($path, $shell);
-            chmod($path,  0777);
-            $ret = exec($path);
-
-            $matches = [];
-            $regexp = '/bestmove ([a-h][1-8])([a-h][1-8])/';
-            if( preg_match($regexp, $ret, $matches) === 1 ) {
-                print "from " . $matches[1] . ' to ' . $matches[2];
-            }
-            else {
-                 // invalid position probably
-                print "Error!\n" . $ret;
-            }
-            unlink($path);
+        /**
+         * @param int $testNumber
+         * @param int $positionNumber
+         * @return null|string
+         */
+        public function actionTestStockfish($testNumber, $positionNumber) {
+            $fen = $this->actionTestFen($testNumber, $positionNumber);
+            $stockfish = new Stockfish();
+            return $stockfish->bestMoveFromFen($fen, true);
         }
+
 
         /**
          * @param Imagick $img
@@ -596,17 +587,73 @@
             }
 
             // If we have "..." then black to white change count will be 5 or more
-            print "color change count: " . $colorChangeCount . "\n";
+            if( !defined('NO_PRINT') ) {
+                print "color change count: " . $colorChangeCount . "\n";
+            }
             return $colorChangeCount > 4;
         }
 
-        public function actionTestBlackMove($positionNumber) {
-            $path = $this->home . '/test1_' . $positionNumber . '.jpeg';
+        public function actionTestBlackMove($testNumber, $positionNumber) {
+            $path = $this->home . '/img/test' . $testNumber . '_' . $positionNumber . '.jpeg';
             $img = new Imagick($path);
             $isBlack = $this->isBlackToMove($img);
 
-            print "Black: " . ($isBlack ? "true" : "false");
-            print "\n";
+            if( !defined('NO_PRINT') ) {
+                print "Black: " . ($isBlack ? "true" : "false");
+                print "\n";
+            }
+            return $isBlack;
+        }
+
+        /**
+         * @param int $testNumber
+         * @param int $positionNumber
+         * @return bool
+         */
+        public function actionTestRecognize($testNumber, $positionNumber) {
+
+            define('NO_PRINT', true);
+
+            //1. Let's understand if black is to move first
+            $isBlack = $this->actionTestBlackMove($testNumber, $positionNumber);
+
+            //2. Recognize the image
+            $fen = $this->actionTestFen($testNumber, $positionNumber);
+
+            //3. Get stockfish best move
+            $stockfish = new Stockfish();
+            $bestMove = $stockfish->bestMoveFromFen($fen, $isBlack);
+
+            //4. Save the data
+            $positionId = ($this->level - 1) * 600 + ($testNumber-1)*12 + $positionNumber;
+            $testId = ($this->level - 1) * 12 + $testNumber;
+
+            /**
+             * @var TacticsPosition $model
+             */
+            $model = TacticsPosition::findOne($positionId);
+            if( $model == null ) {
+                $model = new TacticsPosition();
+                $model->id = $positionId;
+                $model->test_id = $testId;
+                $model->verified = 0;
+                $model->points = 0;
+            }
+
+            $model->dotdotdot = $isBlack ? 1 : 0;
+            $model->stockfish_answer = $bestMove;
+            $model->fen = $fen;
+            if( !$model->verified ) {
+                $model->answer = $stockfish->humanReadableMove($bestMove, $fen);
+            }
+
+            $ret = $model->save();
+            print ($ret? "Ok\n" : "Failed to save\n");
+
+            if( !$ret ) {
+                var_dump( $model->getErrorSummary(true) );
+            }
+            return $ret;
         }
 
     }

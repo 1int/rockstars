@@ -52,7 +52,7 @@
                 }
 
                 $avatar = UploadedFile::getInstanceByName('avatar');
-                if( $avatar != null ) {
+                if( $avatar !== null ) {
                     $info = getimagesize($avatar->tempName);
                     if( $info == false ) {
                         throw new HttpException(400, 'Please select a jpeg or png file');
@@ -70,11 +70,11 @@
                 }
 
                 $bio = Yii::$app->request->post('description');
-                if( $bio ) {
+                if( $bio !== null ) {
                     $member->bio = strip_tags($bio, '<br><b><s><u><i>');
                 }
                 $email = Yii::$app->request->post('private-email');
-                if( $email ) {
+                if( $email !== null ) {
                     $member->email = $email;
                     if( Yii::$app->request->post('private-sms') ) {
                         $member->receive_sms = true;
@@ -85,11 +85,11 @@
                 }
 
                 $phone = Yii::$app->request->post('private-phone');
-                if( $phone ) {
+                if( $phone !== null ) {
                     $member->phone = $phone;
                 }
                 $pass = Yii::$app->request->post('pass');
-                if( $pass ) {
+                if( $pass !== null ) {
                     $repeat = Yii::$app->request->post('repeat');
                     $pass = trim($pass);
                     $repeat = trim($repeat);
