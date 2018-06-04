@@ -12,6 +12,8 @@
     use yii\base\Action;
     use yii\web\HttpException;
     use app\models\TacticsPosition;
+    use yii\web\NotFoundHttpException;
+    use app\models\TacticsTest;
 
     class AdminController extends BaseController {
 
@@ -117,4 +119,28 @@
 
             return $this->render('answers');
         }
+
+
+        public function actionVerify($positionId) {
+            /** @var Member $member */
+            $member = Yii::$app->user->identity;
+            if( !$member->canInputAnswers() ) {
+                throw new HttpException(403, 'You cannot do this');
+            }
+
+            $model = TacticsPosition::findOne($positionId);
+            if( !$model ) {
+                throw new NotFoundHttpException('Position doesnt exist');
+            }
+
+            /** @var TacticsPosition $model */
+            /** @var TacticsTest $test */
+            $testId = $model->test->id;
+            $levelId = $model->test->level_id;
+            $pos = intval($positionId) % 12;
+            $imgurl = '/tactics/' . $levelId . '/' . $testId . '/image' . $pos;
+
+            return $this->render('verify', ['model'=>$model, 'imgurl'=>$imgurl]);
+        }
+
     }

@@ -344,7 +344,7 @@
             return $ret / count($map1);
         }
 
-        public function actionTestFen($testNumber, $positionNumber) {
+        public function actionFen($testNumber, $positionNumber) {
             $models = [];
             $models['white'] = [];
             $models['black'] = [];
@@ -414,7 +414,9 @@
                     }
                     $ret .= $recognizedName;
                 }
-                $ret .= '/';
+                if( $y != 7 ) {
+                    $ret .= '/';
+                }
             }
 
 
@@ -498,7 +500,7 @@
          * @return null|string
          */
         public function actionTestStockfish($testNumber, $positionNumber) {
-            $fen = $this->actionTestFen($testNumber, $positionNumber);
+            $fen = $this->actionFen($testNumber, $positionNumber);
             $stockfish = new Stockfish();
             return $stockfish->bestMoveFromFen($fen, true);
         }
@@ -593,7 +595,7 @@
             return $colorChangeCount > 4;
         }
 
-        public function actionTestBlackMove($testNumber, $positionNumber) {
+        public function actionBlackMove($testNumber, $positionNumber) {
             $path = $this->home . '/img/test' . $testNumber . '_' . $positionNumber . '.jpeg';
             $img = new Imagick($path);
             $isBlack = $this->isBlackToMove($img);
@@ -610,15 +612,15 @@
          * @param int $positionNumber
          * @return bool
          */
-        public function actionTestRecognize($testNumber, $positionNumber) {
+        public function actionRecognizeOne($testNumber, $positionNumber) {
 
             define('NO_PRINT', true);
 
             //1. Let's understand if black is to move first
-            $isBlack = $this->actionTestBlackMove($testNumber, $positionNumber);
+            $isBlack = $this->actionBlackMove($testNumber, $positionNumber);
 
             //2. Recognize the image
-            $fen = $this->actionTestFen($testNumber, $positionNumber);
+            $fen = $this->actionFen($testNumber, $positionNumber);
 
             //3. Get stockfish best move
             $stockfish = new Stockfish();

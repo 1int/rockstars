@@ -1355,3 +1355,24 @@ h2.member-name a, h2.member-name a:hover, h2.member-name a:visited {
 input#private-sms {
     margin: 5px 5px 5px 0;
 }
+
+div#verify-img {
+    display: inline-block;
+    vertical-align: top;
+    width: 300px;
+}
+
+div#verify-img img {
+    width: 100%;
+}
+
+div#board {
+    display: inline-block;
+    vert-align: top;
+    width: 286px;
+
+}
+
+div#verify-content {
+    text-align: center;
+}
