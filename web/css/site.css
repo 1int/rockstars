@@ -1363,7 +1363,8 @@ div#verify-img {
 }
 
 div#verify-img img {
-    width: 100%;
+    width: 300px;
+    height: 313px;
 }
 
 div#board {
@@ -1373,6 +1374,69 @@ div#board {
 
 }
 
-div#verify-content {
+div#verify-content-wrapper {
     text-align: center;
+    margin-top: 35px;
+}
+
+div#verify-content {
+    display: inline-block;
+}
+
+div#verify-buttons-holder{
+    text-align: right;
+}
+
+input[name=fen] {
+    width: 520px;
+    font-size: 12px;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+label[for=fen] {
+    margin-top: 20px;
+    margin-right: 10px;
+    width: auto;
+}
+
+label[for=isBlackToMove] {
+    margin-left: 15px;
+}
+
+div#verify-content form {
+    text-align: left;
+}
+
+input[name=isBlackToMove] {
+    margin-left: 15px;
+}
+
+.loader {
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #3498db; /* Blue */
+    border-right: 5px solid #3498db; /* Blue */
+
+    border-radius: 50%;
+    animation: spin 0.5s linear infinite;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+div.loading-holder {
+    display: inline-block;
+    position: relative;
+    top: 10px;
+    width: 91.83px;
+    text-align: center;
+}
+
+button#btn-recognized {
+    display: none;
 }

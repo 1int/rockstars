@@ -650,11 +650,6 @@
             }
 
             $ret = $model->save();
-            print ($ret? "Ok\n" : "Failed to save\n");
-
-            if( !$ret ) {
-                var_dump( $model->getErrorSummary(true) );
-            }
             return $ret;
         }
 

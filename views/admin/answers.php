@@ -4,8 +4,10 @@
      * Mail to: pavel@1int.org
      */
 
-    $this->title = 'Rockstars! — Test answers';
+    $this->title = 'Rockstars! Admin — Test answers';
     $this->params['breadcrumbs'][] = 'Test answers';
+    $this->params['homeLink'] = ['label'=>'Admin', 'url'=>'/admin'];
+
 ?>
     <form method="post" action="/marisha">
         <div class="form-group">

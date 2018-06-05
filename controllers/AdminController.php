@@ -7,13 +7,17 @@
     namespace app\controllers;
 
     use app\classes\smsru\Smsru;
+    use app\classes\stockfish\Stockfish;
     use Yii;
     use app\models\Member;
     use yii\base\Action;
+    use yii\helpers\Console;
+    use yii\helpers\Json;
     use yii\web\HttpException;
     use app\models\TacticsPosition;
     use yii\web\NotFoundHttpException;
     use app\models\TacticsTest;
+    use app\commands\TacticsController as ConsoleCommand;
 
     class AdminController extends BaseController {
 
@@ -128,19 +132,79 @@
                 throw new HttpException(403, 'You cannot do this');
             }
 
+            /** @var TacticsPosition $model */
             $model = TacticsPosition::findOne($positionId);
             if( !$model ) {
                 throw new NotFoundHttpException('Position doesnt exist');
             }
 
-            /** @var TacticsPosition $model */
+            $total = TacticsPosition::find()->count();
+
+            // Verify the recognition
+            if( Yii::$app->request->isPost ) {
+                $model->fen = Yii::$app->request->post('fen');
+                $model->dotdotdot = Yii::$app->request->post('isBlackToMove') ? 1 : 0;
+                $model->verified = 1;
+                if($model->save()) {
+                    return $this->redirect(['admin/verify', 'positionId' => intval($positionId) + 1]);
+                }
+                else {
+                    foreach($model->getErrors() as $error) {
+                        Yii::$app->session->addFlash('error', $error[0]);
+                    }
+                }
+            }
+
             /** @var TacticsTest $test */
             $testId = $model->test->id;
             $levelId = $model->test->level_id;
             $pos = intval($positionId) % 12;
+            if( $pos == 0 ) {
+                $pos = 12;
+            }
             $imgurl = '/tactics/' . $levelId . '/' . $testId . '/image' . $pos;
 
-            return $this->render('verify', ['model'=>$model, 'imgurl'=>$imgurl]);
+            return $this->render('verify', ['model'=>$model, 'imgurl'=>$imgurl, 'total'=>$total]);
+        }
+
+        public function actionRecognize($positionId) {
+
+            /** @var Member $member */
+            $member = Yii::$app->user->identity;
+            if( !$member->canInputAnswers() ) {
+                throw new HttpException(403, 'You cannot do this');
+            }
+
+            /** @var TacticsPosition $model */
+            $model = TacticsPosition::findOne($positionId);
+            if( !$model ) {
+                throw new NotFoundHttpException('Position doesnt exist');
+            }
+
+            /** @var TacticsTest $test */
+            $testId = $model->test->id;
+            $levelId = $model->test->level_id;
+            $pos = intval($positionId) % 12;
+            if( $pos == 0 ) {
+                $pos = 12;
+            }
+
+            $c = new ConsoleCommand('cid', Yii::$app);
+            $c->level = $levelId;
+            $c->runAction('recognize-one', [$testId, $pos]);
+
+            $model = TacticsPosition::findOne($positionId);
+            return Json::encode(['fen'=>$model->fen, 'isBlackToMove'=>$model->dotdotdot]);
+        }
+
+        public function actionIndex() {
+            /** @var Member $member */
+            $member = Yii::$app->user->identity;
+            if( $member->role != Member::ADMIN ) {
+                throw new HttpException(403, 'Access denied');
+            }
+
+            return $this->render('index');
         }
 
     }

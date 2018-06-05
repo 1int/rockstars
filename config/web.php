@@ -64,7 +64,8 @@ $config = [
                 '/tactics/<level:[-a-zA-Z0-9]+>/<test:[0-9]+>/image<position:[0-9]+>'=>'tactics/image',
                 '/@/<uname:[a-zA-Z0-9_]+>' => 'members/profile',
                 '/marisha' => 'admin/answers',
-                '/admin/verify/<positionId:[0-9]+>' => 'admin/verify'
+                '/admin/verify/<positionId:[0-9]+>' => 'admin/verify',
+                '/admin/recognize/<positionId:[0-9]+>' => 'admin/recognize'
             ]
         ],
 
