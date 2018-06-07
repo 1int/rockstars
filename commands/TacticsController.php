@@ -5,6 +5,7 @@
      */
 
     namespace app\commands;
+    use app\models\TacticsLevel;
     use app\models\TacticsPosition;
     use Yii;
     use yii\console\Controller;
@@ -18,7 +19,7 @@
 
     class TacticsController extends Controller {
 
-        var $split = 4;
+        var $split = 5;
         var $level = 1;
         var $home = '';
 
@@ -344,51 +345,41 @@
             return $ret / count($map1);
         }
 
-        public function actionFen($testNumber, $positionNumber) {
-            $models = [];
+
+        /**
+         * @param array $models
+         */
+        protected function loadModels( &$models ) {
+
             $models['white'] = [];
             $models['black'] = [];
 
-            $dir = new \DirectoryIterator($this->home . '/model/white');
-            foreach ($dir as $file) {
-                if (!$file->isDot()  && $file->getFilename() != '.DS_Store') {
-                    $isBlack = $file->getExtension() == 'jpg';
-                    $name = $file->getBasename();
-                    $name = str_replace('.jpeg', '', $name);
-                    $name = str_replace('.jpg', '', $name);
-                    if( !$isBlack ) {
-                        $name = strtoupper($name);
+            foreach($models as $color => $unused) {
+                $dir = new \DirectoryIterator($this->home . '/model/' . $color);
+                foreach ($dir as $file) {
+                    if (!$file->isDot() && $file->getFilename() != '.DS_Store') {
+                        $isBlack = $file->getExtension() == 'jpg';
+                        $name = $file->getBasename();
+                        $name = str_replace('.jpeg', '', $name);
+                        $name = str_replace('.jpg', '', $name);
+                        if (!$isBlack) {
+                            $name = strtoupper($name);
+                        }
+                        $path = $dir->getPath() . '/' . $file->getFilename();
+                        $models[$color][$name] = [ ];
+                        $models[$color][$name]['path'] = $path;
+                        $img = new \Imagick($path);
+                        //  $img->cropImage(90, 90, 20, 20);
+                        $models[$color][$name]['img'] = $img;
+                        $models[$color][$name]['map'] = $this->getPixelMap($models[$color][$name]['img']);
                     }
-                    $path = $dir->getPath() . '/' . $file->getFilename();
-                    $models['white'][$name] = [];
-                    $models['white'][$name]['path'] = $path;
-                    $img = new \Imagick($path);
-                    $img->cropImage(90, 90, 20, 20);
-                    $models['white'][$name]['img'] = $img;
-                    $models['white'][$name]['map'] = $this->getPixelMap($models['white'][$name]['img']);
                 }
             }
+        }
 
-            $dir = new \DirectoryIterator($this->home . '/model/black');
-            foreach( $dir as $file ) {
-                if (!$file->isDot() && $file->getFilename() != '.DS_Store') {
-                    $isBlack = $file->getExtension() == 'jpg';
-                    $name = $file->getBasename();
-                    $name = str_replace('.jpeg', '', $name);
-                    $name = str_replace('.jpg', '', $name);
-                    if( !$isBlack ) {
-                        $name = strtoupper($name);
-                    }
-                    $path = $dir->getPath() . '/' . $file->getFilename();
-                    $models['black'][$name] = [];
-                    $models['black'][$name]['path'] = $path;
-                    $img = new \Imagick($path);
-                    $img->cropImage(90, 90, 20, 20);
-                    $models['black'][$name]['img'] = $img;
-                    $models['black'][$name]['map'] = $this->getPixelMap($models['white'][$name]['img']);
-                }
-            }
-
+        public function actionFen($testNumber, $positionNumber) {
+            $models = [];
+            $this->loadModels($models);
 
             $dir = $this->home . '/data/test' . $testNumber . '_' . $positionNumber;
             $ret = '';
@@ -399,7 +390,7 @@
                     $src = $isBlack ? $models['black'] : $models['white'];
 
                     $img = new Imagick($path);
-                    $img->cropImage(90, 90, 20, 20);
+                //    $img->cropImage(90, 90, 20, 20);
 
                     $map = $this->getPixelMap($img);
                     $minDiff = -1;
@@ -419,9 +410,7 @@
                 }
             }
 
-
-
-            $fen = $this->fixQueens($ret, $positionNumber);
+            $fen = $this->fixQueens($ret, $testNumber, $positionNumber);
             if( !defined('NO_PRINT') ) {
                 print "FEN: " . $fen . "\n";
             }
@@ -437,7 +426,7 @@
             $h = $img->getImageHeight();
             $longest = 0;
 
-            for( $x = $w/2 - 5; $x < $w/2 + 5; $x++ ) {
+            for( $x = $w/2 - 15; $x < $w/2 + 15; $x++ ) {
                 $current = 0;
                 for( $y = 0; $y < $h; $y++ ) {
                     $pixel = $img->getImagePixelColor($x, $y)->getColor();
@@ -468,22 +457,31 @@
          * @param int $testNumber
          * @return string
          */
-        protected function fixQueens($fen, $testNumber) {
-            $dir = $this->home . '/data/test' . $this->level . '_' . $testNumber . '/';
+        protected function fixQueens($fen, $testNumber, $positionNumber) {
+            $dir = $this->home . '/data/test' . $testNumber . '_' . $positionNumber . '/';
             $index = -1;
 
             $model1 = new Imagick($this->home . '/model/white/q.jpeg');
-            $model1->cropImage(90, 90, 20, 20);
+            //$model1->cropImage(90, 90, 20, 20);
             $whiteMaxLine = $this->getLongestVerticalBlackLine($model1);
             $model2 = new Imagick($this->home . '/model/black/q.jpg');
-            $model2->cropImage(90, 90, 20, 20);
+           // $model2->cropImage(90, 90, 20, 20);
             $blackMaxLine = $this->getLongestVerticalBlackLine($model2);
+
+
+            if( !defined('NO_PRINT') ) {
+                print "black line: " . $blackMaxLine . "\n";
+                print "white line: " . $whiteMaxLine . "\n";
+            }
 
             while (($index = stripos($fen, 'q', $index + 1)) !== false) {
                 $path = $dir . (($index % 9) . '.' . intval($index / 9)) . '.jpeg';
                 $img = new Imagick($path);
-                $img->cropImage(90, 90, 20, 20);
+                //$img->cropImage(90, 90, 20, 20);
                 $line = $this->getLongestVerticalBlackLine($img);
+                if( !defined('NO_PRINT') ) {
+                    print "this line: " . $line . "\n";
+                }
                 if (abs($line - $blackMaxLine) > abs($line - $whiteMaxLine)) {
                     $fen[$index] = 'Q';
                 }
@@ -614,7 +612,9 @@
          */
         public function actionRecognizeOne($testNumber, $positionNumber) {
 
-            define('NO_PRINT', true);
+            if( php_sapi_name() != "cli") {
+                define('NO_PRINT', true);
+            }
 
             //1. Let's understand if black is to move first
             $isBlack = $this->actionBlackMove($testNumber, $positionNumber);
@@ -650,7 +650,34 @@
             }
 
             $ret = $model->save();
-            return $ret;
+            return $ret && (!!$bestMove);
+        }
+
+        public function actionRecognize() {
+            define( 'NO_PRINT', true );
+
+            $level = TacticsLevel::findOne($this->level);
+            for($testNumber = 1; $testNumber <=  $level->total_tests; $testNumber++) {
+                for($position = 1; $position <= $level->positions_in_test; $position++) {
+                    $posid = $level->start_position + ($testNumber-1) * $level->positions_in_test + $position - 1;
+                    /** @var TacticsPosition $model */
+                    $model = TacticsPosition::findOne($posid);
+
+                    if( $model && $model->verified ) {
+                        continue;
+                    }
+
+                    print "Recognizing Level 1, test{$testNumber}_{$position}...";
+                    $ret = $this->actionRecognizeOne($testNumber, $position);
+                    if( !$ret ) {
+                        print "FAIL.\n";
+                        die;
+                    }
+                    else {
+                        print "OK.\n";
+                    }
+                }
+            }
         }
 
     }

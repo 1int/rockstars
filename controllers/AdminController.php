@@ -7,11 +7,9 @@
     namespace app\controllers;
 
     use app\classes\smsru\Smsru;
-    use app\classes\stockfish\Stockfish;
     use Yii;
     use app\models\Member;
     use yii\base\Action;
-    use yii\helpers\Console;
     use yii\helpers\Json;
     use yii\web\HttpException;
     use app\models\TacticsPosition;

@@ -34,7 +34,7 @@
             $regexp = '/bestmove ([a-h][1-8])([a-h][1-8])/';
             if( preg_match($regexp, $ret, $matches) === 1 ) {
                 if( !defined('NO_PRINT') ) {
-                    print "from " . $matches[1] . ' to ' . $matches[2];
+                    print "best move - from " . $matches[1] . ' to ' . $matches[2] . "\n";
                 }
                 $ret = $matches[1] . '-' . $matches[2];
             }

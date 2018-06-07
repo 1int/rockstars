@@ -13,6 +13,9 @@ use \yii\db\ActiveRecord;
  * @property string $slug
  * @property int $time
  * @property string $description
+ * @property int $total_tests
+ * @property int $positions_in_test
+ * @property int $start_position
  *
  * @property TacticsTest[] $tests
  * @property TacticsTest[] $publishedTests

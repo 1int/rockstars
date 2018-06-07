@@ -37,7 +37,7 @@ class TacticsPosition extends ActiveRecord
     public function rules()
     {
         return [
-            [['test_id', 'points', 'dotdotdot', 'answer'], 'required'],
+            [['test_id', 'points', 'dotdotdot', 'answer', 'fen'], 'required'],
             [['test_id', 'points', 'dotdotdot'], 'integer'],
             [['answer'], 'string', 'max' => 10],
             [['test_id'], 'exist', 'skipOnError' => true, 'targetClass' => TacticsTest::className(), 'targetAttribute' => ['test_id' => 'id']],

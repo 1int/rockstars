@@ -79,7 +79,7 @@
                 $("input[type=checkbox]").prop("checked", !!data.isBlackToMove);
                 board.position(data.fen, true);
                 $(".loading-holder").hide();
-                $("#btn-recognized").show();
+                $("#btn-recognize").show();
             }, 'JSON');
             return false;
         });
