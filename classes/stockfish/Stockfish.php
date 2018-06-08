@@ -63,16 +63,25 @@
             $fen = strtolower($fen);
             $regexp = '/([a-h])([1-8])-([a-h])([1-8])/';
             if( preg_match($regexp, $move, $matches) === 1 ) {
-                $coord = [ ord(strtolower($matches[1])) - ord('a'), intval($matches[2])];
+                $matches = array_map(function($e) {
+                    return strtolower($e);
+                }, $matches);
+                $coord = [ord($matches[1]) - ord('a'), intval($matches[2])];
                 $location = 9 * (8-$coord[1]) + $coord[0];
                 $figure = $fen[$location];
                 switch($figure) {
-                    case 'b': return 'B' . strtolower($matches[3]) . $matches[4];
-                    case 'n': return 'N' . strtolower($matches[3]) . $matches[4];
-                    case 'k': return 'K' . strtolower($matches[3]) . $matches[4];
-                    case 'q': return 'Q' . strtolower($matches[3]) . $matches[4];
-                    case 'r': return 'R' . strtolower($matches[3]) . $matches[4];
-                    case 'p': return strtolower($matches[3]) . $matches[4];
+                    case 'b': return 'B' . $matches[3] . $matches[4];
+                    case 'n': return 'N' . $matches[3] . $matches[4];
+                    case 'k': return 'K' . $matches[3] . $matches[4];
+                    case 'q': return 'Q' . $matches[3] . $matches[4];
+                    case 'r': return 'R' . $matches[3] . $matches[4];
+                    case 'p':
+                        if( $matches[1] == $matches[3] ) {
+                            return $matches[3] . $matches[4];
+                        }
+                        else {
+                            return $matches[1] . $matches[3];
+                        }
                 }
             }
             return null;

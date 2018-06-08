@@ -497,7 +497,7 @@
          * @param int $positionNumber
          * @return null|string
          */
-        public function actionTestStockfish($testNumber, $positionNumber) {
+        public function actionStockfishOne($testNumber, $positionNumber) {
             $fen = $this->actionFen($testNumber, $positionNumber);
             $stockfish = new Stockfish();
             return $stockfish->bestMoveFromFen($fen, true);
@@ -761,6 +761,44 @@
                 else {
                     print "FAIL.\n";
                     die;
+                }
+            }
+        }
+
+        public function actionStockfish() {
+            define('NO_PRINT', true);
+            $level = TacticsLevel::findOne($this->level);
+            $stockfish = new Stockfish();
+            for($testNumber = 1; $testNumber <=  $level->total_tests; $testNumber++) {
+                for ($position = 1; $position <= $level->positions_in_test; $position++) {
+                    $posid = $level->start_position + ($testNumber - 1) * $level->positions_in_test + $position - 1;
+                    /** @var TacticsPosition $model */
+                    $model = TacticsPosition::findOne($posid);
+                    if (!$model->fen) {
+                        print "NO FEN!\n";
+                        die;
+                    }
+                    $answer = $stockfish->bestMoveFromFen($model->fen, $model->dotdotdot);
+                    $human = $stockfish->humanReadableMove($answer, $model->fen);
+
+                    if( !$answer ) {
+                        print "stockfish fail\n";
+                        die;
+                    }
+
+                    print "Checking Level 1, test{$testNumber}_{$position}...";
+                    if ($answer == $model->stockfish_answer && $human == $model->answer) {
+                        print "ok.\n";
+                    }
+                    else {
+                        print "changing {$model->answer} to {$human}.\n";
+                        $model->answer = $human;
+                        $model->stockfish_answer = $answer;
+                        if( !$model->save() ) {
+                            print "failed to save model.\n";
+                            die;
+                        }
+                    }
                 }
             }
         }
