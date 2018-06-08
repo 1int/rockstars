@@ -100,8 +100,11 @@
             }
             $this->loadEntities($level, $test);
 
+            /** @var Member $member */
+            $member = Yii::$app->user->identity;
+
             $uid = Yii::$app->user->getId();
-            $ok = $this->test->isFinishedBy($uid) || $this->test->isInProgressFor($uid);
+            $ok = $this->test->isFinishedBy($uid) || $this->test->isInProgressFor($uid) || $member->canInputAnswers();
             if( $position == 0 || !$ok ) {
                 $path =  Yii::getAlias('@app') . '/assets/tactics/default.jpeg';
             }

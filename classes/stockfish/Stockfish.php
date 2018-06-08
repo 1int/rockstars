@@ -45,6 +45,7 @@
                     var_dump($ret);
                     print $shell;
                 }
+                $ret = null;
             }
             unlink($path);
 

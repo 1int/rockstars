@@ -538,6 +538,7 @@
                 $x++;
             }
             while(true);
+          //  print("left: $left\n");
 
             $x = $w / 2;
             $y = $h;
@@ -555,6 +556,7 @@
                 $y--;
             }
             while(true);
+        //    print("bottom: $bottom\n");
 
             // find the lowest black pixel (the bottom of "1.")
             for( $x = $left; $x < $left + 50; $x++ ) {
@@ -566,6 +568,7 @@
                     }
                 }
             }
+         //   print("bottom: $bottom\n");
 
             //Now, count the black/white change count horizontally
             $colorChangeCount = 0;
@@ -576,7 +579,6 @@
                     $p = $img->getImagePixelColor($x, $bottom)->getColor();
                     $avg = ($p['r'] + $p['g'] + $p['b']) / 3;
                     if( $avg < 20 && $prev > 100 ) {
-                        $bottom = $y;
                         $count++;
                         if( $count > $colorChangeCount ) {
                             $colorChangeCount = $count;
@@ -590,7 +592,7 @@
             if( !defined('NO_PRINT') ) {
                 print "color change count: " . $colorChangeCount . "\n";
             }
-            return $colorChangeCount > 4;
+            return $colorChangeCount >= 4;
         }
 
         public function actionBlackMove($testNumber, $positionNumber) {
@@ -649,7 +651,16 @@
                 $model->answer = $stockfish->humanReadableMove($bestMove, $fen);
             }
 
+            if( !$model->verified && !$model->answer && !$bestMove ) {
+                $model->answer = 'xx'; //indicates error
+            }
+
             $ret = $model->save();
+            if( !$ret ) {
+                if(!defined('NO_PRINT')) {
+                    var_dump($model->getErrors());
+                }
+            }
             return $ret && (!!$bestMove);
         }
 
@@ -663,7 +674,7 @@
                     /** @var TacticsPosition $model */
                     $model = TacticsPosition::findOne($posid);
 
-                    if( $model && $model->verified ) {
+                    if( $model && ($model->verified || (!!$model->fen && $model->answer != 'xx')) ) {
                         continue;
                     }
 
@@ -676,6 +687,80 @@
                     else {
                         print "OK.\n";
                     }
+                }
+            }
+        }
+
+        public function actionFix() {
+            define('NO_PRINT', true);
+            $level = TacticsLevel::findOne($this->level);
+         /*   for($testNumber = 1; $testNumber <=  $level->total_tests; $testNumber++) {
+                for($position = 1; $position <= $level->positions_in_test; $position++) {
+                    $posid = $level->start_position + ($testNumber-1) * $level->positions_in_test + $position - 1;
+
+                    $model = TacticsPosition::findOne($posid);
+
+                    if( $model && $model->verified ) {
+                        continue;
+                    }
+
+                    print "Fixing Level 1, test{$testNumber}_{$position}...";
+                    $ret = $this->actionBlackMove($testNumber, $position);
+                    $model->dotdotdot = $ret;
+                    $model->save();
+                    print "OK.\n";
+
+                }
+            }*/
+
+            print "\n\nFixing answers:\n";
+            $models = TacticsPosition::find()->where("answer='' OR answer='xx' OR stockfish_answer IS NULL")->all();
+            $stockfish = new Stockfish();
+            foreach($models as $m) {
+                /** @var TacticsPosition $m */
+                print "Answer for pos id {$m->id}...";
+                $m->stockfish_answer = $stockfish->bestMoveFromFen($m->fen, $m->dotdotdot);
+                $m->answer = $stockfish->humanReadableMove($m->stockfish_answer, $m->fen);
+                print $m->answer;
+                print "\n";
+                $m->save();
+            }
+        }
+
+        public function actionImportPoints() {
+            $file = fopen($this->home . '/points.txt', 'r');
+            $i = 0;
+            while( ($line=fgets($file)) ) {
+                $matches = [];
+                $i++;
+                $regexp = "/(\d).([1-4])-([1-4])-([1-4])-([1-4])-([1-4])-([1-4])-([1-4])-([1-4])-([1-4])-([1-4])-([1-4])-([1-4])/";
+                print "Importing {$i}...";
+                if( preg_match($regexp, $line, $matches) === 1 ) {
+
+                    //1. first, check if we have 25
+                    $testNumber = $matches[1];
+
+                    array_shift($matches);
+                    array_shift($matches);
+
+                    $sum = array_sum($matches);
+                    if( $sum != 25 ) {
+                        print "not 25.\n";
+                        die;
+                    }
+
+                    for( $j = 0; $j < 12; $j++ ) {
+                        $model = TacticsPosition::findOne(($i-1) * 12 + $j + 1);
+                        /** @var TacticsPosition $model */
+                        $model->points = $matches[$j];
+                        $model->save();
+                    }
+
+                    print "OK.\n";
+                }
+                else {
+                    print "FAIL.\n";
+                    die;
                 }
             }
         }
