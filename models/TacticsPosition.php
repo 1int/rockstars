@@ -18,6 +18,8 @@ use RockstarsApp;
  * @property string $stockfish_answer
  * @property string $fen
  * @property bool $verified
+ * @property string $castling
+ * @property string $fullFen
  *
  * @property TacticsTest $test
  */
@@ -71,8 +73,18 @@ class TacticsPosition extends ActiveRecord
         return RockstarsApp::ClearTacticsAnswer($answer->answer) == RockstarsApp::ClearTacticsAnswer($this->answer);
     }
 
+    /**
+     * @return string
+     */
     public function getPrettyAnswer() {
         return strlen($this->answer) == 2 ? strtolower($this->answer) :
                 ucfirst(strtolower($this->answer));
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullFen() {
+        return sprintf('%s %s %s - 0 1', $this->fen, $this->dotdotdot ? 'b':'w', $this->castling);
     }
 }

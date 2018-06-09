@@ -64,7 +64,7 @@
         var fen = '<?=$model->fen?>';
         var positionId = <?=$model->id?>;
     </script>
-    <link rel="stylesheet" href="/css/chessboard.min.css"/>
+    <link rel="stylesheet" href="/css/vendor/chessboard.min.css"/>
     <?php ob_start() ?>
     $(function() {
         var board = ChessBoard('board', fen);
@@ -84,5 +84,5 @@
             return false;
         });
     })
-    <?php $this->registerJsFile('/js/chessboard.min.js', ['position'=>View::POS_END, 'depends' => [JqueryAsset::className()]]); ?>
+    <?php $this->registerJsFile('/js/vendor/chessboard.min.js', ['position'=>View::POS_END, 'depends' => [JqueryAsset::className()]]); ?>
     <?php $this->registerJs(ob_get_clean(), View::POS_END); ?>

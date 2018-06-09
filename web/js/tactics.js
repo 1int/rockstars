@@ -1,132 +1,198 @@
 /**
- * Created by Lint on 25/04/2018.
+ * Created by Lint on 09/06/2018.
  */
+var board,
+    game = new Chess();
+
+var countdown = 3;
+var initialSeconds = timeLeft;
+var timerRef;
+var currentPosition = 0;
+const TOTAL_POSITIONS = 12;
+const AFTERMOVE_DELAY = 700;
+var answers = [];
+var disableMoves = false;
+var disableStartTime = 0;
 
 
-    var countdown = 3;
-    var initialSeconds = timeLeft;
-    var timerRef;
-    var currentPosition = 0;
-    const TOTAL_POSITIONS = 12;
-    var answers = [];
+var removeGreySquares = function() {
+    var $el = $('#board .square-55d63');
+    if( $el.hasClass('move-dest') ) {
+        $el.removeClass('move-dest');
+    }
+}
 
-    function startCountdown() {
-        if( isStarted ) {
-            $("#countdown").hide();
-            startTest();
-            return;
+var greySquare = function(square) {
+    $('#board .square-' + square).addClass("move-dest");
+};
+
+var onDragStart = function(source, piece) {
+    // do not pick up pieces if the game is over
+    // or if it's not that side's turn
+    if (game.game_over() === true ||
+        (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+        (game.turn() === 'b' && piece.search(/^w/) !== -1) ||
+        disableMoves) {
+        return false;
+    }
+
+    var square = source;
+    var moves = game.moves({
+        square: square,
+        verbose: true
+    });
+
+    // exit if there are no moves available for this square
+    if (moves.length === 0) return;
+
+    // highlight the possible squares for this piece
+    for (var i = 0; i < moves.length; i++) {
+        greySquare(moves[i].to);
+    }
+};
+
+var onDrop = function(source, target) {
+    removeGreySquares();
+
+    // see if the move is legal
+    var move = game.move({
+        from: source,
+        to: target,
+        promotion: 'q' // NOTE: always promote to a queen for example simplicity
+    });
+
+    // illegal move
+    if (move === null)
+        return 'snapback';
+    else {
+        var strMove = '';
+        if( move.piece != 'p' ) {
+            strMove = move.piece.toUpperCase() + move.to;
         }
-        $.post(window.location.href.toString() + "/start");
-        $("#countdown" + countdown).html(countdown).show().css({"font-size": "300px", "color":"rgba(33,33,33,0)"});
+        else {
+            var source_column = move.from.substring(1,1);
+            var target_column = move.to.substring(1,1);
+            if( source_column == target_column ) {
+                strMove = move.to;
+            }
+            else {
+                strMove = source_column + target_column;
+            }
+        }
+        submitAnswer(strMove);
+    }
+};
+
+var onSnapEnd = function() {
+    board.position(game.fen());
+};
+
+var cfg = {
+    draggable: true,
+    position: '',
+    onDragStart: onDragStart,
+    onDrop: onDrop,
+    onSnapEnd: onSnapEnd
+};
+board = ChessBoard('board', cfg);
+
+
+
+
+
+
+
+//////////////
+
+
+function startCountdown() {
+    if( isStarted ) {
+        $("#countdown").hide();
+        startTest();
+        return;
+    }
+    $.post(window.location.href.toString() + "/start");
+    $("#countdown" + countdown).html(countdown).show().css({"font-size": "300px", "color":"rgba(33,33,33,0)"});
+    setTimeout(nextNumber, 1000);
+}
+
+function nextNumber() {
+    $("#countdown" + countdown).remove();
+    countdown--;
+    $("#countdown" + countdown).html(countdown).show().css({"font-size": "300px", "color":"rgba(33,33,33,0)"});
+    if (countdown > 0) {
         setTimeout(nextNumber, 1000);
     }
+    else {
+        startTest();
+    }
+}
 
-    function nextNumber() {
-        $("#countdown" + countdown).remove();
-        countdown--;
-        $("#countdown" + countdown).html(countdown).show().css({"font-size": "300px", "color":"rgba(33,33,33,0)"});
-        if (countdown > 0) {
-            setTimeout(nextNumber, 1000);
+function startTimer() {
+    timerRef = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+    initialSeconds--;
+
+    var minutes = parseInt(initialSeconds/60);
+    var seconds = initialSeconds % 60;
+    if( minutes < 10 ) {
+        minutes = "0" + minutes.toString();
+    }
+    if( seconds < 10 ) {
+        seconds = "0" + seconds.toString();
+    }
+    $("#tactics-timer").html( minutes.toString() + ":" + seconds.toString());
+    if( initialSeconds == 0 ) {
+        finish();
+        clearInterval(timerRef);
+    }
+}
+
+function submitAnswer(answer) {
+    disableMoves = true;
+    disableStartTime = (new Date()).getTime();
+    $.post(window.location.href.toString() + "/answer", {answer: answer, position: currentPosition}).done(function() {
+        var now = (new Date()).getTime();
+        var diff = disableStartTime - now + AFTERMOVE_DELAY;
+        if( diff > 0 ) {
+            setTimeout( nextPosition, diff );
         }
         else {
-            startTest();
+            nextPosition();
         }
+    });
+}
+
+
+function nextPosition() {
+    if( currentPosition == TOTAL_POSITIONS - 1 ) {
+        finish();
+        return;
     }
+    currentPosition++;
 
-    function startTimer() {
-        timerRef = setInterval(updateTimer, 1000);
-    }
+    var animated = (blackToMove[currentPosition] == blackToMove[currentPosition-1]);
+    board.position(fens[currentPosition], animated);
+    board.orientation(blackToMove[currentPosition] ? 'black':'white');
+    game.load(fens[currentPosition]);
+    disableMoves = false;
+}
 
-    function updateTimer() {
-        initialSeconds--;
+function startTest() {
+    startTimer();
+    $("#board").show();
+    board.position(fens[currentPosition], true);
+    game.load(fens[currentPosition]);
+    board.orientation(blackToMove[currentPosition] ? 'black':'white');
+    $("#btn-next").show();
+    $("#test-container").show();
+    $("#tactics-timer").show();
+}
 
-        var minutes = parseInt(initialSeconds/60);
-        var seconds = initialSeconds % 60;
-        if( minutes < 10 ) {
-            minutes = "0" + minutes.toString();
-        }
-        if( seconds < 10 ) {
-            seconds = "0" + seconds.toString();
-        }
-        $("#tactics-timer").html( minutes.toString() + ":" + seconds.toString());
-        if( initialSeconds == 0 ) {
-            finish();
-            clearInterval(timerRef);
-        }
-    }
-
-    function submitAnswer() {
-        var a = $("input#answer").val();
-        $.post(window.location.href.toString() + "/answer", {answer: a, position: currentPosition});
-    }
-
-    function nextPosition() {
-        if( currentPosition == TOTAL_POSITIONS - 1 ) {
-            $("#btn-next").hide();
-            $("#btn-prev").hide();
-            var a = $("input#answer").val();
-            $.post(window.location.href.toString() + "/answer", {answer: a, position: currentPosition}).done(function() {
-                finish();
-            });
-            return;
-        }
-        submitAnswer();
-        answers[currentPosition] = $("input#answer").val();
-        currentPosition++;
-        if( answers[currentPosition] !== undefined ) {
-            $("input#answer").val(answers[currentPosition]);
-        }
-        else {
-            $("input#answer").val('');
-        }
-
-        $("#btn-prev").show();
-
-        if( currentPosition == TOTAL_POSITIONS - 1 ) {
-            $("#btn-next").html("Finish");
-        }
-
-        $("#img-position").attr("src", window.location.href + "/image" + (currentPosition+1).toString());
-    }
-
-    function previousPosition() {
-        if( currentPosition <= 0 ) {
-            return;
-        }
-
-        var currentAnswer = $("input#answer").val();
-        answers[currentPosition] = currentAnswer;
-
-        if( currentPosition == TOTAL_POSITIONS -1 ) {
-            submitAnswer();
-        }
-
-        currentPosition--;
-        if( currentPosition == 0 ) {
-            $("#btn-prev").hide();
-        }
-        if( currentPosition == TOTAL_POSITIONS - 2 ) {
-            $("#btn-next").html('Next <i class="glyphicon glyphicon-circle-arrow-right"></i>');
-        }
-        if( answers[currentPosition] !== undefined ) {
-            $("input#answer").val(answers[currentPosition]);
-        }
-        else {
-            $("input#answer").val('');
-        }
-
-        $("#img-position").attr("src", window.location.href + "/image" + (currentPosition+1).toString());
-    }
-
-    function startTest() {
-        startTimer();
-        $("#img-position").attr("src", window.location.href + "/image1");
-        $("#test-container").show();
-        $("#tactics-timer").show();
-    }
-
-    function finish() {
-        $.post(window.location.href.toString() + "/finish").done(function() {
-           window.location.href = window.location.href + "/result";
-        });
-    }
+function finish() {
+    $.post(window.location.href.toString() + "/finish").done(function() {
+        window.location.href = window.location.href + "/result";
+    });
+}

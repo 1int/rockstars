@@ -1,9 +1,7 @@
 <?php
     use app\models\TacticsTest;
     use app\models\TacticsLevel;
-    use yii\web\JqueryAsset;
     use yii\web\View;
-
     /**
      * Crafted by Pavel Lint 24/04/2018
      * Mail to: pavel@1int.org
@@ -21,8 +19,6 @@
     $this->params['breadcrumbs'][] = ['label'=>'Tactics Tests', 'url'=>'/tactics'];
     $this->params['breadcrumbs'][] = ['label'=> $level->name, 'url'=>'/tactics/' . $level->slug];
     $this->params['breadcrumbs'][] = 'Test ' . $test->number;
-
-
 ?>
 
 
@@ -34,9 +30,12 @@
     <p id="tactics-timer" style="display: none">10:00</p>
 
     <div id="test-container" style="display: none">
-        <div id="board"></div>
-        <!--<button class="btn btn-large btn-primary" id="btn-prev" style="display: none"><i class="glyphicon glyphicon-circle-arrow-left"></i> Previous</button>-->
-      <!--  <button class="btn btn-large btn-primary" id="btn-next">Next <i class="glyphicon glyphicon-circle-arrow-right"></i></button> -->
+        <img id="img-position" src="" alt=""/>
+        <div id="answer-holder">
+            <input class="input form-control" id="answer" placeholder="Nf3"></input>
+        </div>
+        <button class="btn btn-large btn-primary" id="btn-prev" style="display: none"><i class="glyphicon glyphicon-circle-arrow-left"></i> Previous</button>
+        <button class="btn btn-large btn-primary" id="btn-next">Next <i class="glyphicon glyphicon-circle-arrow-right"></i></button>
     </div>
 
 
@@ -46,27 +45,12 @@
             startCountdown();
         });
         $("#tactics-timer").detach().appendTo($("ul.breadcrumb"));
-        //$("#btn-prev").click(previousPosition);
+        $("#btn-prev").click(previousPosition);
         $("#btn-next").click(nextPosition);
 <?php $this->registerJs(ob_get_clean()); ?>
 
 <?php ob_start();?>
-
-var timeLeft = <?=$timeLeft?>;
-var isStarted = <?=$isStarted ? 'true' : 'false'?>;
-var fens = [];
-var blackToMove = [];
-<?php foreach($test->tacticsPositions as $p) { ?>
-fens.push('<?=$p->fullFen?>');
-blackToMove.push(<?=$p->dotdotdot? 'true':'false'?>);
-<?php } ?>
+        var timeLeft = <?=$timeLeft?>;
+        var isStarted = <?=$isStarted ? 'true' : 'false'?>;
 <?php $this->registerJs(ob_get_clean(), View::POS_BEGIN); ?>
-
-
-<link rel="stylesheet" href="/css/vendor/chessboard.min.css"/>
-
-<?php
-    $this->registerJsFile('/js/vendor/chess.min.js', ['position'=>View::POS_END, 'depends'=>[JqueryAsset::className()]], 'chessjs');
-    $this->registerJsFile('/js/vendor/chessboard.min.js', ['position'=>View::POS_END], 'chessboardjs');
-    $this->registerJsFile('/js/tactics.js', ['position'=>View::POS_END, 'depends'=>[JqueryAsset::className()]]);
-?>
+<?php $this->registerJsFile('/js/tactics.old.js', ['position'=>View::POS_END]);

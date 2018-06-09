@@ -1440,3 +1440,15 @@ div.loading-holder {
 button#btn-recognized {
     display: none;
 }
+
+div#board {
+    width: 400px;
+}
+
+.highlight1-32417, .highlight2-9c5d2 {
+    box-shadow: none !important;
+}
+
+.move-dest{
+    background:radial-gradient(rgba(20,85,30,0.3) 17%,#208530 0,rgba(0,0,0,0.3) 0,rgba(0,0,0,0) 0);
+}
