@@ -9,7 +9,7 @@ var initialSeconds = timeLeft;
 var timerRef;
 var currentPosition = 0;
 const TOTAL_POSITIONS = 12;
-const AFTERMOVE_DELAY = 700;
+const AFTERMOVE_DELAY = 1000;
 var answers = [];
 var disableMoves = false;
 var disableStartTime = 0;
@@ -49,10 +49,19 @@ var onDragStart = function(source, piece) {
     for (var i = 0; i < moves.length; i++) {
         greySquare(moves[i].to);
     }
+
+    $(".piece-417db").each(function() {
+        if( this.style.display == 'none' ) {
+            $(this).addClass("animated pulse infinite");
+        }
+    });
 };
 
+var latestMove = null;
+var doAnimate = false;
 var onDrop = function(source, target) {
     removeGreySquares();
+    $(".piece-417db").removeClass("animated pulse infinite");
 
     // see if the move is legal
     var move = game.move({
@@ -65,13 +74,16 @@ var onDrop = function(source, target) {
     if (move === null)
         return 'snapback';
     else {
+        latestMove = target;
+        doAnimate = true;
+
         var strMove = '';
         if( move.piece != 'p' ) {
             strMove = move.piece.toUpperCase() + move.to;
         }
         else {
-            var source_column = move.from.substring(1,1);
-            var target_column = move.to.substring(1,1);
+            var source_column = move.from.substr(0,1);
+            var target_column = move.to.substr(0,1);
             if( source_column == target_column ) {
                 strMove = move.to;
             }
@@ -81,18 +93,38 @@ var onDrop = function(source, target) {
         }
         submitAnswer(strMove);
     }
+
+
+};
+
+
+var onMoveOver = function() {
+    $(".piece-417db").each(function() {
+        if($(this).closest('.square-55d63').data('square') != latestMove) {
+            $(this).addClass('animated swing');
+        }
+    });
+
+    setTimeout(function() {
+        $(".piece-417db").removeClass("animated swing");
+    }, 500);
 };
 
 var onSnapEnd = function() {
-    board.position(game.fen());
+   // board.position(game.fen());
+    onMoveOver();
 };
+
 
 var cfg = {
     draggable: true,
     position: '',
     onDragStart: onDragStart,
     onDrop: onDrop,
-    onSnapEnd: onSnapEnd
+    onSnapEnd: onSnapEnd,
+    moveSpeed: 0,
+    appearSpeed: 0,
+    snapbackSpeed: 0
 };
 board = ChessBoard('board', cfg);
 
@@ -177,6 +209,7 @@ function nextPosition() {
     board.position(fens[currentPosition], animated);
     board.orientation(blackToMove[currentPosition] ? 'black':'white');
     game.load(fens[currentPosition]);
+    $("#pos-number").html("Position " + (currentPosition+1) + "/12")
     disableMoves = false;
 }
 

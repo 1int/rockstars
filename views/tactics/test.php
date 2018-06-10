@@ -31,10 +31,11 @@
     <div id="countdown2" class="countdown" style="display: none">2</div>
     <div id="countdown1" class="countdown" style="display: none">1</div>
 
-    <p id="tactics-timer" style="display: none">10:00</p>
 
     <div id="test-container" style="display: none">
+        <p id="tactics-timer" style="display: none">10:00</p>
         <div id="board"></div>
+        <div id="pos-number">Position 1/12</div>
         <!--<button class="btn btn-large btn-primary" id="btn-prev" style="display: none"><i class="glyphicon glyphicon-circle-arrow-left"></i> Previous</button>-->
       <!--  <button class="btn btn-large btn-primary" id="btn-next">Next <i class="glyphicon glyphicon-circle-arrow-right"></i></button> -->
     </div>
@@ -45,7 +46,7 @@
             $(this).hide();
             startCountdown();
         });
-        $("#tactics-timer").detach().appendTo($("ul.breadcrumb"));
+        //$("#tactics-timer").detach().appendTo($("ul.breadcrumb"));
         //$("#btn-prev").click(previousPosition);
         $("#btn-next").click(nextPosition);
 <?php $this->registerJs(ob_get_clean()); ?>
@@ -64,6 +65,21 @@ blackToMove.push(<?=$p->dotdotdot? 'true':'false'?>);
 
 
 <link rel="stylesheet" href="/css/vendor/chessboard.min.css"/>
+<link rel="stylesheet" href="/css/vendor/animate.css"/>
+
+<svg height="0" xmlns="http://www.w3.org/2000/svg">
+    <filter id="drop-shadow">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+        <feOffset dx="12" dy="12" result="offsetblur"/>
+        <feFlood flood-color="rgba(0,0,0,0.5)"/>
+        <feComposite in2="offsetblur" operator="in"/>
+        <feMerge>
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+    </filter>
+</svg>
+
 
 <?php
     $this->registerJsFile('/js/vendor/chess.min.js', ['position'=>View::POS_END, 'depends'=>[JqueryAsset::className()]], 'chessjs');

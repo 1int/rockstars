@@ -768,9 +768,9 @@ div#test-container > .btn:nth-child(4) {
 #tactics-timer {
     font-weight: bold;
     font-size: 20px;
-    float: right;
-    margin-top: -5px;
     letter-spacing: 1.1px;
+    width: 400px;
+    text-align: center;
 }
 
 div#answer-holder {
@@ -1452,3 +1452,38 @@ div#board {
 .move-dest{
     background:radial-gradient(rgba(20,85,30,0.3) 17%,#208530 0,rgba(0,0,0,0.3) 0,rgba(0,0,0,0) 0);
 }
+
+.black-3c85d {
+    background-color: #7cb5ec !important;
+    color: #ccc !important;
+}
+
+.white-1e1d7 {
+    background-color: white !important;
+    color: #ccc !important;
+}
+
+div#pos-number {
+    width: 400px;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.shadowed {
+    -webkit-filter: drop-shadow(12px 12px 25px rgba(0,0,0,0.5));
+    filter: url(#drop-shadow);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+}
+
+img#e7b6-27f3-7ad7-2e05-fff0-db8d-9da3-042e {
+
+}
+
+/*float: left;
+list-style: none;
+margin-top: 35px;
+cursor: pointer;
+background-color: #f5f5f5;
+padding: 10px 15px 10px 15px;*/
