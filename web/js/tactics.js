@@ -52,7 +52,7 @@ var onDragStart = function(source, piece) {
 
     $(".piece-417db").each(function() {
         if( this.style.display == 'none' ) {
-            $(this).addClass("animated pulse infinite");
+            $(this).addClass("animated enlarge");
         }
     });
 };
@@ -61,7 +61,7 @@ var latestMove = null;
 var doAnimate = false;
 var onDrop = function(source, target) {
     removeGreySquares();
-    $(".piece-417db").removeClass("animated pulse infinite");
+    $(".piece-417db").removeClass("animated enlarge");
 
     // see if the move is legal
     var move = game.move({
@@ -185,6 +185,7 @@ function updateTimer() {
 function submitAnswer(answer) {
     disableMoves = true;
     disableStartTime = (new Date()).getTime();
+    $("#answers-list").find('li').eq(currentPosition).html((currentPosition+1).toString() + ". " + answer);
     $.post(window.location.href.toString() + "/answer", {answer: answer, position: currentPosition}).done(function() {
         var now = (new Date()).getTime();
         var diff = disableStartTime - now + AFTERMOVE_DELAY;
