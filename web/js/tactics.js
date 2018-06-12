@@ -101,18 +101,23 @@ var onDrop = function(source, target) {
 var onMoveOver = function() {
     $(".piece-417db").each(function() {
         if($(this).closest('.square-55d63').data('square') != latestMove) {
-            $(this).addClass('animated swing');
+            if( Math.random() >= 0.5 ) {
+                $(this).addClass('animated chessdrop');
+            }
+            else {
+                $(this).addClass('animated chessdrop-left');
+            }
         }
     });
 
     setTimeout(function() {
-        $(".piece-417db").removeClass("animated swing");
+        $(".piece-417db").removeClass("animated chessdrop chessdrop-left");
     }, 500);
 };
 
 var onSnapEnd = function() {
-   // board.position(game.fen());
     onMoveOver();
+    board.position(game.fen(), true);
 };
 
 

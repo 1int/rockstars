@@ -867,7 +867,7 @@ div#result-answers {
     position: relative;
 }
 
-div#result-answers img {
+img#img-result-board {
     position: absolute;
     top: -5px;
     width: 210px;
@@ -1501,9 +1501,72 @@ ul#answers-list li:hover {
 }
 
 
-/*float: left;
-list-style: none;
-margin-top: 35px;
-cursor: pointer;
-background-color: #f5f5f5;
-padding: 10px 15px 10px 15px;*/
+.chessdrop {
+    -webkit-transform-origin: bottom center;
+    transform-origin: bottom center;
+    -webkit-animation-name: chessdrop;
+    animation-name: chessdrop;
+    animation-duration: 0.4s !important;
+}
+
+.chessdrop-left {
+    -webkit-transform-origin: bottom center;
+    transform-origin: bottom center;
+    -webkit-animation-name: chessdrop-left;
+    animation-name: chessdrop-left;
+    animation-duration: 0.4s !important;
+}
+
+@keyframes chessdrop {
+    30% {
+        -webkit-transform: rotate3d(1, 0.5, 1, -12deg);
+        transform: rotate3d(1, 0.5, 1, -12deg);
+    }
+
+    60% {
+        -webkit-transform: rotate3d(1, 0.5, 1, 8deg);
+        transform: rotate3d(1, 0.5, 1, 8deg);
+    }
+
+    90% {
+        -webkit-transform: rotate3d(1, 0.5, 1, -3deg);
+        transform: rotate3d(1, 0.5, 1, -3deg);
+    }
+    
+    to {
+        -webkit-transform: rotate3d(1, 0.5, 1, 0deg);
+        transform: rotate3d(1, 0.5, 1, 0deg);
+    }
+}
+
+@keyframes chessdrop-left {
+    30% {
+        -webkit-transform: rotate3d(1, 0.5, 1, 12deg);
+        transform: rotate3d(1, 0.5, 1, 12deg);
+    }
+
+    60% {
+        -webkit-transform: rotate3d(1, 0.5, 1, -8deg);
+        transform: rotate3d(1, 0.5, 1, -8deg);
+    }
+
+    90% {
+        -webkit-transform: rotate3d(1, 0.5, 1, 3deg);
+        transform: rotate3d(1, 0.5, 1, 3deg);
+    }
+
+    to {
+        -webkit-transform: rotate3d(1, 0.5, 1, 0deg);
+        transform: rotate3d(1, 0.5, 1, 0deg);
+    }
+}
+
+div#result-board {
+    position: absolute;
+    top: -5px;
+    width: 210px;
+    height: 210px;
+    left: 120px;
+    z-index: 1;
+    padding: 5px;
+}

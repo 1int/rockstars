@@ -2,8 +2,6 @@
     use app\models\TacticsTest;
     use app\models\TacticsLevel;
     use app\models\TacticsTestResult;
-    use yii\web\View;
-
     /**
      * Crafted by Pavel Lint 25/04/2018
      * Mail to: pavel@1int.org
@@ -24,7 +22,7 @@
 ?>
 <div id="score-content">
     <div id="result-answers" class="col-sm-3">
-        <div id="result-board"></div>
+        <img id="answer-image" src="" alt="" style="display: none"/>
         <?php
             $uid = Yii::$app->user->getId();
             $i = 1;
@@ -69,52 +67,38 @@
             </tbody>
         </table>
     </div>
-
-    <script type="text/javascript">
-            var fens = [];
-            var blackToMove = [];
-        <?php foreach($test->tacticsPositions as $p) { ?>
-            fens.push('<?=$p->fullFen?>');
-            blackToMove.push(<?=$p->dotdotdot? 'true':'false'?>);
-        <?php } ?>
-    </script>
 </div>
 
-<link rel="stylesheet" href="/css/vendor/chessboard.min.css"/>
-<?php $this->registerJsFile('/js/vendor/chessboard.min.js', ['position'=>View::POS_END], 'chessboardjs'); ?>
 
 <?php ob_start(); ?>
-
-    var board = new ChessBoard('result-board', {draggable:false});
-
-
-    function showPosition(index) {
-        board.position(fens[index], true);
-        board.orientation( blackToMove[index] ? 'black':'white' );
+    function isMobile() {
+        return ('ontouchstart' in document.documentElement && navigator.userAgent.match(/Mobi/));
     }
+    if( !isMobile() ) {
+        $("div.result-answer").mouseover(function() {
+            $("#answer-image").show();
+            var index = $(this).index();
+            var url = window.location.href.replace("result", "image") + index.toString();
+            $("#answer-image").attr("src", url);
+        });
 
-    $("div.result-answer").click(function() {
-        if( !$(this).hasClass("selected") ) {
-            $("div.result-answer").removeClass("selected");
-            $(this).addClass("selected");
-            var index = $(this).index() - 1;
-            showPosition(index);
-        }
-    });
-
-    var gotWrongPosition = false;
-    $('div.result-answer').each(function() {
-        if( $(this).hasClass('wrong') && !gotWrongPosition ) {
-            var index = $(this).index() - 1;
-            $(this).addClass('selected');
-            gotWrongPosition = true;
-            showPosition(index);
-        }
-    });
-
-    if( !gotWrongPosition ) {
-        $('div.result-answer').eq(0).addClass('selected');
-        showPosition(0);
+        $("#result-answers").mouseout(function() {
+            $("#answer-image").hide();
+        });
     }
-
-<?php $this->registerJs(ob_get_clean(), View::POS_END);
+    else {
+        $("div.result-answer").click(function() {
+            if( !$(this).hasClass("selected") ) {
+                $("div.result-answer").removeClass("selected");
+                $(this).addClass("selected");
+                var index = $(this).index();
+                var url = window.location.href.replace("result", "image") + index.toString();
+                $("#answer-image").attr("src", url).show();
+            }
+            else {
+                $(this).removeClass("selected");
+                $("#answer-image").hide();
+            }
+        });
+    }
+<?php $this->registerJs(ob_get_clean());
