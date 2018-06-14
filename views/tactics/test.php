@@ -98,5 +98,5 @@ blackToMove.push(<?=$p->dotdotdot? 'true':'false'?>);
 <?php
     $this->registerJsFile('/js/vendor/chess.min.js', ['position'=>View::POS_END, 'depends'=>[JqueryAsset::className()]], 'chessjs');
     $this->registerJsFile('/js/vendor/chessboard.min.js', ['position'=>View::POS_END], 'chessboardjs');
-    $this->registerJsFile('/js/tactics.js', ['position'=>View::POS_END, 'depends'=>[JqueryAsset::className()]]);
+    $this->registerJsFile('/js/tactics.js?2', ['position'=>View::POS_END, 'depends'=>[JqueryAsset::className()]]);
 ?>

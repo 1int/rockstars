@@ -73,9 +73,11 @@
     <script type="text/javascript">
             var fens = [];
             var blackToMove = [];
+            var moves = [];
         <?php foreach($test->tacticsPositions as $p) { ?>
             fens.push('<?=$p->fullFen?>');
             blackToMove.push(<?=$p->dotdotdot? 'true':'false'?>);
+            moves.push('<?=$p->stockfish_answer?>');
         <?php } ?>
     </script>
 </div>
@@ -86,7 +88,8 @@
 <?php ob_start(); ?>
 
     var board = new ChessBoard('result-board', {draggable:false});
-
+    var moveTimer = setTimeout(showMove, 1300);
+    var goBackTimer = null;
 
     function showPosition(index) {
         board.position(fens[index], true);
@@ -99,6 +102,9 @@
             $(this).addClass("selected");
             var index = $(this).index() - 1;
             showPosition(index);
+            clearTimeout(moveTimer);
+            clearTimeout(goBackTimer);
+            moveTimer = setTimeout(showMove, 800);
         }
     });
 
@@ -115,6 +121,24 @@
     if( !gotWrongPosition ) {
         $('div.result-answer').eq(0).addClass('selected');
         showPosition(0);
+    }
+
+    function showMove() {
+        $elem = $("div.result-answer.selected");
+        var index = $elem.index() - 1;
+        board.move(moves[index]);
+        clearTimeout(moveTimer);
+        moveTimer = null;
+        goBackTimer = setTimeout(resetBoard, 3000);
+    }
+
+    function resetBoard() {
+        $elem = $("div.result-answer.selected");
+        var index = $elem.index() - 1;
+        board.position(fens[index], true);
+        clearTimeout(goBackTimer);
+        goBackTimer = null;
+        moveTimer = setTimeout(showMove, 3000);
     }
 
 <?php $this->registerJs(ob_get_clean(), View::POS_END);

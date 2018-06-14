@@ -1473,7 +1473,6 @@ div#pos-number {
 }
 
 .enlarge {
-    -webkit-transform: scale3d(1.3, 1.3, 1.3);
     transform: scale3d(1.3, 1.3, 1.3);
 }
 
@@ -1502,9 +1501,7 @@ ul#answers-list li:hover {
 
 
 .chessdrop {
-    -webkit-transform-origin: bottom center;
     transform-origin: bottom center;
-    -webkit-animation-name: chessdrop;
     animation-name: chessdrop;
     animation-duration: 0.4s !important;
 }
@@ -1519,44 +1516,36 @@ ul#answers-list li:hover {
 
 @keyframes chessdrop {
     30% {
-        -webkit-transform: rotate3d(1, 0.5, 1, -12deg);
         transform: rotate3d(1, 0.5, 1, -12deg);
     }
 
     60% {
-        -webkit-transform: rotate3d(1, 0.5, 1, 8deg);
         transform: rotate3d(1, 0.5, 1, 8deg);
     }
 
     90% {
-        -webkit-transform: rotate3d(1, 0.5, 1, -3deg);
         transform: rotate3d(1, 0.5, 1, -3deg);
     }
     
     to {
-        -webkit-transform: rotate3d(1, 0.5, 1, 0deg);
         transform: rotate3d(1, 0.5, 1, 0deg);
     }
 }
 
 @keyframes chessdrop-left {
     30% {
-        -webkit-transform: rotate3d(1, 0.5, 1, 12deg);
         transform: rotate3d(1, 0.5, 1, 12deg);
     }
 
     60% {
-        -webkit-transform: rotate3d(1, 0.5, 1, -8deg);
         transform: rotate3d(1, 0.5, 1, -8deg);
     }
 
     90% {
-        -webkit-transform: rotate3d(1, 0.5, 1, 3deg);
         transform: rotate3d(1, 0.5, 1, 3deg);
     }
 
     to {
-        -webkit-transform: rotate3d(1, 0.5, 1, 0deg);
         transform: rotate3d(1, 0.5, 1, 0deg);
     }
 }
