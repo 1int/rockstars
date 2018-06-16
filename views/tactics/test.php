@@ -48,11 +48,32 @@
             <li>12. —</li>
         </ul>
         <p id="tactics-timer" style="display: none">10:00</p>
-        <div id="board"></div>
+        <div id="board">
+        </div>
         <div id="pos-number">Position 1/12</div>
         <!--<button class="btn btn-large btn-primary" id="btn-prev" style="display: none"><i class="glyphicon glyphicon-circle-arrow-left"></i> Previous</button>-->
       <!--  <button class="btn btn-large btn-primary" id="btn-next">Next <i class="glyphicon glyphicon-circle-arrow-right"></i></button> -->
     </div>
+
+
+<div id="promote-popup" style="display: none">
+    <ul id="promote-white" style="display: none">
+        <li><img src="/images/chesspieces/wikipedia/wN.png"</li>
+        <li><img src="/images/chesspieces/wikipedia/wB.png"</li>
+        <li><img src="/images/chesspieces/wikipedia/wR.png"</li>
+        <li><img src="/images/chesspieces/wikipedia/wQ.png"</li>
+    </ul>
+    <ul id="promote-black">
+        <li><img src="/images/chesspieces/wikipedia/bN.png"</li>
+        <li><img src="/images/chesspieces/wikipedia/bB.png"</li>
+        <li><img src="/images/chesspieces/wikipedia/bR.png"</li>
+        <li><img src="/images/chesspieces/wikipedia/bQ.png"</li>
+    </ul>
+</div>
+
+
+
+<!-- 6/1 r1qr11k1/1b111pb1/p1pBpnpp/11111111/111PN111/1Q1111P1/PP111PBP/11RR11K1 -->
 
 
 <?php ob_start();?>
@@ -80,20 +101,6 @@ blackToMove.push(<?=$p->dotdotdot? 'true':'false'?>);
 
 <link rel="stylesheet" href="/css/vendor/chessboard.min.css"/>
 <link rel="stylesheet" href="/css/vendor/animate.css"/>
-
-<svg height="0" xmlns="http://www.w3.org/2000/svg">
-    <filter id="drop-shadow">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
-        <feOffset dx="12" dy="12" result="offsetblur"/>
-        <feFlood flood-color="rgba(0,0,0,0.5)"/>
-        <feComposite in2="offsetblur" operator="in"/>
-        <feMerge>
-            <feMergeNode/>
-            <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-    </filter>
-</svg>
-
 
 <?php
     $this->registerJsFile('/js/vendor/chess.min.js', ['position'=>View::POS_END, 'depends'=>[JqueryAsset::className()]], 'chessjs');

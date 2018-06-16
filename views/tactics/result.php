@@ -87,12 +87,12 @@
 
 <?php ob_start(); ?>
 
-    var board = new ChessBoard('result-board', {draggable:false});
+    var board = new ChessBoard('result-board', 'start');
     var moveTimer = setTimeout(showMove, 1300);
     var goBackTimer = null;
 
     function showPosition(index) {
-        board.position(fens[index], true);
+        board.position(fens[index], false);
         board.orientation( blackToMove[index] ? 'black':'white' );
     }
 

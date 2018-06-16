@@ -59,42 +59,72 @@ var onDragStart = function(source, piece) {
 
 var latestMove = null;
 var doAnimate = false;
+var isPromoting = false;
+var promote = null;
+
 var onDrop = function(source, target) {
     removeGreySquares();
     $(".piece-417db").removeClass("animated enlarge");
 
-    // see if the move is legal
+
+
+
+    var piece = game.get(source).type;
+    var source_rank = source.substring(2,1);
+    var target_rank = target.substring(2,1);
+    if (piece === 'p' &&
+        ((source_rank === '7' && target_rank === '8') || (source_rank === '2' && target_rank === '1'))) {
+
+        isPromoting = true;
+        promote = {from: source, to: target};
+
+        if( game.turn() == 'b' ) {
+            $("#promote-black").show();
+            $("#promote-white").hide();
+        }
+        else {
+            $("#promote-black").hide();
+            $("#promote-white").show();
+        }
+
+        $("#promote-popup").fadeIn();
+        return true;
+    }
+
+
+        // see if the move is legal
     var move = game.move({
         from: source,
         to: target,
         promotion: 'q' // NOTE: always promote to a queen for example simplicity
     });
 
+
     // illegal move
     if (move === null)
         return 'snapback';
     else {
         latestMove = target;
-        doAnimate = true;
+        submitAnswer(moveToString(move));
+    }
+};
 
-        var strMove = '';
-        if( move.piece != 'p' ) {
-            strMove = move.piece.toUpperCase() + move.to;
+var moveToString = function(move) {
+    var strMove = '';
+    if( move.piece != 'p' ) {
+        strMove = move.piece.toUpperCase() + move.to;
+    }
+    else {
+        var source_column = move.from.substr(0,1);
+        var target_column = move.to.substr(0,1);
+        if( source_column == target_column ) {
+            strMove = move.to;
         }
         else {
-            var source_column = move.from.substr(0,1);
-            var target_column = move.to.substr(0,1);
-            if( source_column == target_column ) {
-                strMove = move.to;
-            }
-            else {
-                strMove = source_column + target_column;
-            }
+            strMove = source_column + target_column;
         }
-        submitAnswer(strMove);
     }
-
-
+    return strMove;
 };
 
 
@@ -116,10 +146,28 @@ var onMoveOver = function() {
 };
 
 var onSnapEnd = function() {
-    onMoveOver();
-    board.position(game.fen(), true);
+    if( !isPromoting ) {
+        onMoveOver();
+        board.position(game.fen(), true);
+    }
 };
 
+var makePromotionMove = function(figure) {
+    $("#promote-popup").hide();
+    var move = game.move({
+        from: promote.from,
+        to: promote.to,
+        promotion: figure
+    });
+    board.position('clear', false);
+    board.position(game.fen(), false);
+    latestMove = promote.to;
+    submitAnswer(moveToString(move), figure);
+    isPromoting = false;
+    promote = null;
+
+    onMoveOver();
+};
 
 var cfg = {
     draggable: true,
@@ -134,10 +182,13 @@ var cfg = {
 board = ChessBoard('board', cfg);
 
 
+$("#promote-popup").prependTo($("#board div"));
 
-
-
-
+$("#promote-popup ul li").click(function() {
+    var index = $(this).index();
+    var figure = ['n', 'b', 'r', 'q'][index];
+    makePromotionMove(figure);
+});
 
 //////////////
 
@@ -187,11 +238,11 @@ function updateTimer() {
     }
 }
 
-function submitAnswer(answer) {
+function submitAnswer(answer, promotion = '') {
     disableMoves = true;
     disableStartTime = (new Date()).getTime();
     $("#answers-list").find('li').eq(currentPosition).html((currentPosition+1).toString() + ". " + answer);
-    $.post(window.location.href.toString() + "/answer", {answer: answer, position: currentPosition}).done(function() {
+    $.post(window.location.href.toString() + "/answer", {answer: answer, position: currentPosition, promotion: promotion}).done(function() {
         var now = (new Date()).getTime();
         var diff = disableStartTime - now + AFTERMOVE_DELAY;
         if( diff > 0 ) {
