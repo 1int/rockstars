@@ -78,7 +78,7 @@ class TacticsPosition extends ActiveRecord
      */
     public function getPrettyAnswer() {
         return strlen($this->answer) == 2 ? strtolower($this->answer) :
-                ucfirst(strtolower($this->answer));
+            (strpos($this->answer, '=') === false ?  ucfirst(strtolower($this->answer)) : $this->answer) ;
     }
 
     /**

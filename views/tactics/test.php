@@ -51,8 +51,6 @@
         <div id="board">
         </div>
         <div id="pos-number">Position 1/12</div>
-        <!--<button class="btn btn-large btn-primary" id="btn-prev" style="display: none"><i class="glyphicon glyphicon-circle-arrow-left"></i> Previous</button>-->
-      <!--  <button class="btn btn-large btn-primary" id="btn-next">Next <i class="glyphicon glyphicon-circle-arrow-right"></i></button> -->
     </div>
 
 
@@ -71,19 +69,11 @@
     </ul>
 </div>
 
-
-
-<!-- 6/1 r1qr11k1/1b111pb1/p1pBpnpp/11111111/111PN111/1Q1111P1/PP111PBP/11RR11K1 -->
-
-
 <?php ob_start();?>
         $("div#start-test").click(function(){
             $(this).hide();
             startCountdown();
         });
-        //$("#tactics-timer").detach().appendTo($("ul.breadcrumb"));
-        //$("#btn-prev").click(previousPosition);
-        $("#btn-next").click(nextPosition);
 <?php $this->registerJs(ob_get_clean()); ?>
 
 <?php ob_start();?>

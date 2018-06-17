@@ -74,10 +74,12 @@
             var fens = [];
             var blackToMove = [];
             var moves = [];
+            var prettyMoves = [];
         <?php foreach($test->tacticsPositions as $p) { ?>
             fens.push('<?=$p->fullFen?>');
             blackToMove.push(<?=$p->dotdotdot? 'true':'false'?>);
             moves.push('<?=$p->stockfish_answer?>');
+            prettyMoves.push('<?=$p->answer?>');
         <?php } ?>
     </script>
 </div>
@@ -87,7 +89,7 @@
 
 <?php ob_start(); ?>
 
-    var board = new ChessBoard('result-board', 'start');
+    var board = new ChessBoard('result-board', {position: 'start'});
     var moveTimer = setTimeout(showMove, 1300);
     var goBackTimer = null;
 
@@ -130,15 +132,44 @@
         clearTimeout(moveTimer);
         moveTimer = null;
         goBackTimer = setTimeout(resetBoard, 3000);
+        setTimeout( showPromotion, 300 );
     }
 
     function resetBoard() {
-        $elem = $("div.result-answer.selected");
-        var index = $elem.index() - 1;
-        board.position(fens[index], true);
+        board.position(fens[currentPosition()], true);
         clearTimeout(goBackTimer);
         goBackTimer = null;
         moveTimer = setTimeout(showMove, 3000);
+    }
+
+    function currentFen() {
+        return fens[currentPosition()];
+    }
+
+    function currentPrettyAnswer() {
+        return prettyMoves[currentPosition()];
+    }
+
+    function currentAnswer() {
+        return moves[currentPosition()];
+    }
+
+    function currentPosition() {
+        return $("div.result-answer.selected").index() - 1;
+    }
+
+    function isPromotion() {
+        return currentPrettyAnswer().indexOf('=') > 0;
+    }
+
+    function showPromotion() {
+        if( isPromotion() ) {
+           var position = board.position();
+           var square = currentAnswer().substr(-2);
+           var promoted = board.orientation().substr(0,1) + currentPrettyAnswer().substr(-1).toUpperCase();
+           position[square] = promoted;
+           board.position(position, true);
+        }
     }
 
 <?php $this->registerJs(ob_get_clean(), View::POS_END);

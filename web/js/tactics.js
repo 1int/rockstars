@@ -109,7 +109,7 @@ var onDrop = function(source, target) {
     }
 };
 
-var moveToString = function(move) {
+var moveToString = function(move, promoted = '') {
     var strMove = '';
     if( move.piece != 'p' ) {
         strMove = move.piece.toUpperCase() + move.to;
@@ -122,6 +122,9 @@ var moveToString = function(move) {
         }
         else {
             strMove = source_column + target_column;
+        }
+        if( promoted ) {
+            strMove += '=' + promoted.toUpperCase();
         }
     }
     return strMove;
@@ -162,7 +165,7 @@ var makePromotionMove = function(figure) {
     board.position('clear', false);
     board.position(game.fen(), false);
     latestMove = promote.to;
-    submitAnswer(moveToString(move), figure);
+    submitAnswer(moveToString(move, figure));
     isPromoting = false;
     promote = null;
 
@@ -238,11 +241,11 @@ function updateTimer() {
     }
 }
 
-function submitAnswer(answer, promotion = '') {
+function submitAnswer(answer) {
     disableMoves = true;
     disableStartTime = (new Date()).getTime();
     $("#answers-list").find('li').eq(currentPosition).html((currentPosition+1).toString() + ". " + answer);
-    $.post(window.location.href.toString() + "/answer", {answer: answer, position: currentPosition, promotion: promotion}).done(function() {
+    $.post(window.location.href.toString() + "/answer", {answer: answer, position: currentPosition}).done(function() {
         var now = (new Date()).getTime();
         var diff = disableStartTime - now + AFTERMOVE_DELAY;
         if( diff > 0 ) {
