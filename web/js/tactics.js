@@ -20,12 +20,17 @@ var removeGreySquares = function() {
     if( $el.hasClass('move-dest') ) {
         $el.removeClass('move-dest');
     }
+    if( $el.hasClass('possible-capture') ) {
+        $el.removeClass('possible-capture');
+    }
 }
 
 var greySquare = function(square) {
     $('#board .square-' + square).addClass("move-dest");
 };
-
+var greyCapture = function(square) {
+    $('#board .square-' + square).addClass("possible-capture");
+};
 var onDragStart = function(source, piece) {
     // do not pick up pieces if the game is over
     // or if it's not that side's turn
@@ -45,9 +50,16 @@ var onDragStart = function(source, piece) {
     // exit if there are no moves available for this square
     if (moves.length === 0) return;
 
+    var position = board.position();
     // highlight the possible squares for this piece
     for (var i = 0; i < moves.length; i++) {
-        greySquare(moves[i].to);
+        var to = moves[i].to;
+        if( position[to] ) {
+            greyCapture(to);
+        }
+        else {
+            greySquare(to);
+        }
     }
 
     $(".piece-417db").each(function() {
@@ -58,7 +70,6 @@ var onDragStart = function(source, piece) {
 };
 
 var latestMove = null;
-var doAnimate = false;
 var isPromoting = false;
 var promote = null;
 
