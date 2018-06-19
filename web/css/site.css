@@ -1499,6 +1499,9 @@ ul#answers-list li:hover {
     background-color: #eaeaea;
 }
 
+ul#answers-list li.active {
+    background-color: #eaeaea;
+}
 
 .chessdrop {
     transform-origin: bottom center;

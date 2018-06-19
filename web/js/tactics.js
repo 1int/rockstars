@@ -204,6 +204,18 @@ $("#promote-popup ul li").click(function() {
     makePromotionMove(figure);
 });
 
+$("#answers-list li").click(function() {
+    if( disableMoves ) {
+        return;
+    }
+    $("#answers-list li").removeClass('active');
+    $(this).addClass('active');
+    var index = $(this).index();
+    currentPosition = index;
+    game.load(fens[currentPosition]);
+    board.position(fens[currentPosition], false);
+});
+
 //////////////
 
 
@@ -269,12 +281,42 @@ function submitAnswer(answer) {
 }
 
 
+function getNextPositionNumber() {
+
+    var currentResult = -1;
+    var gotSomethingAhead = false;
+    $("#answers-list li").each(function(){
+       var index = $(this).index();
+       if( $(this).html().indexOf('—') > 0 ) {
+           if( index == currentPosition ) {
+
+           }
+           else if( index < currentPosition ) {
+               if( currentResult == -1 ) {
+                   currentResult = index;
+               }
+           }
+           else {
+               if (!gotSomethingAhead) {
+                   currentResult = index;
+                   gotSomethingAhead = true;
+               }
+           }
+       }
+    });
+
+    return currentResult;
+}
+
 function nextPosition() {
-    if( currentPosition == TOTAL_POSITIONS - 1 ) {
+    currentPosition = getNextPositionNumber();
+    if( currentPosition == -1 ) {
         finish();
         return;
     }
-    currentPosition++;
+
+    $("#answers-list li").removeClass('active');
+    $("#answers-list").find('li').eq(currentPosition).addClass('active');
 
     var animated = (blackToMove[currentPosition] == blackToMove[currentPosition-1]);
     board.position(fens[currentPosition], animated);
@@ -287,12 +329,15 @@ function nextPosition() {
 function startTest() {
     startTimer();
     $("#board").show();
-    board.position(fens[currentPosition], true);
-    game.load(fens[currentPosition]);
-    board.orientation(blackToMove[currentPosition] ? 'black':'white');
-    $("#btn-next").show();
     $("#test-container").show();
     $("#tactics-timer").show();
+    //$("#answers-list li").eq(0).addClass('active');
+    currentPosition = -1;
+    nextPosition();
+
+    /*board.position(fens[currentPosition], true);
+    game.load(fens[currentPosition]);
+    board.orientation(blackToMove[currentPosition] ? 'black':'white');*/
 }
 
 function finish() {

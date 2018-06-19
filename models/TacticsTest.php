@@ -65,7 +65,7 @@ class TacticsTest extends ActiveRecord
     }
 
     public function getNumber() {
-        return $this->id;
+        return $this->id - $this->level->start_test + 1;
     }
 
     public function clearAnswer($a) {
@@ -168,4 +168,24 @@ class TacticsTest extends ActiveRecord
         return $result->score;
     }
 
+    /**
+     * @param $num
+     * @return int
+     */
+    public function positionIdFromNumber($num) {
+        return $this->level->start_position + ($this->number - 1) * $this->level->positions_in_test + $num - 1;
+    }
+
+    public function answerFor($positionNumber, $playerId) {
+        $posId = $this->positionIdFromNumber($positionNumber);
+        $answer = TacticsAnswer::find()->where('player_id=:uid AND position_id=:pid', ['uid'=>$playerId, 'pid'=>$posId])->one();
+
+        /** @var TacticsAnswer|null $answer */
+        if( !$answer ) {
+            return '—';
+        }
+        else{
+            return $answer->answer;
+        }
+    }
 }

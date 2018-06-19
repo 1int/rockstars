@@ -16,6 +16,7 @@ use \yii\db\ActiveRecord;
  * @property int $total_tests
  * @property int $positions_in_test
  * @property int $start_position
+ * @property int $start_test
  *
  * @property TacticsTest[] $tests
  * @property TacticsTest[] $publishedTests
