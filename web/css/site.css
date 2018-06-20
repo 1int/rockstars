@@ -1604,3 +1604,25 @@ div#promote-popup li img:hover {
 .possible-capture {
     background: radial-gradient(transparent 0%, transparent 80%, rgba(20, 85, 0, 0.3) 80%);
 }
+
+@media screen and (max-width: 600px) {
+
+    div#board {
+        width: 100%;
+    }
+
+    div#pos-number {
+        display: none;
+    }
+
+    ul#answers-list {
+        position: relative;
+        float: none;
+        margin: 0;
+        text-align: left;
+    }
+
+    ul#answers-list li {
+        display: inline-block;
+    }
+}

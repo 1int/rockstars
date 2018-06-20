@@ -214,6 +214,7 @@ $("#answers-list li").click(function() {
     currentPosition = index;
     game.load(fens[currentPosition]);
     board.position(fens[currentPosition], false);
+    board.orientation(blackToMove[currentPosition] ? 'black':'white');
 });
 
 //////////////
@@ -344,4 +345,12 @@ function finish() {
     $.post(window.location.href.toString() + "/finish").done(function() {
         window.location.href = window.location.href + "/result";
     });
+}
+
+function isMobile() {
+    return true;
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        return true;
+    }
+    return false;
 }

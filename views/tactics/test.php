@@ -42,7 +42,9 @@
         <p id="tactics-timer" style="display: none">10:00</p>
         <div id="board">
         </div>
-        <div id="pos-number">Position 1/12</div>
+        <!--<div id="pos-number">Position 1/12</div>-->
+        <div id="results-mobile-holder">
+        </div>
     </div>
 
 
@@ -66,6 +68,12 @@
             $(this).hide();
             startCountdown();
         });
+        if(isMobile()) {
+            $("#answers-list").detach().appendTo($("#results-mobile-holder"));
+            var width = $(window).width() - 40;
+            $("#board").css({width:width + 'px'});
+            board.resize();
+        }
 <?php $this->registerJs(ob_get_clean()); ?>
 
 <?php ob_start();?>
