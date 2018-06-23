@@ -215,6 +215,7 @@ $("#answers-list li").click(function() {
     game.load(fens[currentPosition]);
     board.position(fens[currentPosition], false);
     board.orientation(blackToMove[currentPosition] ? 'black':'white');
+    $("#pos-number").html("Position " + (currentPosition+1) + "/12")
 });
 
 //////////////
@@ -348,7 +349,6 @@ function finish() {
 }
 
 function isMobile() {
-    return true;
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
         return true;
     }

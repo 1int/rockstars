@@ -42,7 +42,7 @@
         <p id="tactics-timer" style="display: none">10:00</p>
         <div id="board">
         </div>
-        <!--<div id="pos-number">Position 1/12</div>-->
+        <div id="pos-number">Position 1/12</div>
         <div id="results-mobile-holder">
         </div>
     </div>
