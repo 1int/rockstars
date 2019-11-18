@@ -1074,11 +1074,10 @@ div#notable-games h2:hover span.owner#add-game {
 }
 
 div.notable-game {
-    width: 214px;
-    height: 214px;
+    width: 201px;
+    height: 201px;
     overflow: hidden;
-    #display: inline-block;
-    #margin-left: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 div.notable-game-container {
