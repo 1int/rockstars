@@ -24,6 +24,10 @@
                  */
 
                 if( $member ) {
+                    if( !$member->is_active ) {
+                        Yii::$app->user->logout();
+                        return true;
+                    }
                     date_default_timezone_set('Europe/Moscow');
                     $member->lastseen = date('Y-m-d H:i:s', time());
                     $member->save();

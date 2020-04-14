@@ -41,6 +41,7 @@ use yii\image\drivers\Image;
  * @property string $smallAvatar
  * @property string $mediumAvatar
  * @property bool $receive_sms
+ * @property int $is_active
  *
  * @property NotableGame[] $notableGames
  * @property Event[] $events
