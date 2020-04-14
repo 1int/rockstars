@@ -92,7 +92,7 @@ class TacticsPosition extends ActiveRecord
     /**
      * @return array
      */
-    public function optionsArray($minimumOptions = 4)
+    public function optionsArray($minimumOptions = 3)
     {
         if( !$this->options ) {
             $ret = [];

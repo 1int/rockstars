@@ -231,7 +231,16 @@
 
             // Verify the recognition
             if( Yii::$app->request->isPost ) {
-                $model->options = implode(" ", Yii::$app->request->post('options'));
+                $options = Yii::$app->request->post('options');
+
+                foreach($options as $option) {
+                    if($option == $model->answer) {
+                        Yii::$app->session->addFlash('error', 'Ход ' . $option . ' правильный, нельзя указать его как неправильный вариант');
+                        return $this->redirect(['admin/options', 'positionId' => intval($positionId)]);
+                    }
+                }
+                
+                $model->options = implode(" ", $options);
                 $model->save(false);
                 return $this->redirect(['admin/options', 'positionId' => intval($positionId) + 1]);
             }

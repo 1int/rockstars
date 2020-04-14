@@ -44,8 +44,15 @@
 
                     <label class="col-form-label">Quiz Options:</label>
 
+                    <div>
+                        <div class="col-sm-5"
+                        <label> 1:
+                            <input class="input form-control" disabled="disabled" type="text" name="options[]" value="<?=$model->answer?>"/>
+                        </label>
+                    </div>
+                </div>
                     <?php
-                        $index = 1;
+                        $index = 2;
                         foreach($model->optionsArray() as $option) { ?>
                             <div>
                                 <div class="col-sm-5 <?= ($index % 2 == 0) ? "col-sm-offset-2":""?>"
