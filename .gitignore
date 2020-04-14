@@ -49,3 +49,16 @@ views/doctors
 controllers/DoctorsController.php
 *.csv
 /web/images/avatars/*
+BMW.jpg
+web/1.jpg
+DemoController.php
+DentalController.php
+DnoController.php
+phpinfo.php
+tests/out/*.jpeg
+SpoodsController.php
+views/demo/*
+views/spoods/*
+input.txt
+ec.zip
+banners.html

@@ -22,6 +22,7 @@
         /**
          * @param Action $action the action to be executed.
          * @return bool
+         * @throws \yii\web\ForbiddenHttpException
          */
         public function beforeAction($action) {
             if( parent::beforeAction($action) ) {
@@ -122,7 +123,6 @@
             return $this->render('answers');
         }
 
-
         public function actionVerify($positionId) {
             /** @var Member $member */
             $member = Yii::$app->user->identity;
@@ -203,6 +203,40 @@
             }
 
             return $this->render('index');
+        }
+
+        /**
+         * @param int $positionId
+         * @return string
+         * @throws HttpException
+         * @throws NotFoundHttpException
+         */
+        public function actionOptions($positionId)
+        {
+            /** @var Member $member */
+            $member = Yii::$app->user->identity;
+
+
+            if( !$member->canInputOptions() ) {
+                throw new HttpException(403, 'You cannot do this');
+            }
+
+            /** @var TacticsPosition $model */
+            $model = TacticsPosition::findOne($positionId);
+            if( !$model ) {
+                throw new NotFoundHttpException('Position doesnt exist');
+            }
+
+            $total = TacticsPosition::find()->count();
+
+            // Verify the recognition
+            if( Yii::$app->request->isPost ) {
+                $model->options = implode(" ", Yii::$app->request->post('options'));
+                $model->save(false);
+                return $this->redirect(['admin/options', 'positionId' => intval($positionId) + 1]);
+            }
+
+            return $this->render('variants', ['model'=>$model, 'total'=>$total]);
         }
 
     }

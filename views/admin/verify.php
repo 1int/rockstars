@@ -41,7 +41,11 @@
                     <?php if($model->id > 1) { ?>
                     <a class="btn btn-default" href="/admin/verify/<?=(intval($model->id) - 1)?>"><i class="glyphicon glyphicon-chevron-left"></i></a>
                     <?php } ?>
+
+                    <?php if($model->id < $total) { ?>
                     <a class="btn btn-default" href="/admin/verify/<?=(intval($model->id) + 1)?>"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                    <?php } ?>
+
                     <?= $verified? '':'<button class="btn btn-primary" id="btn-recognize">Recognize</button>'?>
                     <button id="btn-recognized" class="btn btn-default" disabled="disabled"><i class="glyphicon glyphicon-ok"></i> Recognized</button>
                     <div class="loading-holder" style="display: none">

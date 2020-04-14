@@ -20,6 +20,7 @@ use RockstarsApp;
  * @property bool $verified
  * @property string $castling
  * @property string $fullFen
+ * @property string $options
  *
  * @property TacticsTest $test
  */
@@ -86,5 +87,23 @@ class TacticsPosition extends ActiveRecord
      */
     public function getFullFen() {
         return sprintf('%s %s %s - 0 1', $this->fen, $this->dotdotdot ? 'b':'w', $this->castling);
+    }
+
+    /**
+     * @return array
+     */
+    public function optionsArray($minimumOptions = 4)
+    {
+        if( !$this->options ) {
+            $ret = [];
+        }
+        else {
+            $ret = explode(' ', $this->options);
+        }
+
+        while( count($ret) < $minimumOptions) {
+            $ret[] = '';
+        }
+        return $ret;
     }
 }

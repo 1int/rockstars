@@ -16,6 +16,7 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'GyxaVmwLMtfO-nkyf4sLk9cL-LJjxwfN',
+            'enableCsrfValidation' => false,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -65,13 +66,25 @@ $config = [
                 '/@/<uname:[a-zA-Z0-9_]+>' => 'members/profile',
                 '/marisha' => 'admin/answers',
                 '/admin/verify/<positionId:[0-9]+>' => 'admin/verify',
-                '/admin/recognize/<positionId:[0-9]+>' => 'admin/recognize'
+                '/admin/recognize/<positionId:[0-9]+>' => 'admin/recognize',
+                '/admin/quiz-options/<positionId:[0-9]+>' => 'admin/options',
             ]
         ],
 
         'image' => [
             'class' => 'yii\image\ImageDriver',
             'driver' => 'Imagick'
+        ],
+
+        'html2pdf' => [
+            'class' => 'yii2tech\html2pdf\Manager',
+            'viewPath' => '@app/views/spoods',
+            'converter' => [
+                'class' => 'yii2tech\html2pdf\converters\Dompdf',
+                'defaultOptions' => [
+                    'pageSize' => 'A4'
+                ],
+            ]
         ],
 
 
