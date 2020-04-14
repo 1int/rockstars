@@ -18,16 +18,14 @@
     use yii\web\View;
     use yii\web\JqueryAsset;
 
-    $verified = !!$model->verified;
-
 ?>
 
 
-    <div id="verify-content-wrapper">
-        <div id="verify-content">
-            <div id="board" style="float: left"></div>
+    <div>
+        <div>
+            <div id="board" class="col-sm-6" style="margin-bottom: 25px; margin-right: 35px;" ></div>
 
-            <form action="" method="POST" style="margin-left: 35px; float: right">
+            <form action="" method="POST" class="col-sm-6">
 
                 <div class="form-group">
                     <div>
