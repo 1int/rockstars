@@ -21,8 +21,10 @@ use RockstarsApp;
  * @property string $castling
  * @property string $fullFen
  * @property string $options
+ * @property int $modified_by
  *
  * @property TacticsTest $test
+ * @property Member $modifiedBy
  */
 class TacticsPosition extends ActiveRecord
 {
@@ -106,4 +108,11 @@ class TacticsPosition extends ActiveRecord
         }
         return $ret;
     }
+
+    public function getModifiedBy()
+    {
+        return $this->hasOne(Member::className(), ['id' => 'modified_by']);
+    }
 }
+
+

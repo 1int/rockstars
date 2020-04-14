@@ -239,8 +239,9 @@
                         return $this->redirect(['admin/options', 'positionId' => intval($positionId)]);
                     }
                 }
-                
+
                 $model->options = implode(" ", $options);
+                $model->modified_by = $member->id;
                 $model->save(false);
                 return $this->redirect(['admin/options', 'positionId' => intval($positionId) + 1]);
             }

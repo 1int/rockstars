@@ -79,6 +79,10 @@
                         <a class="btn btn-default" href="/admin/quiz-options/<?=(intval($model->id) + 1)?>"><i class="glyphicon glyphicon-chevron-right"></i></a>
                         <?php } ?>
 
+                        <br/>
+                        <br/>
+                        <i style="font-size: 10px; color: #999">Last modified by @<?=$model->modifiedBy->username?></i>
+
                     </div>
                 <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
             </form>
