@@ -229,8 +229,14 @@
 
             $total = TacticsPosition::find()->count();
 
-            // Verify the recognition
+            // Save puzzle options
             if( Yii::$app->request->isPost ) {
+
+                if( $model->options && $model->modifiedBy->role == Member::ADMIN && $member->role != Member::ADMIN ) {
+                    Yii::$app->session->addFlash('error', 'Access denied. Please contact the admin.');
+                    return $this->redirect(['admin/options', 'positionId' => intval($positionId)]);
+                }
+
                 $options = Yii::$app->request->post('options');
 
                 foreach($options as $option) {
